@@ -41,12 +41,26 @@ export default new Router({
       meta:{
         title:'我的'
       }
-    },,{
+    },{
       path: '/pingdaoList',
       name: 'pingdaoList',
       component:() => import('../pages/pingdaoList.vue'),
       meta:{
         title:'频道列表'
+      }
+    },{
+      path: '/mydianzan',
+      name: 'mydianzan',
+      component:() => import('../pages/mydianzan.vue'),
+      meta:{
+        title:'我的点赞'
+      }
+    },{
+      path: '/myshoucang',
+      name: 'myshoucang',
+      component:() => import('../pages/myshoucang.vue'),
+      meta:{
+        title:'我的收藏'
       }
     }
   ]
