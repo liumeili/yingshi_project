@@ -209,7 +209,7 @@ export default {
 
     // 频道跳转
     topingdaoFun(){
-        this.$router.push({name:'pingdaoList'})
+        this.$router.push({name:'pingdaoList',query:{listId:this.pingdaoId}})
     },
     
 
