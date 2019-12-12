@@ -1,6 +1,6 @@
 <template>
   <div class="pingdaoList"> 
-           <div class="ys-goback"><span>电影</span></div>
+           <div class="ys-goback" @click="gobackFun()"><span>电影</span></div>
           <!--筛选  -->
           <div class="pd-sx topNavMargin">
             <div class="pd-sx-line">
@@ -23,11 +23,11 @@
             </div>
           </div>
            
-          <mescroll-vue ref="mescroll"  :down="downOption" :up="mescrollUp" @init="mescrollInit" :style="height">
+          <mescroll-vue ref="mescroll"  :down="downOption" :up="mescrollUp" @init="mescrollInit" :style="height" class="ys-bg">
             <div class="index-titleLine">
               <span>资源列表</span>
             </div>
-            <div class="index-tuijian">
+            <div class="index-tuijian" v-if="List.length>0">
               <ul>
                 <li v-for="(item,index) in List" :key="index">
                     <div class="tuijian-img"><img :src="item.vod_pic" ></div>
@@ -36,6 +36,10 @@
                 </li>
                 <div class="clearBoth"></div>
               </ul>
+            </div>
+            <div class="pingdaoNodata" v-else>
+              <img src="../assets/img/nodata.png">
+              <div>暂无数据</div>
             </div>
           </mescroll-vue>
 
@@ -58,6 +62,7 @@ export default {
   },
   data () {
     return {
+      pingdaoName:'',  //频道名称
       pingdaoList:[],  //频道
       List:[],  //其他类目
       pingdaoId:0,
@@ -104,16 +109,28 @@ export default {
     }
   },
   created(){
+    let listId=this.$route.query.listId;
+    let that=this;
     this.shaixuanObj.list_id=this.$route.query.listId;
+    let pingdaoList=JSON.parse(localStorage.getItem('channel_list'));
+    pingdaoList.forEach(function(item) {
+       if(item.id=listId){
+          that.pingdaoName=item.name;
+       }
+    });
+    
   },
   mounted(){
-
+    
      this.getchannelnavisortFun(1);
     //  this.getchannelsortlistFun();
-     let heightVal=document.documentElement.clientHeight;
+     let heightVal=document.documentElement.clientHeight-30;
      this.height.height=heightVal+'px';
   },
   methods:{
+    gobackFun(){
+       this.$router.go(-1);
+     },
     // mescroll组件初始化的回调,可获取到mescroll对象
     mescrollInit (mescroll) {
       this.mescroll = mescroll  // 如果this.mescroll对象没有使用到,则mescrollInit可以不用配置
@@ -162,30 +179,61 @@ export default {
 
     // 类型
     tagTabFun(name,title){
-      this.shaixuanObj.list_type=title;
+       if(title=='全部类型'){
+         this.shaixuanObj.list_type='全部';
+      }else{
+         this.shaixuanObj.list_type=title;
+      }
+      this.mescrollUp.page.num=1;
+      this.shaixuanObj.page=1;
+      this.List=[];
       this.getchannelsortlistFun();
     },
-    // 地区
+    // 地区 
     areaTabFun(name,title){
-      this.shaixuanObj.list_area=title;
+      if(title=='全部地区'){
+         this.shaixuanObj.list_area='全部';
+      }else{
+         this.shaixuanObj.list_area=title;
+      }
+      this.mescrollUp.page.num=1;
+      this.shaixuanObj.page=1;
+      this.List=[];
       this.getchannelsortlistFun();
     },
 
     // 年份
     yearTabFun(name,title){
-      this.shaixuanObj.list_year=title;
+      if(title=='全部年代'){
+         this.shaixuanObj.list_year='全部';
+      }else{
+         this.shaixuanObj.list_year=title;
+      }
+      this.mescrollUp.page.num=1;
+      this.shaixuanObj.page=1;
+      this.List=[];
       this.getchannelsortlistFun();
     },
     
     // 明星
     starTabFun(name,title){
-       this.shaixuanObj.list_star=title;
-       this.getchannelsortlistFun();
+       if(title=='全部明星'){
+          this.shaixuanObj.list_star='全部';
+        }else{
+          this.shaixuanObj.list_star=title;
+        }
+        this.mescrollUp.page.num=1;
+        this.shaixuanObj.page=1;
+        this.List=[];
+        this.getchannelsortlistFun();
     }, 
 
     // 最新上线
     newOnlineTabFun(name,title){
        this.shaixuanObj.list_order=name;
+       this.mescrollUp.page.num=1;
+       this.shaixuanObj.page=1;
+       this.List=[];
        this.getchannelsortlistFun();
     }
 
@@ -245,6 +293,21 @@ export default {
 
       .index-titleLine{
         margin-top:430px;
+      }
+
+      // 无数据
+      .pingdaoNodata{
+        margin-top:30px;
+        img{
+          width: 278px;
+          height: 313px;
+        }
+        div{
+          text-align: center;
+          color: #27FCB9;
+          font-size: 34px;
+          margin-top:10px;
+        }
       }
 
   }

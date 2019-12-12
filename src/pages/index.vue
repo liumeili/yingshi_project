@@ -139,11 +139,18 @@ export default {
             console.log('首页列表页接口');
             console.log(res);
             that.mainList=res.data.list;
+            let list=res.data.list;
             //动态设置顶部导航的宽度
             if(that.mainList.length>6){
                that.topNavWidth=that.topNavWidth +1.1*(that.mainList.length-6);
             }
             that.otherList=res.data.list;
+            let arr=[];
+            list.forEach(function(item,index) {
+               let objS={id:item.list_id,name:item.list_name} ;
+               arr.push(objS);
+            });
+            localStorage.setItem('channel_list',JSON.stringify(arr));
          })
     },
 

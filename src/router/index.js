@@ -69,6 +69,13 @@ export default new Router({
       meta:{
         title:'我的缓存'
       }
+    },{
+      path: '/details',
+      name: 'details',
+      component:() => import('../pages/details.vue'),
+      meta:{
+        title:'详情'
+      }
     }
   ]
 })

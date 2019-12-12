@@ -1,9 +1,24 @@
 import AxiosBaseService from '../AxiosBaseService.js'
 
 class iMService extends AxiosBaseService {
-    // 获取验证码
+    // 测试
     testapp(params) {
         return this.request('?s=App-Test-testapp', 'post', params);
+    }
+    
+    // 用户登录发送验证码
+    regSendCode(params) {
+        return this.request('?s=App-Login-regSendCode', 'get', params);
+    }
+
+    // 用户验证码登录
+    phoneCodeLogin(params) {
+        return this.request('?s=App-Login-phoneCodeLogin', 'get', params);
+    }
+    
+    // 获取公共配置的接口，前端需缓存这个接口获取到的信息
+    getConfig(params) {
+        return this.request('?s=App-Home-getConfig', 'post', params);
     }
 
     // 首页列表页接口,也可用于首页选项卡 (电影-电视剧-动漫的选项卡)
@@ -40,6 +55,14 @@ class iMService extends AxiosBaseService {
     getchannelsortlist(params) {
         return this.request('?s=App-Home-getchannelsortlist', 'get', params);
     }
+
+    // 获取影视详情页信息的接口
+    getmoviedetail(params) {
+        return this.request('?s=App-User-getmoviedetail', 'get', params);
+    }
+
+    
+
 
     
 
