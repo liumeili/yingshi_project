@@ -76,6 +76,20 @@ export default new Router({
       meta:{
         title:'详情'
       }
+    },{
+      path: '/mysetting',
+      name: 'mysetting',
+      component:() => import('../pages/mysetting.vue'),
+      meta:{
+        title:'设置'
+      }
+    },{
+      path: '/mybuyhistory',
+      name: 'mybuyhistory',
+      component:() => import('../pages/mybuyhistory.vue'),
+      meta:{
+        title:'购买记录'
+      }
     }
   ]
 })

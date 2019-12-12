@@ -56,8 +56,8 @@
       <span>其他</span>
     </div>
     <div class="GOothers">
-      <div class="tiaozhuan">设置<img src="../assets/img/my_next.png"/></div>
-      <div class="tiaozhuan">购买记录<img src="../assets/img/my_next.png"/></div>
+      <div class="tiaozhuan" @click="goMydianzan('mysetting')">设置<img src="../assets/img/my_next.png"/></div>
+      <div class="tiaozhuan" @click="goMydianzan('mybuyhistory')">购买记录<img src="../assets/img/my_next.png"/></div>
       <div class="tiaozhuan lianxi">联系客服<img src="../assets/img/my_next.png"/></div>
     </div>
      <Footer></Footer>
@@ -200,7 +200,7 @@ export default {
         border-bottom: 1px solid #3E3F4A;
         img{
           float: right;
-          width: 19px;
+          width: 27px;
           height: 27px;
           margin: 40px 31px auto auto;
         }
