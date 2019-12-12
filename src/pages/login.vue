@@ -12,15 +12,16 @@
       <div class="login-form">
         <div class="login-form-input">
           <span class="login-form-span">手机号</span>
-          <van-field v-model="formData.phone" placeholder="请输入手机号码" />
+          <van-field v-model="formData.phone" type='tel' placeholder="请输入手机号码" />
         </div>
         <div class="login-form-input">
           <span class="login-form-span">验证码</span>
           <van-field v-model="formData.code" placeholder="请输入验证码" />
-          <span class="login-form-code">{{codeText}}</span>
+          <span class="login-form-code" @click="clickCodeFun()">获取验证码</span>
+          <!-- <span class="login-form-code">{{times}}</span> -->
         </div>
         <!-- button -->
-        <div class="login-form-btn">登录</div>
+        <div class="login-form-btn" @click="phoneCodeLoginFun()">登录</div>
       </div>
     </div>
 
@@ -29,7 +30,7 @@
 
 <script>
 import {IMService} from '../service/RiziServices.js'
-import { Button,Field } from 'vant';
+import {Toast, Button,Field } from 'vant';
 export default {
   name: 'login',
   components:{
@@ -41,20 +42,65 @@ export default {
       formData:{
         phone:'',
         code:'',
+        client_type:1
       },
-      codeText:'获取验证码'
+      times:60,
     }
   },
   created(){},
   mounted(){
-    IMService.testapp()
-      .then(function(res){
-          console.log(res);
-      })
+   
   },
-   methods:{
+  methods:{
+    // 点击获取验证码
+    clickCodeFun(){
+      let phone= this.formData.phone;
+      let regMobile = /^1[345789]\d{9}$/;
+      if(phone==''){
+          Toast('请输入的手机号码');
+      }else if (!regMobile.test(phone)) {
+         Toast('输入的手机号码格式不正确');
+      }else{
+         this.regSendCodeFun(phone);
+      }
+      
+    },
+    // 获取验证码
+    regSendCodeFun(phone){
+      let that=this;
+      IMService.regSendCode({phone:phone})
+        .then(function(res){
+           Toast(res.msg);
+        })
+    },
 
-   }
+    // 登录
+    phoneCodeLoginFun(){
+        let that=this;
+        let regMobile = /^1[345789]\d{9}$/;
+        if(this.formData.phone==''){
+          Toast('请输入的手机号码');
+        }else if (!regMobile.test(this.formData.phone)) {
+          Toast('输入的手机号码格式不正确');
+        }else if(this.formData.code==''){
+          Toast('请输入验证码');
+        }else{
+          IMService.phoneCodeLogin(this.formData)
+            .then(function(res){
+               
+               if(res.status==1){
+                 let uidAtoken={uid:res.data.user_id,token:res.data.user_token};
+                  localStorage.setItem('uidAtoken',JSON.stringify(uidAtoken));
+                  localStorage.setItem('loginInfo',JSON.stringify(res.data));
+                  localStorage.setItem("isLogin",1);
+                  that.$router.push({name:'index'})
+               }else{
+                 Toast(res.msg);
+               }
+            })
+        }
+    },
+  }
 
 }
 </script>
@@ -164,6 +210,9 @@ export default {
       font-size: 32px;
       margin:20px auto;
     }
+    .van-field__control{
+      color: #fff;
+    }
     // 输入信息
     .login-form{
       margin-top:60px;
@@ -182,7 +231,7 @@ export default {
           .login-form-code{
              position: absolute;
              right: 125px;
-             bottom:8px;
+             bottom:18px;
              font-size: 30px;
              display: block;
              border-left:2px solid #27FCB9;

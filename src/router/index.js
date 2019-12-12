@@ -70,6 +70,13 @@ export default new Router({
         title:'我的缓存'
       }
     },{
+      path: '/details',
+      name: 'details',
+      component:() => import('../pages/details.vue'),
+      meta:{
+        title:'详情'
+      }
+    },{
       path: '/mysetting',
       name: 'mysetting',
       component:() => import('../pages/mysetting.vue'),
@@ -82,6 +89,20 @@ export default new Router({
       component:() => import('../pages/mybuyhistory.vue'),
       meta:{
         title:'购买记录'
+      }
+    },{
+      path: '/myviewhistory',
+      name: 'myviewhistory',
+      component:() => import('../pages/myviewhistory.vue'),
+      meta:{
+        title:'观看历史'
+      }
+    },{
+      path: '/myinformationedit',
+      name: 'myinformationedit',
+      component:() => import('../pages/myinformationedit.vue'),
+      meta:{
+        title:'编辑资料'
       }
     }
   ]

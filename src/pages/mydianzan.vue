@@ -30,8 +30,8 @@ export default {
   data () {
     return {
       dianzanList: [], // 点赞数据
-      uid: JSON.parse(localStorage.getItem('publicInfo')).uid,
-      token: JSON.parse(localStorage.getItem('publicInfo')).token
+      uid: JSON.parse(localStorage.getItem('uidAtoken')).uid,
+      token: JSON.parse(localStorage.getItem('uidAtoken')).token
     }
   },
   mounted () {
@@ -40,8 +40,8 @@ export default {
   methods: {
     // 列表接口
     GetdianzanList () {
-      console.log(this.uid)//10108  6fb9254d1cf73f6f32e47325d002f3ae
-      IMService.getlikevod({uid: this.uid, token: this.token})
+      console.log(this.uid)
+      IMService.getlikevod({limit: 2, page: 1, uid: this.uid, token: this.token})
         .then(function (res) {
           console.log(res)
         })

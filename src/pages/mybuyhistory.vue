@@ -17,7 +17,7 @@
         <div>购买时间</div>
       </li>
     </ul>
-    <ul>
+    <ul class="list_data">
       <li>
         <div>20190902201</div>
         <div>超级vip包年</div>
@@ -170,7 +170,7 @@ export default {
     .van-hairline--top-bottom{
       height: 80px;
     }
-    ul{
+    .list_head,.list_data{
       float: left;
       width: 100%;
       line-height: 88px;

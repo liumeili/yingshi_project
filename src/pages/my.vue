@@ -1,10 +1,12 @@
 <template>
   <div class="my">
     <div class="my_head">
-      <div class="editMyinfo">修改信息
-        <img src="../assets/img/my_eidt.png"/>
+      <div class="editMyinfo" @click="goMydianzan('myinformationedit')">
+        修改信息<img src="../assets/img/my_eidt.png"/>
       </div>
-      <div class="touxiang"><img src="../assets/img/my_bg.jpg"/></div>
+      <div class="touxiang">
+        <div class="myImge"><img src="../assets/img/my_bg.jpg"/></div>
+        </div>
       <div class="my_name">
         <span>开了花的耐克</span>
         <img src="../assets/img/my_woman.png" />
@@ -30,7 +32,7 @@
     </div>
     <div class="index-titleLine">
       <span>观看历史</span>
-      <span>更多历史</span>
+      <span @click="goMydianzan('myviewhistory')">更多历史</span>
     </div>
     <div class="index-tuijian">
       <ul>
@@ -108,15 +110,26 @@ export default {
         }
       }
       .touxiang{
-        width: 100%;
+        position: relative;
+        width: 215px;
         height: 237px;
-        img{
-          float: left;
-          width: 160px;
-          height: 160px;
-          border-radius: 50%;
-          border: 3px solid #FFFFFF;
-          margin: 77px auto auto 53px;
+        .myImge{
+           position: absolute;
+           top: 77px;
+           left: 53px;
+           width: 160px;
+           height: 160px;
+           border-radius: 50%;
+           border: 3px solid #FFFFFF;
+           overflow: hidden;
+           img{
+             position: absolute;
+             left: 50%;
+             top: 50%;
+             transform: translate(-50%,-50%);
+             height: 100%;
+             border-radius: 13px;
+           }
         }
       }
       .my_name{
