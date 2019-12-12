@@ -29,7 +29,9 @@ export default {
   name: 'mydianzan',
   data () {
     return {
-      dianzanList: [] // 点赞数据
+      dianzanList: [], // 点赞数据
+      uid: JSON.parse(localStorage.getItem('publicInfo')).uid,
+      token: JSON.parse(localStorage.getItem('publicInfo')).token
     }
   },
   mounted () {
@@ -38,10 +40,11 @@ export default {
   methods: {
     // 列表接口
     GetdianzanList () {
-      // IMService.likevod()
-      //   .then(function (res) {
-      //     console.log(res)
-      //   })
+      console.log(this.uid)//10108  6fb9254d1cf73f6f32e47325d002f3ae
+      IMService.getlikevod({uid: this.uid, token: this.token})
+        .then(function (res) {
+          console.log(res)
+        })
     }
   }
 }
