@@ -18,12 +18,12 @@
       <div>我的点赞</div>
       <div class="dianzanNum">10</div>
     </div>
-    <div class="my_dianzan"  @click="goMydianzan('myshoucang')">
+    <div class="my_dianzan" @click="goMydianzan('myshoucang')">
       <img src="../assets/img/my_shoucang.png"/>
       <div>我的收藏</div>
       <div class="dianzanNum">5</div>
     </div>
-    <div class="my_dianzan">
+    <div class="my_dianzan" @click="goMydianzan('mycache')">
       <img src="../assets/img/my_xiazai.png" class="xiazaiImg"/>
       <div>我的缓存</div>
       <div class="dianzanNum">3</div>

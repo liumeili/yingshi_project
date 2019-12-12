@@ -38,10 +38,10 @@ export default {
   methods: {
     // 列表接口
     GetdianzanList () {
-      IMService.likevod()
-        .then(function (res) {
-          console.log(res)
-        })
+      // IMService.likevod()
+      //   .then(function (res) {
+      //     console.log(res)
+      //   })
     }
   }
 }

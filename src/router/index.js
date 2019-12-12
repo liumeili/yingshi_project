@@ -62,6 +62,13 @@ export default new Router({
       meta:{
         title:'我的收藏'
       }
+    },{
+      path: '/mycache',
+      name: 'mycache',
+      component:() => import('../pages/mycache.vue'),
+      meta:{
+        title:'我的缓存'
+      }
     }
   ]
 })
