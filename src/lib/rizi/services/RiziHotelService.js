@@ -35,6 +35,16 @@ class iMService extends AxiosBaseService {
     getchannelnavisort(params) {
         return this.request('?s=App-Home-getchannelnavisort', 'get', params);
     }
+
+    // 频道筛选页列表接口
+    getchannelsortlist(params) {
+        return this.request('?s=App-Home-getchannelsortlist', 'get', params);
+    }
+
+    
+
+
+    
     
 
     

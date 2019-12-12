@@ -5,46 +5,46 @@
           <div class="pd-sx topNavMargin">
             <div class="pd-sx-line">
               <!-- <span class="pd-sx-title">全部类型</span> -->
-              <van-tabs class="pd-sx-tab">
+              <van-tabs class="pd-sx-tab" @click="tagTabFun">
                 <van-tab v-for="(item,index) in tag" :key="index" :title="item"></van-tab>
               </van-tabs>
-              <van-tabs class="pd-sx-tab">
+              <van-tabs class="pd-sx-tab" @click="areaTabFun">
                 <van-tab v-for="(item,index) in area" :key="index" :title="item"></van-tab>
               </van-tabs>
-              <van-tabs class="pd-sx-tab">
+              <van-tabs class="pd-sx-tab" @click="yearTabFun">
                 <van-tab v-for="(item,index) in year" :key="index" :title="item"></van-tab>
               </van-tabs>
-              <van-tabs class="pd-sx-tab">
+              <van-tabs class="pd-sx-tab" @click="starTabFun">
                 <van-tab v-for="(item,index) in star" :key="index" :title="item"></van-tab>
               </van-tabs>
-              <van-tabs class="pd-sx-tab">
-                <van-tab v-for="(item,index) in newOnline" :key="index" :title="item"></van-tab>
+              <van-tabs class="pd-sx-tab" @click="newOnlineTabFun">
+                <van-tab v-for="(item,index) in newOnline" :key="index" :title="item" :name="index+1"></van-tab>
               </van-tabs>
             </div>
           </div>
-
-          <!-- 推荐 -->
-          <!-- <div class="index-titleLine" v-if="tuijianList.length>0">
-            <span>资源列表</span>
-          </div>
-          <div class="index-tuijian">
-            <ul>
-              <li v-for="(item,index) in tuijianList" :key="index">
-                  <div class="tuijian-img"><img :src="item.vod_pic" ></div>
-                  <div class="index-tuijian-name">{{item.vod_name}}</div>
-                  <div class="index-tuijian-dec">{{item.vod_content}}</div>
-              </li>
-              <div class="clearBoth"></div>
-            </ul>
-          </div>
-          <div class="changeOne" @click="getlatestrecommendlistFun()" v-if="tuijianList.length>0"><img src="../assets/img/change.png"><span>换一批</span></div> -->
-
+           
+          <mescroll-vue ref="mescroll"  :down="downOption" :up="mescrollUp" @init="mescrollInit" :style="height">
+            <div class="index-titleLine">
+              <span>资源列表</span>
+            </div>
+            <div class="index-tuijian">
+              <ul>
+                <li v-for="(item,index) in List" :key="index">
+                    <div class="tuijian-img"><img :src="item.vod_pic" ></div>
+                    <div class="index-tuijian-name">{{item.vod_name}}</div>
+                    <div class="index-tuijian-dec">{{item.vod_content}}</div>
+                </li>
+                <div class="clearBoth"></div>
+              </ul>
+            </div>
+          </mescroll-vue>
 
   </div>
 </template>
 
 <script>
 import {IMService} from '../service/RiziServices.js'
+import MescrollVue from 'mescroll.js/mescroll.vue'
 import {Tab, Tabs} from 'vant';
 
 
@@ -54,11 +54,12 @@ export default {
   components:{
      [Tab.name]: Tab,
      [Tabs.name]: Tabs,
+     MescrollVue // 注册mescroll组件
   },
   data () {
     return {
       pingdaoList:[],  //频道
-      otherList:'',  //其他类目
+      List:[],  //其他类目
       pingdaoId:0,
       tag:['全部类型'],  //全部类型
       area:['全部地区'], //全部地区
@@ -68,14 +69,61 @@ export default {
       state:['播放类型'],  //
       version:['所有版本'],  //
       newOnline:['最新上线','最多播放','评分最高','',''],  //最新上线
+      shaixuanObj:{
+        page:1,
+        limit:9,
+        list_id:'',
+        list_type:'全部',
+        list_star:'全部',
+        list_area:'全部',
+        list_year :'全部',
+        list_order:'1',
+      },  //频道筛选需要传的参数
+
+      // ------------------分页--------------------------
+      mescroll: null, // mescroll实例对象
+      downOption: { 
+        use: false, // 是否启用下拉刷新; 默认true
+        auto: true, // 是否在初始化完毕之后自动执行下拉刷新的回调; 默认true
+        },
+      mescrollUp: { // 上拉加载的配置.
+        use: true,
+        callback: this.upCallback, // 上拉回调,此处简写; 相当于 callback: function(page, mescroll) { }
+        page: {
+          num: 0, //当前页 默认0,回调之前会加1; 即callback(page)会从1开始
+          size: 9 //每页数据条数,默认10
+        },
+        htmlNodata: '<p class="upwarp-nodata">-- 没有更多的相关数据 --</p>',
+        noMoreSize: 5, //如果列表已无数据,可设置列表的总数量要大于5才显示无更多数据; 
+        offset:400,   
+        up:{
+         isBounce: false  //此处禁止ios回弹,解析(务必认真阅读,特别是最后一点): http://www.mescroll.com/qa.html#q10
+        }
+      },
+      height:{height:''}
     }
   },
+  created(){
+    this.shaixuanObj.list_id=this.$route.query.listId;
+  },
   mounted(){
+
      this.getchannelnavisortFun(1);
-    
+    //  this.getchannelsortlistFun();
+     let heightVal=document.documentElement.clientHeight;
+     this.height.height=heightVal+'px';
   },
   methods:{
-
+    // mescroll组件初始化的回调,可获取到mescroll对象
+    mescrollInit (mescroll) {
+      this.mescroll = mescroll  // 如果this.mescroll对象没有使用到,则mescrollInit可以不用配置
+    },
+    // 上拉回调 
+    upCallback (page, mescroll) {
+          this.shaixuanObj.page=page.num;
+          this.getchannelsortlistFun(mescroll);
+        
+    },
     // 频道列表接口
     getchannelnavisortFun(id){
        let that=this;
@@ -95,6 +143,51 @@ export default {
             that.version=that.version.concat(res.data.list_extend.version.split(','),qitaArr);
          })
     },
+
+    //频道 筛选
+    getchannelsortlistFun(mescroll){
+       let that=this;
+       let objVal=this.shaixuanObj;
+       IMService.getchannelsortlist(objVal)
+          .then(function(res){
+              console.log('频道筛选');
+              console.log(res);
+              that.List=that.List.concat(res.data.list);
+              console.log(that.List);
+              that.$nextTick(() => {
+                mescroll.endSuccess(res.data.list.length)
+              })
+          })
+    },
+
+    // 类型
+    tagTabFun(name,title){
+      this.shaixuanObj.list_type=title;
+      this.getchannelsortlistFun();
+    },
+    // 地区
+    areaTabFun(name,title){
+      this.shaixuanObj.list_area=title;
+      this.getchannelsortlistFun();
+    },
+
+    // 年份
+    yearTabFun(name,title){
+      this.shaixuanObj.list_year=title;
+      this.getchannelsortlistFun();
+    },
+    
+    // 明星
+    starTabFun(name,title){
+       this.shaixuanObj.list_star=title;
+       this.getchannelsortlistFun();
+    }, 
+
+    // 最新上线
+    newOnlineTabFun(name,title){
+       this.shaixuanObj.list_order=name;
+       this.getchannelsortlistFun();
+    }
 
     
     
@@ -136,6 +229,12 @@ export default {
       // 筛选
       .pd-sx{
         padding: 15px 20px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 999;
+        background: #0D1225;
         .pd-sx-line{ 
            .pd-sx-tab{
              width: 700px;
@@ -143,6 +242,10 @@ export default {
            }
         } 
       } 
+
+      .index-titleLine{
+        margin-top:430px;
+      }
 
   }
  
