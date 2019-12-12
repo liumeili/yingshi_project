@@ -9,6 +9,10 @@
           </div>
           <div class="shipingName">如懿传&nbsp;<span>第50集</span></div>
           <div class="shipingTime">正在缓存</div>
+          <div class="progress">
+            <van-progress :percentage="50"  pivot-text=" "/>
+          </div>
+          <div class="percentage">50%</div>
         </li>
         <li>
           <div class="tuijian-img">
@@ -24,11 +28,26 @@
 </template>
 
 <script>
+import { Progress } from 'vant'
+export default {
+  components: {
+    [Progress.name]: Progress
+
+  }
+}
 </script>
 
 <style lang="less">
   .shipingTime{
     padding: 0 15px!important;
+  }
+  .progress{
+    float: left;
+    width: calc(100% - 410px);
+    padding: 15px 15px;
+  }
+  .percentage{
+    font-size: 18px;
   }
   .closeALL{
     position: absolute;
