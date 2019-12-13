@@ -17,8 +17,8 @@
         <div class="login-form-input">
           <span class="login-form-span">验证码</span>
           <van-field v-model="formData.code" placeholder="请输入验证码" />
-          <span class="login-form-code" @click="clickCodeFun()">获取验证码</span>
-          <!-- <span class="login-form-code">{{times}}</span> -->
+          <span class="login-form-code" @click="clickCodeFun()" v-if="showTime==false">获取验证码</span>
+          <span class="login-form-code" v-if="showTime==true">{{times}} s</span>
         </div>
         <!-- button -->
         <div class="login-form-btn" @click="phoneCodeLoginFun()">登录</div>
@@ -42,9 +42,10 @@ export default {
       formData:{
         phone:'',
         code:'',
-        client_type:1
+        client_type:2
       },
       times:60,
+      showTime:false,
     }
   },
   created(){},
@@ -71,6 +72,17 @@ export default {
       IMService.regSendCode({phone:phone})
         .then(function(res){
            Toast(res.msg);
+           if(res.status==0){
+              that.showTime=true;
+              let timer=setInterval(function(){
+                  that.times-=1;
+                  if(that.times==0){
+                    that.showTime=false;
+                    that.times=60;
+                    clearInterval(timer);
+                  }
+              },1000)
+           }
         })
     },
 
@@ -181,14 +193,15 @@ export default {
  	height: 100%;
   z-index: 99999;
  }
-	.ys-goback{
-		background: none!important;
-	}
+	
   .login{
     position: relative;
     width: 100%;
     height: 1600px;
     overflow: hidden;
+    .ys-goback{
+      background: none!important;
+    }
     .login-logo{
         font-size: 36px;
         text-align:center;

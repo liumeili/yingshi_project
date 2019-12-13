@@ -36,7 +36,7 @@
           </div>
           <div class="index-tuijian">
             <ul>
-              <li v-for="(item,index) in tuijianList" :key="index">
+              <li v-for="(item,index) in tuijianList" :key="index" @click="toDetailsFun(item.vod_id)">
                   <div class="tuijian-img"><img :src="item.vod_pic" ></div>
                   <div class="index-tuijian-name">{{item.vod_name}}</div>
                   <div class="index-tuijian-dec">{{item.vod_content}}</div>
@@ -218,6 +218,11 @@ export default {
     topingdaoFun(){
         this.$router.push({name:'pingdaoList',query:{listId:this.pingdaoId}})
     },
+
+    // 影视详情
+    toDetailsFun(id){
+       this.$router.push({name:'details',query:{vodId:id}})
+    }
     
 
     
