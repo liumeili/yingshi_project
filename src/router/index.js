@@ -90,6 +90,20 @@ export default new Router({
       meta:{
         title:'购买记录'
       }
+    },{
+      path: '/myviewhistory',
+      name: 'myviewhistory',
+      component:() => import('../pages/myviewhistory.vue'),
+      meta:{
+        title:'观看历史'
+      }
+    },{
+      path: '/myinformationedit',
+      name: 'myinformationedit',
+      component:() => import('../pages/myinformationedit.vue'),
+      meta:{
+        title:'编辑资料'
+      }
     }
   ]
 })
