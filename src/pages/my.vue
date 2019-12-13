@@ -6,14 +6,14 @@
       </div>
       <div class="touxiang">
         <div class="myImge"><img src="../assets/img/my_bg.jpg"/></div>
-        </div>
+      </div>
       <div class="my_name">
         <span>开了花的耐克</span>
         <img src="../assets/img/my_woman.png" />
         <img src="../assets/img/my_novip.png"/>
       </div>
     </div>
-    <div class="openVIP"><span>开通VIP</span><br><span>9.9元/月</span></div>
+    <div class="openVIP" @click="goMydianzan('mybuyvip')"><span>开通VIP</span><br><span>9.9元/月</span></div>
     <div class="openVIP"><span>会员享受</span><br><span>免费1万多项电影</span></div>
     <div class="my_dianzan" @click="goMydianzan('mydianzan')">
       <img src="../assets/img/my_dianzan.png"/>
@@ -109,29 +109,7 @@ export default {
           height: 25px;
         }
       }
-      .touxiang{
-        position: relative;
-        width: 215px;
-        height: 237px;
-        .myImge{
-           position: absolute;
-           top: 77px;
-           left: 53px;
-           width: 160px;
-           height: 160px;
-           border-radius: 50%;
-           border: 3px solid #FFFFFF;
-           overflow: hidden;
-           img{
-             position: absolute;
-             left: 50%;
-             top: 50%;
-             transform: translate(-50%,-50%);
-             height: 100%;
-             border-radius: 13px;
-           }
-        }
-      }
+
       .my_name{
         width: 100%;
         text-align: left;
