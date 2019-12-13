@@ -104,6 +104,13 @@ export default new Router({
       meta:{
         title:'编辑资料'
       }
+    },{
+      path: '/mybuyvip',
+      name: 'mybuyvip',
+      component:() => import('../pages/mybuyvip.vue'),
+      meta:{
+        title:'会员购买'
+      }
     }
   ]
 })

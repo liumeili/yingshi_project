@@ -102,15 +102,5 @@ export default {
         border-bottom: none;
       }
     }
-    .loginOut{
-      width: calc(100% - 60px);
-      height: 90px;
-      margin: 130px 30px;
-      background:linear-gradient(84deg,rgba(36,217,200,1),rgba(80,208,111,1));
-      border-radius: 10px;
-      line-height: 90px;
-      font-size: 36px;
-      color: #161C2C;
-    }
   }
 </style>

@@ -257,3 +257,38 @@
    }
 
  }
+ //头像
+.touxiang{
+  position: relative;
+  width: 215px;
+  height: 243px;
+  .myImge{
+     position: absolute;
+     top: 77px;
+     left: 53px;
+     width: 160px;
+     height: 160px;
+     border-radius: 50%;
+     border: 3px solid #FFFFFF;
+     overflow: hidden;
+     img{
+       position: absolute;
+       left: 50%;
+       top: 50%;
+       transform: translate(-50%,-50%);
+       height: 100%;
+       border-radius: 13px;
+     }
+  }
+}
+//退出登录按钮
+.loginOut{
+  width: calc(100% - 60px);
+  height: 90px;
+  margin: 130px 30px;
+  background:linear-gradient(84deg,rgba(36,217,200,1),rgba(80,208,111,1));
+  border-radius: 10px;
+  line-height: 90px;
+  font-size: 36px;
+  color: #161C2C;
+}
