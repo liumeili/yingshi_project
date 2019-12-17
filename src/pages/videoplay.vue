@@ -1,0 +1,305 @@
+<template>
+  <div class="videoplay">
+    <div class="videoplaying" id="dplayer">
+      <HelloWorld></HelloWorld>
+    </div>
+    <div class="jieshao">
+      <div class="video-titleLine">
+        <span>{{details.vod_name}}</span>
+        <img src="~@/assets/img/moreIcon.png" v-if="opendetail == false"/>
+        <span @click="openCont()" id="jianjie" v-if="opendetail == false">简介</span>
+        <img src="~@/assets/img/moreCloseIcon.png" class="shouqiImg" v-if="opendetail == true"/>
+        <span @click="openCont()" id="shouqi" v-if="opendetail == true">收起</span>
+      </div>
+      <div class="jieshao_xinxi">
+        评分<span>{{details.vod_gold}}</span>&nbsp;&nbsp;年份<span>{{details.vod_year}}</span>&nbsp;&nbsp;
+        分类<span>{{details.vod_type}}</span>&nbsp;&nbsp;<span>{{details.vod_up}}</span>次播放
+      </div>
+      <!-- 简介 -->
+      <div class="details-jjie">
+        <div class="details_txt" id="details_txt">{{details.vod_content}}</div>
+      </div>
+      <div class="xiazaiVideo"  v-if="opendetail == false">
+        <img src="../assets/img/my_xiazai.png"/>
+        <span>下载影片&nbsp;</span>
+        <img src="../assets/img/my_dianzan.png"/>
+        <span>3w+&nbsp;</span>
+        <img src="../assets/img/my_shoucang.png"/>
+        <span>3100</span>
+      </div>
+    </div>
+
+    <!-- 集数 -->
+    <div class="details-num">
+      <div class="details-num-title">
+        <span>剧集</span>
+        <span>来源：风行</span>
+      </div>
+      <div class="details-num6" v-if="allNum==false">
+        <ul class="details-num-ul">
+          <li class="details-numLiHover">1</li>
+          <li @click="selectedNumCLick()">2</li>
+          <li>3</li>
+          <li>4</li>
+          <li>5</li>
+          <li>6</li>
+          <div class="clearBoth"></div>
+        </ul>
+        <img src="../assets/img/moreyd.png" class="details-num-more" @click="allNum=true">
+      </div>
+      <!-- 全部集数 -->
+      <div class="details-numAll" v-if="allNum==true">
+        <div class="details-numAll-tab">
+          <span style="color:#27FCB9;">1-30</span>
+          <span>30-60</span>
+          <span>61-90</span>
+        </div>
+        <ul class="details-num-ul">
+          <li class="details-numLiHover">1</li>
+          <li @click="selectedNumCLick()">2</li>
+          <li>3</li>
+          <li>4</li>
+          <li>5</li>
+          <li>6</li>
+          <li>7</li>
+          <li>8</li>
+          <li>9</li>
+          <div class="clearBoth"></div>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 热播 -->
+    <div class="details-hots">
+      <div class="index-titleLine">
+        <span>正在热播</span>
+        <span>更多内容</span>
+      </div>
+      <div class="index-tuijian" v-if="hotsList.length>0">
+        <ul>
+          <li v-for="(item,index) in hotsList" :key="index" @click="toDetailsFun(item.vod_id)">
+              <div class="tuijian-img"><img :src="item.vod_pic" ></div>
+              <div class="index-tuijian-name">{{item.vod_name}}</div>
+              <div class="index-tuijian-dec">{{item.vod_content}}</div>
+          </li>
+          <div class="clearBoth"></div>
+        </ul>
+      </div>
+      <div class="pingdaoNodata" v-if="hotsList.length<1">
+        <img src="../assets/img/nodata.png">
+        <div>暂无数据</div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+// import VueDPlayer from './VueDPlayerHls'
+import {IMService} from '../service/RiziServices.js'
+// import VueDPlayer from 'vue-dplayer'
+// import 'vue-dplayer/vue-dplayer.css'
+import HelloWorld from '../components/HelloWorld.vue'
+
+export default{
+  components: {
+    // 'd-player': VueDPlayer
+    HelloWorld
+  },
+  data () {
+    return {
+      details: {}, // 影视详情
+      opendetail: false,
+      hotsList: [], // 热播
+      allNum: false // 是否展示全部集数
+    }
+  },
+  created () {
+    this.vodId = this.$route.query.vodId
+  },
+  mounted () {
+    this.getmoviedetailFun()
+    this.DPlayerC()
+  },
+  methods: {
+    // 展开详情
+    openCont () {
+      var detailsTxt = document.getElementById('details_txt')
+      if (this.opendetail === false) {
+        this.opendetail = true
+        detailsTxt.classList.remove('details_txt')
+        detailsTxt.classList.add('details_txt_all')
+      } else {
+        detailsTxt.classList.remove('details_txt_all')
+        detailsTxt.classList.add('details_txt')
+        this.opendetail = false
+      }
+    },
+    //  获取影视详情
+    getmoviedetailFun () {
+      let that = this
+      let objStr = JSON.parse(localStorage.getItem('uidAtoken'))
+      objStr.vod_id = this.vodId
+      IMService.getmoviedetail(objStr)
+        .then(function (res) {
+          console.log('获取影视详情')
+          console.log(res)
+          that.details = res.data
+          that.hotsList = res.data.other
+        })
+    },
+
+    DPlayerC () {
+    },
+    // 展示全部集数
+    selectedNumCLick () {
+      this.allNum = false
+    }
+  }
+}
+</script>
+
+<style lang="less">
+  // @import '../assets/css/DPlayer.min.css';
+  .ys-goback{
+    background: none!important;
+  }
+  .videoplay{
+    width: 100%;
+    .videoplaying{
+      width: 100%;
+      height: 407px;
+      background-image: url(../assets/img/my_bg.jpg);
+      background-size: 100% 100%;
+    }
+    .video-titleLine{
+      text-align: left;
+      padding: 10px 29px;
+      img{
+        float: right;
+        width: 28px;
+        height: 28px;
+        margin-top: 4px;
+      }
+      #jianjie,#shouqi{
+        float: right;
+        font-size: 24px;
+        color: #9D9D9D;
+      }
+      .shouqiImg{
+        width: 28px;
+        height: 15px;
+        margin-left: 10px;
+        margin-top: 10px;
+      }
+    }
+    .jieshao_xinxi{
+      font-size: 24px;
+      text-align: left;
+      padding: 0 29px;
+      span{
+        color: #9D9D9D;
+      }
+    }
+    .details-jjie .details_txt {
+      padding: 10px 29px 0 29px;
+      text-align: left;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      font-size: 0.24rem;
+      color: #9D9D9D;
+    }
+    .details-jjie .details_txt_all {
+      padding: 10px 29px 0 29px;
+      text-align: left;
+      overflow: hidden;
+      font-size: 0.24rem;
+      color: #9D9D9D;
+    }
+    .xiazaiVideo{
+      width: calc(100% - 35px);
+      text-align: right;
+      color: #9D9D9D;
+      font-size: 18px;
+      padding-top: 12px;
+      margin-right: 35px;
+      img{
+        width: 25px;
+        height: 23px;
+      }
+    }
+    // 集数
+    .details-num{
+        background: #161C2C;
+        margin-top:25px;
+        position: relative;
+        .details-num-title{
+           display: flex;
+           justify-content: space-between;
+           align-items: center;
+           padding: 25px;
+           border-bottom: 1px solid #252633;
+        }
+        .details-num-ul{
+          padding-bottom: 20px;
+          li{
+            float: left;
+            width: 82.7px;
+            padding:20px 0;
+            background: #0D1225;
+            margin-left: 25px;
+            margin-top:20px;
+          }
+          .details-numLiHover{
+            background: none;
+            color:#27FCB9;
+            margin-left: 10px;
+          }
+
+        }
+        .details-num-more{
+          width: 32px;
+          height: 32px;
+          position: absolute;
+          bottom: 40px;
+          right: 45px;
+        }
+        .details-numAll{
+           .details-numAll-tab{
+             padding-top: 20px;
+             display: flex;
+             span{
+               width: 150px;
+               padding: 18px 0;
+               text-align: center;
+               background: #0D1225;
+               display: block;
+               border-radius: 50px;
+               margin-left: 20px;
+               color: #9D9D9D;
+             }
+           }
+        }
+    }
+
+    // 无数据
+    .pingdaoNodata{
+      margin-top:30px;
+      img{
+        width: 278px;
+        height: 313px;
+      }
+      div{
+        text-align: center;
+        color: #27FCB9;
+        font-size: 34px;
+        margin-top:10px;
+      }
+    }
+  }
+</style>
+<style scoped>
+  /* @import '../assets/css/DPlayer.min.css'; */
+</style>

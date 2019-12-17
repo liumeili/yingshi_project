@@ -8,7 +8,7 @@ import VueWechatTitle from 'vue-wechat-title'
 Vue.use(VueWechatTitle)
 
 Vue.config.productionTip = false
-
+window.Hls = require('hls.js');
 Vue.use(require('vue-wechat-title'))
 
 router.beforeEach((to, from, next) => {

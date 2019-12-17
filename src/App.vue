@@ -9,23 +9,22 @@
 import {IMService} from '@/service/RiziServices.js'
 export default {
   name: 'App',
-  mounted(){
-     this.getConfigFun();
+  mounted () {
+    this.getConfigFun()
   },
-  methods:{
+  methods: {
     // 返回
-     gobackFun(){
-       alert();
-       this.$router.go(-1);
-     },
+    gobackFun () {
+      this.$router.go(-1)
+    },
 
     //  获取公共配置
-    getConfigFun(){
-        IMService.getConfig()
-          .then(function(res){
-             console.log('获取公共配置');
-             console.log(res);
-          })
+    getConfigFun () {
+      IMService.getConfig()
+        .then(function (res) {
+          console.log('获取公共配置')
+          console.log(res)
+        })
     }
   }
 }
@@ -42,6 +41,5 @@ export default {
   color: #fff;
   font-size: 30px;
 }
-
 
 </style>

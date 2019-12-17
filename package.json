@@ -14,9 +14,12 @@
   },
   "dependencies": {
     "axios": "^0.19.0",
+    "dplayer": "^1.25.0",
+    "hls.js": "^0.13.0",
     "mescroll.js": "^1.4.1",
     "vant": "^2.2.16",
     "vue": "^2.5.2",
+    "vue-dplayer": "0.0.10",
     "vue-router": "^3.0.1",
     "vue-wechat-title": "^2.0.5"
   },

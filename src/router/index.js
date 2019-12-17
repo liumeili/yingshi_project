@@ -111,6 +111,13 @@ export default new Router({
       meta:{
         title:'会员购买'
       }
+    },{
+      path: '/videoplay',
+      name: 'videoplay',
+      component:() => import('../pages/videoplay.vue'),
+      meta:{
+        title:''
+      }
     }
   ]
 })

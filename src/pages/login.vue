@@ -50,7 +50,7 @@ export default {
   },
   created(){},
   mounted(){
-   
+
   },
   methods:{
     // 点击获取验证码
@@ -64,7 +64,7 @@ export default {
       }else{
          this.regSendCodeFun(phone);
       }
-      
+
     },
     // 获取验证码
     regSendCodeFun(phone){
@@ -99,7 +99,7 @@ export default {
         }else{
           IMService.phoneCodeLogin(this.formData)
             .then(function(res){
-               
+
                if(res.status==1){
                  let uidAtoken={uid:res.data.user_id,token:res.data.user_token};
                   localStorage.setItem('uidAtoken',JSON.stringify(uidAtoken));
@@ -193,7 +193,7 @@ export default {
  	height: 100%;
   z-index: 99999;
  }
-	
+
   .login{
     position: relative;
     width: 100%;
