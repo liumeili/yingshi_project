@@ -1,5 +1,5 @@
 <template>
-  <div class="details"> 
+  <div class="details">
            <div class="ys-goback" @click="gobackFun()"><span>{{details.vod_name}}</span></div>
            <!-- 影片基本信息 -->
           <div class="detais-abstract">
@@ -15,13 +15,13 @@
           </div>
           <!-- 简介 -->
           <div class="details-jjie">
-            <div>{{details.vod_content}}</div>
-            <span>展开</span>
+            <div class="details_txt" id="details_txt">{{details.vod_content}}</div>
+            <span @click="openCont()" id="zhankai">展开</span>
           </div>
 
           <!-- 集数 -->
-          <div class="details-num"> 
-            <div class="details-num-title">                              
+          <div class="details-num">
+            <div class="details-num-title">
               <span>剧集</span>
               <span>来源：风行</span>
             </div>
@@ -61,8 +61,6 @@
 
           </div>
 
-
-         
           <!-- 热播 -->
           <div class="details-hots">
             <div class="index-titleLine">
@@ -84,7 +82,6 @@
             </div>
           </div>
 
-
           <!--弹框  -->
           <van-popup v-model="tipShow" round class="details-popup">
               <div class="details-popupDiv">
@@ -105,59 +102,73 @@
 
 <script>
 import {IMService} from '../service/RiziServices.js'
-import {Tab, Tabs,Popup} from 'vant';
+import {Tab, Tabs, Popup} from 'vant'
 export default {
   name: 'details',
-  components:{
-     [Tab.name]: Tab,
-     [Tabs.name]: Tabs,
-     [Popup.name]:Popup,
+  components: {
+    [Tab.name]: Tab,
+    [Tabs.name]: Tabs,
+    [Popup.name]: Popup
   },
   data () {
     return {
-      vodId:'', // 影视id
-      details:{},  //影视详情
-      allNum:false,  //是否展示全部集数
-      hotsList:[],  //热播
-      tipShow:false,  //弹框展示
+      vodId: '', // 影视id
+      details: {}, // 影视详情
+      allNum: false, // 是否展示全部集数
+      hotsList: [], // 热播
+      tipShow: false // 弹框展示
     }
   },
-  created(){
-    this.vodId=this.$route.query.vodId;
+  created () {
+    this.vodId = this.$route.query.vodId
   },
-  mounted(){
-     this.getmoviedetailFun();
-    
+  mounted () {
+    this.getmoviedetailFun()
   },
-  methods:{
-    gobackFun(){
-       this.$router.go(-1);
-     },
+  methods: {
+    gobackFun () {
+      this.$router.go(-1)
+    },
 
     //  获取影视详情
-    getmoviedetailFun(){
-       let that=this;
-       let objStr=JSON.parse(localStorage.getItem('uidAtoken'));
-       objStr.vod_id=this.vodId;
-       IMService.getmoviedetail(objStr)
-         .then(function(res){
-            console.log('获取影视详情');
-            console.log(res);
-            that.details=res.data;
-            that.hotsList=res.data.other;
-         })
+    getmoviedetailFun () {
+      let that = this
+      let objStr = JSON.parse(localStorage.getItem('uidAtoken'))
+      objStr.vod_id = this.vodId
+      IMService.getmoviedetail(objStr)
+        .then(function (res) {
+          console.log('获取影视详情')
+          console.log(res)
+          that.details = res.data
+          that.hotsList = res.data.other
+        })
     },
 
     // 展示全部集数
-    selectedNumCLick(){
-       this.allNum=false;
+    selectedNumCLick () {
+      this.allNum = false
     },
 
     // 立即播放
-    playFun(){
-       this.tipShow=true;
+    playFun () {
+      this.tipShow = false
+      this.$router.push({name: 'videoplay', query: {vodId: this.vodId}})
     },
-    
+
+    // 展开详情
+    openCont () {
+      var details = document.getElementById('details_txt')
+      var zhankai = document.getElementById('zhankai')
+      if (zhankai.innerHTML == '展开') {
+        details.classList.remove('details_txt')
+        details.classList.add('details_txt_all')
+        zhankai.innerHTML = '收起'
+      } else {
+        details.classList.remove('details_txt_all')
+        details.classList.add('details_txt')
+        zhankai.innerHTML = '展开'
+      }
+    }
   }
 }
 </script>
@@ -209,20 +220,25 @@ export default {
             margin-top:20px;
          }
        }
-      
+
     }
 
     // 简介
     .details-jjie{
       padding: 0 25px;
       position: relative;
-      div{
+      .details_txt{
         text-align: left;
         overflow: hidden;
         text-overflow: ellipsis;
         display: -webkit-box;
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
+        font-size: 24px;
+        color: #9D9D9D;
+      }
+      .details_txt_all{
+        text-align: left;
         font-size: 24px;
         color: #9D9D9D;
       }
@@ -254,7 +270,7 @@ export default {
         }
         .details-num-ul{
           padding-bottom: 20px;
-          li{ 
+          li{
             float: left;
             width: 82.7px;
             padding:20px 0;
@@ -267,7 +283,7 @@ export default {
             color:#27FCB9;
             margin-left: 10px;
           }
-          
+
         }
         .details-num-more{
           width: 32px;
@@ -290,10 +306,10 @@ export default {
                margin-left: 20px;
                color: #9D9D9D;
              }
-           } 
+           }
         }
     }
-      
+
     // 无数据
     .pingdaoNodata{
       margin-top:30px;
@@ -314,7 +330,7 @@ export default {
       background: none!important;
       .details-popupDiv{
           background: none!important;
-          padding: 100px 50px 0 50px; 
+          padding: 100px 50px 0 50px;
          .details-popupDiv2{
             width:450px;
             height: 300px;
@@ -357,11 +373,9 @@ export default {
             }
          }
       }
-      
+
     }
 
-    
-
   }
- 
+
 </style>

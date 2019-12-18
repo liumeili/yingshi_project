@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-     <div class="ys-goback" v-if="$route.meta.title!='首页'&&$route.meta.title!='热点'&&$route.meta.title!='任务'&&$route.meta.title!='我的'&&$route.meta.title!='频道列表'" @click="gobackFun()"><span>{{$route.meta.title}}</span></div>
+     <div class="ys-goback" v-if="$route.meta.title!='首页'&&$route.meta.title!='热点'&&$route.meta.title!='任务'&&$route.meta.title!='我的'&&$route.meta.title!='频道列表'&&$route.meta.title!='详情'" @click="gobackFun()"><span>{{$route.meta.title}}</span></div>
     <router-view/>
   </div>
 </template>
@@ -9,23 +9,22 @@
 import {IMService} from '@/service/RiziServices.js'
 export default {
   name: 'App',
-  mounted(){
-     this.getConfigFun();
+  mounted () {
+    this.getConfigFun()
   },
-  methods:{
+  methods: {
     // 返回
-     gobackFun(){
-       alert();
-       this.$router.go(-1);
-     },
+    gobackFun () {
+      this.$router.go(-1)
+    },
 
     //  获取公共配置
-    getConfigFun(){
-        IMService.getConfig()
-          .then(function(res){
-             console.log('获取公共配置');
-             console.log(res);
-          })
+    getConfigFun () {
+      IMService.getConfig()
+        .then(function (res) {
+          console.log('获取公共配置')
+          console.log(res)
+        })
     }
   }
 }
@@ -42,6 +41,5 @@ export default {
   color: #fff;
   font-size: 30px;
 }
-
 
 </style>

@@ -60,6 +60,10 @@ class iMService extends AxiosBaseService {
     getlikevod(params) {
         return this.request('?s=App-User-getlikevod', 'get', params);
     }
+    // 获取点赞影片列表接口
+    getlikevod(params) {
+        return this.request('?s=App-User-getlikevod', 'get', params);
+    }
 
     // 获取影视详情页信息的接口
     getmoviedetail(params) {

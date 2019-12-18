@@ -58,6 +58,7 @@
         <div class="title02">联系客服小姐姐，在线解决问题</div>
       </div>
       <img src="../assets/img/my_bg.jpg"/>
+      <div class="close_model"></div>
     </van-popup>
   </div>
 </template>

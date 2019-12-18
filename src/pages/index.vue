@@ -243,13 +243,13 @@ export default {
 
     // 搜索
     .index-topSearch{
-      display: flex;
+      display: flex;               
       align-items: center;
       position: fixed;
       width: 100%;
       top:0;
       left: 0;
-      z-index:9999;
+      z-index:9999;  
       padding: 20px;
      background: #0D1225;
       img{
