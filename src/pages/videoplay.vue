@@ -1,15 +1,15 @@
 <template>
   <div class="videoplay">
     <div class="videoplaying" id="dplayer">
-      <HelloWorld></HelloWorld>
+     <iframe id="show-iframe" frameborder="0" scrolling="no" :src="videoUrl.play_url"></iframe>
     </div>
     <div class="jieshao">
-      <div class="video-titleLine">
+      <div class="video-titleLine" @click="openCont()">
         <span>{{details.vod_name}}</span>
         <img src="~@/assets/img/moreIcon.png" v-if="opendetail == false"/>
-        <span @click="openCont()" id="jianjie" v-if="opendetail == false">简介</span>
+        <span id="jianjie" v-if="opendetail == false">简介</span>
         <img src="~@/assets/img/moreCloseIcon.png" class="shouqiImg" v-if="opendetail == true"/>
-        <span @click="openCont()" id="shouqi" v-if="opendetail == true">收起</span>
+        <span id="shouqi" v-if="opendetail == true">收起</span>
       </div>
       <div class="jieshao_xinxi">
         评分<span>{{details.vod_gold}}</span>&nbsp;&nbsp;年份<span>{{details.vod_year}}</span>&nbsp;&nbsp;
@@ -20,12 +20,12 @@
         <div class="details_txt" id="details_txt">{{details.vod_content}}</div>
       </div>
       <div class="xiazaiVideo"  v-if="opendetail == false">
-        <img src="../assets/img/my_xiazai.png"/>
-        <span>下载影片&nbsp;</span>
-        <img src="../assets/img/my_dianzan.png"/>
-        <span>3w+&nbsp;</span>
+        <span>&nbsp;3100</span>
         <img src="../assets/img/my_shoucang.png"/>
-        <span>3100</span>
+        <span>&nbsp;3w+&nbsp;&nbsp;</span>
+        <img src="../assets/img/my_dianzan.png"/>
+        <span>&nbsp;下载影片&nbsp;&nbsp;</span>
+        <img src="../assets/img/my_xiazai.png"/>
       </div>
     </div>
 
@@ -33,37 +33,32 @@
     <div class="details-num">
       <div class="details-num-title">
         <span>剧集</span>
-        <span>来源：风行</span>
+        <div @click="xianluOpen()">来源：<span>{{xianluName}}</span></div>
+        <div class="xianlu" v-if="xianluStaus">
+          <div v-for="(item,key,index) in xianluList" @click="xianluSelect(item.player_name_zh,index,key)">{{item.player_name_zh}}</div>
+        </div>
       </div>
       <div class="details-num6" v-if="allNum==false">
         <ul class="details-num-ul">
-          <li class="details-numLiHover">1</li>
-          <li @click="selectedNumCLick()">2</li>
-          <li>3</li>
-          <li>4</li>
-          <li>5</li>
-          <li>6</li>
+          <li v-for="(item, index) in jilist" @click="selectedNumCLick(index)" :class="{'details-numLiHover':jishuOne==index}" v-if="index<6">
+            {{item.title[0]=="第"?item.title.substring(1,item.title.length-1):item.title}}
+          </li>
           <div class="clearBoth"></div>
         </ul>
-        <img src="../assets/img/moreyd.png" class="details-num-more" @click="allNum=true">
+        <img src="../assets/img/moreyd.png" class="details-num-more" @click="allNum=true" v-if="allmore">
       </div>
       <!-- 全部集数 -->
       <div class="details-numAll" v-if="allNum==true">
         <div class="details-numAll-tab">
-          <span style="color:#27FCB9;">1-30</span>
-          <span>30-60</span>
-          <span>61-90</span>
+          <div class="details-numAll-tabs" v-for="(item, index) in jiTabList" :class="{'numAllActive':jishuStaus == index}"
+             @click="jishuTab(index)">{{index * 30 + 1}}-{{index * 30 + jiTabList[index].length}}</div>
+          <div class="guanbijishu" @click="closeJishu()"><img src="../assets/img/my_vip_guanbi.png"/></div>
         </div>
-        <ul class="details-num-ul">
-          <li class="details-numLiHover">1</li>
-          <li @click="selectedNumCLick()">2</li>
-          <li>3</li>
-          <li>4</li>
-          <li>5</li>
-          <li>6</li>
-          <li>7</li>
-          <li>8</li>
-          <li>9</li>
+        <div class="clearBoth"></div>
+        <ul class="details-num-ul" v-for="(item, index) in jiTabList" v-if="jishuStaus == index">
+          <li v-for="(list, ind) in item" @click="selectedNumCLick(index * 30 + ind)" :class="{'details-numLiHover':jishuOne==(index * 30 + ind)}">
+            {{list.title.substring(1,list.title.length-1)}}
+          </li>
           <div class="clearBoth"></div>
         </ul>
       </div>
@@ -94,15 +89,11 @@
 </template>
 
 <script>
-// import VueDPlayer from './VueDPlayerHls'
 import {IMService} from '../service/RiziServices.js'
-// import VueDPlayer from 'vue-dplayer'
-// import 'vue-dplayer/vue-dplayer.css'
 import HelloWorld from '../components/HelloWorld.vue'
 
 export default{
   components: {
-    // 'd-player': VueDPlayer
     HelloWorld
   },
   data () {
@@ -110,15 +101,29 @@ export default{
       details: {}, // 影视详情
       opendetail: false,
       hotsList: [], // 热播
-      allNum: false // 是否展示全部集数
+      allNum: false, // 是否展示全部集数
+      videoUrl: {},
+      xianluStaus: false, // 线路默认隐藏
+      xianluList: {}, // 线路列表
+      xianluName: '', // 线路名称
+      xlList: [],
+      allmore: false, // 是否显示更多集数
+      jilist: [], // 更多集数列表
+      jishuStaus: 1, // 集数范围选中状态
+      jishuOne: 0, // 单个集数的状态
+      // video_sid: 1, // 播放线路的id号
+      // video_pid: 1, // 播放集数id号
+      jiTabList: [] // 全部集数列表分段显示
     }
   },
   created () {
     this.vodId = this.$route.query.vodId
+    this.video_sid = this.$route.query.sid
+    this.video_pid = this.$route.query.pid
   },
   mounted () {
     this.getmoviedetailFun()
-    this.DPlayerC()
+    this.getplayurl()
   },
   methods: {
     // 展开详情
@@ -145,13 +150,83 @@ export default{
           console.log(res)
           that.details = res.data
           that.hotsList = res.data.other
+          that.xianluList = res.data.vod_play_list
+          that.jilist = []
+          that.jiTabList = []
+          that.xlList = []
+          console.log(that.xianluList)
+          for (let i in that.xianluList) {
+            that.xlList.push(that.xianluList[i])
+          }
+          that.xianluName = that.xlList[0].player_name_zh
+          that.jilist = that.xlList[0].son
+          console.log(that.jilist)
+          if (that.jilist.length > 6) {
+            that.allmore = true
+          }
+          for (var i = 0, len = that.jilist.length; i < len; i += 30) {
+            that.jiTabList.push(that.jilist.slice(i, i + 30))
+          }
+          console.log(that.jiTabList)
+          that.jishuTab(0)
+          if (that.video_pid > 6) {
+            that.allNum = true
+          }
+          that.selectedNumCLick(that.video_pid - 1)
         })
     },
-
-    DPlayerC () {
+    // 获取播放url
+    getplayurl () {
+      let that = this
+      let objStr = JSON.parse(localStorage.getItem('uidAtoken'))
+      objStr.vod_id = this.vodId
+      objStr.sid = this.video_sid
+      objStr.pid = this.video_pid
+      console.log(objStr)
+      IMService.getplayurl(objStr)
+        .then(function (res) {
+          console.log('获取播放url')
+          console.log(res)
+          that.videoUrl = res.data
+          console.log(that.videoUrl)
+        })
     },
     // 展示全部集数
-    selectedNumCLick () {
+    selectedNumCLick (index) {
+      this.jishuOne = index
+      this.video_pid = index + 1
+      this.getplayurl()
+      console.log(this.video_pid, this.video_sid)
+    },
+    toDetailsFun (id) {
+      this.details = {}
+      this.vodId = id
+      this.getmoviedetailFun()
+      this.jishuTab(0)
+      this.selectedNumCLick(0)
+    },
+    // 显示来源线路
+    xianluOpen () {
+      if (this.xianluStaus === false) {
+        this.xianluStaus = true
+      } else {
+        this.xianluStaus = false
+      }
+    },
+    xianluSelect (name, index, key) {
+      this.jishuTab(0)
+      this.selectedNumCLick(0)
+      this.xianluName = name
+      this.video_sid = this.xianluList[key].player_sid
+      this.getplayurl()
+      this.xianluStaus = false
+    },
+    // 集数范围选择
+    jishuTab (a) {
+      this.jishuStaus = a
+    },
+    // 关闭集数
+    closeJishu () {
       this.allNum = false
     }
   }
@@ -159,7 +234,6 @@ export default{
 </script>
 
 <style lang="less">
-  // @import '../assets/css/DPlayer.min.css';
   .ys-goback{
     background: none!important;
   }
@@ -168,8 +242,10 @@ export default{
     .videoplaying{
       width: 100%;
       height: 407px;
-      background-image: url(../assets/img/my_bg.jpg);
-      background-size: 100% 100%;
+      iframe{
+        width: 100%;
+        height: 407px;
+      }
     }
     .video-titleLine{
       text-align: left;
@@ -220,14 +296,20 @@ export default{
     }
     .xiazaiVideo{
       width: calc(100% - 35px);
+      height: 50px;
       text-align: right;
       color: #9D9D9D;
       font-size: 18px;
-      padding-top: 12px;
       margin-right: 35px;
       img{
-        width: 25px;
-        height: 23px;
+        float: right;
+        width: 30px;
+        height:30px;
+        margin-top: 10px;
+      }
+      span{
+        float: right;
+        line-height: 50px;
       }
     }
     // 集数
@@ -241,6 +323,20 @@ export default{
            align-items: center;
            padding: 25px;
            border-bottom: 1px solid #252633;
+           .xianlu{
+             position: absolute;
+             right: 30px;
+             top: 65px;
+             width: 143px;
+             height: 110px;
+             padding-top: 50px;
+             background-image: url(../assets/img/xianlu_bg.png);
+             background-size: 100% 100%;
+             z-index: 9999;
+             color: #C5C5C5;
+             font-size: 24px;
+             line-height: 50px;
+           }
         }
         .details-num-ul{
           padding-bottom: 20px;
@@ -249,13 +345,12 @@ export default{
             width: 82.7px;
             padding:20px 0;
             background: #0D1225;
-            margin-left: 25px;
+            margin-left: 20px;
             margin-top:20px;
           }
           .details-numLiHover{
             background: none;
             color:#27FCB9;
-            margin-left: 10px;
           }
 
         }
@@ -269,16 +364,31 @@ export default{
         .details-numAll{
            .details-numAll-tab{
              padding-top: 20px;
-             display: flex;
-             span{
+             .details-numAll-tabs{
+               float: left;
                width: 150px;
-               padding: 18px 0;
+               padding: 16px 0;
                text-align: center;
                background: #0D1225;
                display: block;
                border-radius: 50px;
                margin-left: 20px;
                color: #9D9D9D;
+             }
+             .numAllActive{
+               color:#27FCB9;
+             }
+             .guanbijishu{
+               position: absolute;
+               right: 20px;
+               width: 60px;
+               height: 50px;
+               img{
+                 width: 30px;
+                 height: 30px;
+                 margin-top: 10px;
+                 opacity: 0.8;
+               }
              }
            }
         }
@@ -299,7 +409,4 @@ export default{
       }
     }
   }
-</style>
-<style scoped>
-  /* @import '../assets/css/DPlayer.min.css'; */
 </style>

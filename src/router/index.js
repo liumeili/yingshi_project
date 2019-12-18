@@ -74,7 +74,7 @@ export default new Router({
       name: 'details',
       component:() => import('../pages/details.vue'),
       meta:{
-        title:'详情'
+        title:''
       }
     },{
       path: '/mysetting',

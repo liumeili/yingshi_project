@@ -23,44 +23,36 @@
           <div class="details-num">
             <div class="details-num-title">
               <span>剧集</span>
-              <span>来源：风行</span>
+              <div @click="xianluOpen()">来源：<span>{{xianluName}}</span></div>
+              <div class="xianlu" v-if="xianluStaus">
+                <div v-for="(item,key,index) in xianluList" @click="xianluSelect(item.player_name_zh,index,key)">{{item.player_name_zh}}</div>
+              </div>
             </div>
-
             <div class="details-num6" v-if="allNum==false">
               <ul class="details-num-ul">
-                <li class="details-numLiHover">1</li>
-                <li @click="selectedNumCLick()">2</li>
-                <li>3</li>
-                <li>4</li>
-                <li>5</li>
-                <li>6</li>
+                <li v-for="(item, index) in jilist" @click="selectedNumCLick(index)" :class="{'details-numLiHover':jishuOne==index}" v-if="index<6">
+                  {{item.title[0]=="第"?item.title.substring(1,item.title.length-1):item.title}}
+                </li>
                 <div class="clearBoth"></div>
               </ul>
-              <img src="../assets/img/moreyd.png" class="details-num-more" @click="allNum=true">
+              <img src="../assets/img/moreyd.png" class="details-num-more" @click="allNum=true" v-if="allmore">
             </div>
             <!-- 全部集数 -->
             <div class="details-numAll" v-if="allNum==true">
               <div class="details-numAll-tab">
-                <span style="color:#27FCB9;">1-30</span>
-                <span>30-60</span>
-                <span>61-90</span>
+                <div class="details-numAll-tabs" v-for="(item, index) in jiTabList" :class="{'numAllActive':jishuStaus == index}"
+                   @click="jishuTab(index)">{{index * 30 + 1}}-{{index * 30 + jiTabList[index].length}}</div>
+                <div class="guanbijishu" @click="closeJishu()"><img src="../assets/img/my_vip_guanbi.png"/></div>
               </div>
-              <ul class="details-num-ul">
-                <li class="details-numLiHover">1</li>
-                <li @click="selectedNumCLick()">2</li>
-                <li>3</li>
-                <li>4</li>
-                <li>5</li>
-                <li>6</li>
-                <li>7</li>
-                <li>8</li>
-                <li>9</li>
+              <div class="clearBoth"></div>
+              <ul class="details-num-ul" v-for="(item, index) in jiTabList" v-if="jishuStaus == index">
+                <li v-for="(list, ind) in item" @click="selectedNumCLick(index * 30 + ind)" :class="{'details-numLiHover':jishuOne==(index * 30 + ind)}">
+                  {{list.title.substring(1,list.title.length-1)}}
+                </li>
                 <div class="clearBoth"></div>
               </ul>
             </div>
-
           </div>
-
           <!-- 热播 -->
           <div class="details-hots">
             <div class="index-titleLine">
@@ -91,7 +83,7 @@
                      <div class="details-popupText">可看次数不足，可选择一下获取方式</div>
                      <div class="details-popupBtn">
                        <span>分享</span>
-                       <span>充值</span>
+                       <span>充值</span>6
                      </div>
                   </div>
               </div>
@@ -116,7 +108,18 @@ export default {
       details: {}, // 影视详情
       allNum: false, // 是否展示全部集数
       hotsList: [], // 热播
-      tipShow: false // 弹框展示
+      tipShow: false, // 弹框展示
+      xianluStaus: false, // 线路默认隐藏
+      xianluList: {}, // 线路列表
+      xianluName: '', // 线路名称
+      xlList: [],
+      allmore: false, // 是否显示更多集数
+      jilist: [], // 更多集数列表
+      jishuStaus: 1, // 集数范围选中状态
+      jishuOne: 0, // 单个集数的状态
+      video_sid: 1, // 播放线路的id号
+      video_pid: 1, // 播放集数id号
+      jiTabList: [] // 全部集数列表分段显示
     }
   },
   created () {
@@ -141,18 +144,44 @@ export default {
           console.log(res)
           that.details = res.data
           that.hotsList = res.data.other
+          that.xianluList = res.data.vod_play_list
+          console.log(that.xianluList)
+          for (let i in that.xianluList) {
+            that.xlList.push(that.xianluList[i])
+          }
+          that.xianluName = that.xlList[0].player_name_zh
+          that.jilist = that.xlList[0].son
+          if (that.jilist.length > 6) {
+            that.allmore = true
+          }
+          for (var i = 0, len = that.jilist.length; i < len; i += 30) {
+            that.jiTabList.push(that.jilist.slice(i, i + 30))
+          }
+          console.log(that.jiTabList)
+          that.jishuTab(0)
         })
     },
-
     // 展示全部集数
-    selectedNumCLick () {
-      this.allNum = false
+    selectedNumCLick (index) {
+      this.jishuOne = index
+      this.video_pid = index + 1
+      console.log(this.video_pid, this.video_sid)
+      this.playFun()
     },
-
     // 立即播放
     playFun () {
-      this.tipShow = false
-      this.$router.push({name: 'videoplay', query: {vodId: this.vodId}})
+      let that = this
+      let objStr = JSON.parse(localStorage.getItem('uidAtoken'))
+      objStr.vod_id = this.vodId
+      IMService.getuserinfo(objStr)
+        .then(function (res) {
+          console.log(res.data.userinfo.level_detail)
+          if (res.data.userinfo.level_detail.left_play_time == 0) {
+            that.tipShow = true
+          } else {
+            that.$router.push({name: 'videoplay', query: {vodId: that.vodId, pid: that.video_pid, sid: that.video_sid}})
+          }
+        })
     },
 
     // 展开详情
@@ -168,6 +197,41 @@ export default {
         details.classList.add('details_txt')
         zhankai.innerHTML = '展开'
       }
+    },
+    // 热播影视
+    toDetailsFun (id) {
+      this.details = {}
+      this.vodId = id
+      this.getmoviedetailFun()
+    },
+    // 显示来源线路
+    xianluOpen () {
+      if (this.xianluStaus === false) {
+        this.xianluStaus = true
+      } else {
+        this.xianluStaus = false
+      }
+    },
+    xianluSelect (name, index, key) {
+      this.xianluName = name
+      this.video_sid = this.xianluList[key].player_sid
+      this.jilist = []
+      this.jilist = this.xlList[index].son
+      console.log(this.jilist)
+      this.jiTabList = []
+      for (var i = 0, len = this.jilist.length; i < len; i += 30) {
+        this.jiTabList.push(this.jilist.slice(i, i + 30))
+      }
+      this.xianluStaus = false
+      this.jishuTab(0)
+    },
+    // 集数范围选择
+    jishuTab (a) {
+      this.jishuStaus = a
+    },
+    // 关闭集数
+    closeJishu () {
+      this.allNum = false
     }
   }
 }
@@ -225,7 +289,7 @@ export default {
 
     // 简介
     .details-jjie{
-      padding: 0 25px;
+      padding: 0 25px 10px 25px;
       position: relative;
       .details_txt{
         text-align: left;
@@ -250,7 +314,7 @@ export default {
         padding-left: 8px;
         text-align: left;
         color: #27FCB9;
-        bottom:-2px;
+        bottom:-20px;
         right: 20px;
         font-size: 26px;
       }
@@ -267,6 +331,20 @@ export default {
            align-items: center;
            padding: 25px;
            border-bottom: 1px solid #252633;
+           .xianlu{
+             position: absolute;
+             right: 30px;
+             top: 65px;
+             width: 143px;
+             height: 110px;
+             padding-top: 50px;
+             background-image: url(../assets/img/xianlu_bg.png);
+             background-size: 100% 100%;
+             z-index: 9999;
+             color: #C5C5C5;
+             font-size: 24px;
+             line-height: 50px;
+           }
         }
         .details-num-ul{
           padding-bottom: 20px;
@@ -281,9 +359,7 @@ export default {
           .details-numLiHover{
             background: none;
             color:#27FCB9;
-            margin-left: 10px;
           }
-
         }
         .details-num-more{
           width: 32px;
@@ -295,16 +371,32 @@ export default {
         .details-numAll{
            .details-numAll-tab{
              padding-top: 20px;
-             display: flex;
-             span{
+             .details-numAll-tabs{
+               float: left;
                width: 150px;
-               padding: 18px 0;
+               padding: 16px 0;
+               margin-bottom: 5px;
                text-align: center;
                background: #0D1225;
                display: block;
                border-radius: 50px;
                margin-left: 20px;
                color: #9D9D9D;
+             }
+             .numAllActive{
+               color:#27FCB9;
+             }
+             .guanbijishu{
+               position: absolute;
+               right: 20px;
+               width: 60px;
+               height: 50px;
+               img{
+                 width: 30px;
+                 height: 30px;
+                 margin-top: 10px;
+                 opacity: 0.8;
+               }
              }
            }
         }

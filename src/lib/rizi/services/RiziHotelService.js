@@ -70,6 +70,16 @@ class iMService extends AxiosBaseService {
         return this.request('?s=App-User-getmoviedetail', 'get', params);
     }
 
+	// 获取影视播网页url接口,调这个接口，会累加当日的播放次数
+	getplayurl(params) {
+	    return this.request('?s=App-User-getplayurl', 'get', params);
+	}
+  
+  // 获取用户信息接口,在需要的时候调用
+  getuserinfo(params) {
+      return this.request('?s=App-User-getuserinfo', 'get', params);
+  }
+
 
 
 

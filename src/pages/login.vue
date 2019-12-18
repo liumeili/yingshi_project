@@ -17,9 +17,9 @@
         <div class="login-form-input">
           <span class="login-form-span">验证码</span>
           <van-field v-model="formData.code" placeholder="请输入验证码" />
-          <span class="login-form-code" @click="clickCodeFun()" v-if="showTime==false">获取验证码</span>
-          <span class="login-form-code" v-if="showTime==true">{{times}} s</span>
         </div>
+        <span class="login-form-code" @click="clickCodeFun()" v-if="showTime==false">获取验证码</span>
+        <span class="login-form-code" v-if="showTime==true">{{times}} s</span>
         <!-- button -->
         <div class="login-form-btn" @click="phoneCodeLoginFun()">登录</div>
       </div>
@@ -187,7 +187,7 @@ export default {
   z-index: 100;
  }
  .login_contain{
- 	position: absolute;
+ 	position: fixed;
  	top: 0;
  	width: 100%;
  	height: 100%;
@@ -217,7 +217,7 @@ export default {
     .van-cell{
       width: 530px;
       padding: 18px 40px;
-      background: #4C4E63;
+      background-color: #4C4E63;
       color: #fff;
       border-radius: 70px;
       font-size: 32px;
@@ -226,12 +226,12 @@ export default {
     .van-field__control{
       color: #fff;
     }
-    // 输入信息
+     /* 输入信息 */
     .login-form{
+      position: relative;
       margin-top:60px;
        .login-form-input{
          margin-bottom:40px;
-         position: relative;
           .login-form-span{
             display: block;
             width: 510px;
@@ -241,19 +241,19 @@ export default {
             margin:0 auto;
             text-align: left;
           }
-          .login-form-code{
-             position: absolute;
-             right: 125px;
-             bottom:18px;
-             font-size: 30px;
-             display: block;
-             border-left:2px solid #27FCB9;
-             padding: 8px 20px;
-             color: #27FCB9;
-             width: 150px;
-          }
        }
-      //  登录
+       .login-form-code{
+           position: absolute;
+           right: 125px;
+           bottom:180px;
+           font-size: 28px;
+           display: block;
+           border-left:2px solid #27FCB9;
+           padding: 8px 20px;
+           color: #27FCB9;
+           width: 155px;
+        }
+      /* 登录 */
        .login-form-btn{
          width: 530px;
          padding: 25px 0;
