@@ -183,6 +183,11 @@ export default {
     },
     getssList () {
       let that = this
+      if (localStorage.getItem('uidAtoken') != null) {
+      } else {
+        Toast('请重新登录')
+        return
+      }
       let objStr = JSON.parse(localStorage.getItem('uidAtoken'))
       objStr.page = 1
       objStr.limit = 10
@@ -252,6 +257,11 @@ export default {
     },
     searchItem (item) {
       let that = this
+      if (localStorage.getItem('uidAtoken') != null) {
+      } else {
+        Toast('请重新登录')
+        return
+      }
       let objStr = JSON.parse(localStorage.getItem('uidAtoken'))
       objStr.page = 1
       objStr.limit = 10
@@ -275,7 +285,18 @@ export default {
     },
     // 跳转到观看历史记录页面
     goHistoryPage (url) {
-      this.$router.push({name: url})
+      if (url == 'myviewhistory') {
+        if (localStorage.getItem('uidAtoken') != null) {
+          this.$router.push({name: url})
+        } else {
+          Toast('请重新登录！')
+          localStorage.clear()
+          this.$router.push({name: 'login'})
+        }
+      } else {
+        this.$router.push({name: url})
+      }
+      
     },
     // 首页列表页接口
     mainlistFun () {

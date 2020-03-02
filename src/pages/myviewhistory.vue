@@ -19,7 +19,7 @@
 
 <script>
 import {IMService} from '../service/RiziServices.js'
-import { RadioGroup, Radio, Popup } from 'vant'
+import { RadioGroup, Radio, Popup, Toast } from 'vant'
 export default {
   components: {
     [RadioGroup.name]: RadioGroup,
@@ -28,11 +28,17 @@ export default {
   },
   data () {
     return {
-      HistoryList: [], // 历史记录
+      HistoryList: [] // 历史记录
     }
   },
   mounted () {
-    this.getHistoryListFun()
+    if (localStorage.getItem('uidAtoken') != null) {
+      this.getHistoryListFun()
+    } else {
+      Toast('请登录')
+      localStorage.clear()
+      this.$router.push({name: 'login'})
+    }
   },
   methods: {
     getHistoryListFun () {

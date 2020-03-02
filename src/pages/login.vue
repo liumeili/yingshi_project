@@ -119,79 +119,79 @@ export default {
 
 <style lang='less' >
  .bg01{
- 	position: absolute;
- 	top: -3rem;
- 	left: -1rem;
- 	width: 150%;
- 	height: 150%;
- 	background-image: url(../assets/img/login_bg01.png);
- 	background-size: 160% 160%;
- 	background-position: center;
- 	animation:bgDonghua 15s linear infinite;
-  z-index: 10;
+    position: absolute;
+    top: -3rem;
+    left: -1rem;
+    width: 150%;
+    height: 150%;
+    background-image: url(../assets/img/login_bg01.png);
+    background-size: 160% 160%;
+    background-position: center;
+    animation:bgDonghua 15s linear infinite;
+    z-index: 10;
  }
  @keyframes bgDonghua {
-     0% {
+    0% {
          top: -3rem;
- 		left: -1rem;
-     }
- 	10% {
- 		top: -2rem;
- 		left: -1rem;
- 	}
- 	20% {
- 		top: -1rem;
- 		left: -1rem;
- 	}
- 	30% {
- 		top: -2rem;
- 		left: -1.5rem;
- 	}
- 	40% {
- 		top: -3rem;
- 		left: -2rem;
- 	}
-     50% {
-         top: -3rem;
- 		left: -1.5rem;
-     }
- 	60% {
- 	    top: -3rem;
- 		left: -1rem;
- 	}
- 	70% {
- 	    top: -3.7rem;
- 		left: -0.5rem;
- 	}
- 	80% {
- 	    top: -4.2rem;
- 		left: 0rem;
- 	}
- 	90% {
- 	    top: -3.5rem;
- 		left: -0.5rem;
- 	}
- 	100% {
- 	    top: -3rem;
- 		left: -1rem;
- 	}
+        left: -1rem;
+    }
+    10% {
+      top: -2rem;
+      left: -1rem;
+    }
+    20% {
+      top: -1rem;
+      left: -1rem;
+    }
+    30% {
+      top: -2rem;
+      left: -1.5rem;
+    }
+    40% {
+      top: -3rem;
+      left: -2rem;
+    }
+    50% {
+      top: -3rem;
+      left: -1.5rem;
+    }
+    60% {
+        top: -3rem;
+      left: -1rem;
+    }
+    70% {
+        top: -3.7rem;
+      left: -0.5rem;
+    }
+    80% {
+        top: -4.2rem;
+      left: 0rem;
+    }
+    90% {
+        top: -3.5rem;
+      left: -0.5rem;
+    }
+    100% {
+        top: -3rem;
+      left: -1rem;
+    }
  }
  .bg02{
- 	position: absolute;
- 	top: 0;
- 	bottom: 0;
- 	width: 100%;
- 	height: 100%;
- 	background-image: url(../assets/img/login_bg02.png);
- 	background-size: cover;
-  z-index: 100;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url(../assets/img/login_bg02.png);
+    background-size: cover;
+    z-index: 100;
  }
  .login_contain{
- 	position: fixed;
- 	top: 0;
- 	width: 100%;
- 	height: 100%;
-  z-index: 99999;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 999;
  }
 
   .login{

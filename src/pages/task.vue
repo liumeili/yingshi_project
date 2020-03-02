@@ -1,16 +1,21 @@
 <template>
   <div class="task">
     <div class="task_title">任务
-      <img src="../assets/img/task_renwu.png"/>
+      <img src="../assets/img/task_renwu.png" @click="goMydianzan('sharelist')"/>
     </div>
     <div class="buyvip_head">
-      <img :src="userInfo.user_avatar" class="headBG"/>
+      <img :src="userInfo.user_avatar" class="headBG" v-if="nologin"/>
+      <img src="../assets/img/nopeopleBG.png" class="headBG" v-if="!nologin"/>
       <div class="buyvip_head_hei">
         <div class="touxiang">
-          <div class="myImge"><img :src="userInfo.user_avatar"/></div>
+          <div class="myImge">
+            <img :src="userInfo.user_avatar" v-if="nologin"/>
+            <img src="../assets/img/nopeople.png" v-if="!nologin"/>
+          </div>
         </div>
         <div class="vipInfo">
-          <span>用户：{{userInfo.user_name}}</span><br>
+          <span v-if="nologin">用户：{{userInfo.user_name}}<br></span>
+          <p v-if="!nologin" @click="gologinPage()">未登录</p>
           <span class="openqx" v-if="vipInfo.is_vip == 0" @click="goMydianzan('mybuyvip')">开通VIP享受无限次下载</span>
           <span class="openqx" v-if="vipInfo.is_vip == 1">已为你开启所有权限</span>
           <img src="../assets/img/my_novip.png" v-if="vipInfo.is_vip == 0" @click="goMydianzan('mybuyvip')"/>
@@ -42,7 +47,7 @@
       <div class="index-titleLine"><span>推广链接</span></div>
       <img :src="shareList.share_code_base64"/>
       <div class="btn">
-        <button @click="savePicture()">保存相册</button>
+        <button>长按保存二维码</button>
         <button class="code" :data-clipboard-text="shareList.share_url"  @click="copyFun">复制链接</button>
       </div>
       <div class="shareInfo">
@@ -73,11 +78,20 @@ export default {
       userInfo: {}, // 用户信息
       vipInfo: {}, // 用户VIP信息
       levelDetail: {}, // 用户等级信息
-      pTXT: ''
+      pTXT: '',
+      nologin: false,
+      nopeople: '../assets/img/nopeople.png'
+
     }
   },
   mounted () {
-    this.getshareInfo()
+    if (localStorage.getItem('uidAtoken') != null) {
+      this.getshareInfo()
+      this.nologin = true
+    } else {
+      Toast('请重新登录!')
+      this.nologin = false
+    }
   },
   methods: {
     // 跳转至帮助页面
@@ -118,22 +132,9 @@ export default {
     goMydianzan (url) {
       this.$router.push({name: url})
     },
-    savePicture () {
-      let picurl = this.shareList.share_code_base64
-      let picname = '_downloads/erwei.png'
-      var dtask = plus.downloader.createDownload(picurl, {}, function (d, status) {
-        // 下载完成
-        if (status == 200) {
-          plus.gallery.save(picname, function () {
-            mui.toast('已保存到手机相册')
-          }, function () {
-            mui.toast('保存失败，请重试！')
-          })
-        } else {
-          alert('Download:' + status)
-        }
-      })
-      dtask.start() // 开始下载
+    gologinPage () {
+      localStorage.clear()
+      this.$router.push({name: 'login'})
     }
   }
 }
@@ -202,6 +203,9 @@ export default {
           margin: 40px auto 0 18px;
           padding-top: 19px;
           line-height: 40px;
+          p{
+            padding-top: 20px;
+          }
           .openqx{
             float: left;
             font-size: 21px;
@@ -293,7 +297,7 @@ export default {
           background:linear-gradient(84deg,rgba(36,217,200,1),rgba(80,208,111,1));
           border-radius:50px;
           color: #000000;
-          font-size: 34px;
+          font-size: 32px;
         }
         button:last-child{
           margin-left: 50px;
@@ -306,5 +310,4 @@ export default {
       }
     }
   }
-
 </style>
