@@ -119,11 +119,19 @@ export default new Router({
         title:''
       }
     },{
+<<<<<<< HEAD
       path: '/help',
       name: 'help',
       component:() => import('../pages/help.vue'),
       meta:{
         title:'帮助'
+=======
+      path: '/test',
+      name: 'test',
+      component:() => import('../pages/test.vue'),
+      meta:{
+        title:''
+>>>>>>> add764bc8b22f7a35422791d5d23bcbcf0adca5c
       }
     }
   ]

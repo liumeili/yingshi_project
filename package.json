@@ -20,9 +20,11 @@
     "js-md5": "^0.7.3",
     "mescroll.js": "^1.4.1",
     "vant": "^2.2.16",
+    "videojs-contrib-hls": "^5.15.0",
     "vue": "^2.5.2",
     "vue-dplayer": "0.0.10",
     "vue-router": "^3.0.1",
+    "vue-video-player": "^5.0.2",
     "vue-wechat-title": "^2.0.5"
   },
   "devDependencies": {
