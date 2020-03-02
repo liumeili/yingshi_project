@@ -78,7 +78,7 @@
           </div>
           <div class="index-tuijian">
             <ul>
-              <li v-for="(item,index) in ranklist" :key="index" v-if="index<3">
+              <li v-for="(item,index) in ranklist" :key="index" v-if="index<3" @click="toDetailsFun(item.vod_id)">
                   <div class="tuijian-img"><img :src="item.vod_pic" ></div>
                   <div class="index-tuijian-name">{{item.vod_name}}</div>
                   <div class="index-tuijian-dec">{{item.vod_content}}</div>
@@ -97,7 +97,7 @@
             </div>
             <div class="index-tuijian">
               <ul>
-                <li v-for="(items,indexs) in item.movie" :key="indexs" >
+                <li v-for="(items,indexs) in item.movie" :key="indexs" @click="toDetailsFun(items.vod_id)">
                     <div class="tuijian-img"><img :src="items.vod_pic" ></div>
                     <div class="index-tuijian-name">{{items.vod_name}}</div>
                     <div class="index-tuijian-dec">{{items.vod_content}}</div>
@@ -153,6 +153,7 @@ export default {
     this.getbannerlistFun(0) // banner
     this.getlatestrecommendlistFun() // 最新推荐
     this.getranklistFun(0) // 获取排行榜
+    window.addEventListener('scroll', this.scrollToTop)
   },
   methods: {
     onSearch () {
@@ -354,6 +355,7 @@ export default {
 
     // 顶部导航选择
     topNaChoice (index, id) {
+      document.body.scrollTop = document.documentElement.scrollTop = 0
       if (index == 0) {
         this.mainlistFun()
       }

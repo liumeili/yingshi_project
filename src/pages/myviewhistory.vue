@@ -55,6 +55,9 @@ export default {
 </script>
 
 <style lang="less">
+  .ys-goback{
+    background: #161C2C;
+  }
   .contain{
     ul{
       margin-top: 20px;

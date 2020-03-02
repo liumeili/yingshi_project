@@ -29,7 +29,7 @@
             </div>
             <div class="index-tuijian" v-if="List.length>0">
               <ul>
-                <li v-for="(item,index) in List" :key="index">
+                <li v-for="(item,index) in List" :key="index" @click="toDetailsFun(item.vod_id)">
                     <div class="tuijian-img"><img :src="item.vod_pic" ></div>
                     <div class="index-tuijian-name">{{item.vod_name}}</div>
                     <div class="index-tuijian-dec">{{item.vod_content}}</div>
@@ -110,7 +110,6 @@ export default {
     let listId = this.$route.query.listId
     let that = this
     this.shaixuanObj.list_id = this.$route.query.listId
-
     let pingdaoList = JSON.parse(localStorage.getItem('channel_list'))
     pingdaoList.forEach(function (item) {
       if (item.id == listId) {
@@ -119,8 +118,6 @@ export default {
     })
   },
   mounted () {
-    this.pingdaoId = this.$route.query.movieId
-    console.log(this.pingdaoId)
     this.getchannelnavisortFun(this.shaixuanObj.list_id)
     //  this.getchannelsortlistFun();
     let heightVal = document.documentElement.clientHeight - 30
@@ -148,7 +145,7 @@ export default {
           console.log(res)
           let qitaArr = ['其他']
           that.pingdaoList = res.data.list
-          that.tag = that.tag.concat(res.data.list_extend.tag, qitaArr)
+          that.tag = that.tag.concat(res.data.list_extend.type, qitaArr)
           that.area = that.area.concat(res.data.list_extend.area, qitaArr)
           that.language = that.language.concat(res.data.list_extend.language.split(','), qitaArr)
           that.year = that.year.concat(res.data.list_extend.year, qitaArr)
@@ -162,6 +159,10 @@ export default {
           let list = [' ', ' ', ' ']
           that.state = that.state.concat(res.data.list_extend.state.split(','), qitaArr, list)
           that.version = that.version.concat(res.data.list_extend.version.split(','), qitaArr)
+          if (that.$route.query.movieId) {
+            that.tagTabFun(that.$route.query.movieId, that.tag[that.$route.query.movieId])
+            that.pingdaoId = that.$route.query.movieId + 1
+          }
         })
     },
 
@@ -180,10 +181,13 @@ export default {
             mescroll.endSuccess(res.data.list.length)
           })
         })
+      this.pingdaoId = this.$route.query.movieId + 1
+      console.log(this.pingdaoId)
     },
 
     // 类型
     tagTabFun (name, title) {
+      console.log(name, title)
       if (title == '全部类型') {
         this.shaixuanObj.list_type = '全部'
       } else {
@@ -240,78 +244,85 @@ export default {
       this.shaixuanObj.page = 1
       this.List = []
       this.getchannelsortlistFun()
-    }
+    },
 
+    // 影视详情
+    toDetailsFun (id) {
+      this.$router.push({name: 'details', query: {vodId: id}})
+    }
   }
 }
 </script>
 
 <style lang='less'>
   .pingdaoList{
-      .van-tabs__nav{
-        background: #0D1225;
+    .ys-goback{
+      background: #161C2C;
+    }
+    .van-tabs__nav{
+      background: #0D1225;
 
-      }
-      .van-tab{
-         color: #fff!important;
-         font-size: 28px;
-         height: 58px;
-         line-height: 58px;
-         flex-basis: auto!important;
-         padding: 0 20px;
-      }
-     .van-tabs__wrap{
-        height: 58px!important;
-      }
-      [class*=van-hairline]::after{
-        border:none!important;
-      }
-      .van-tabs__line{
-         height: 0px;
+    }
+    .van-tab{
+       color: #fff!important;
+       font-size: 28px;
+       height: 58px;
+       line-height: 58px;
+       flex-basis: auto!important;
+       padding: 0 20px;
+    }
+   .van-tabs__wrap{
+      height: 58px!important;
+    }
+    [class*=van-hairline]::after{
+      border:none!important;
+    }
+    .van-tabs__line{
+       height: 0px;
 
+    }
+    .van-tab--active{
+      color: #27FCB9!important;
+      background: #161C2C;
+      border-radius: 50px;
+    }
+    .pd-sx{
+      padding: 15px 20px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 999;
+      background: #0D1225;
+      .pd-sx-line{
+         .pd-sx-tab{
+           width: 700px;
+           margin-top:10px;
+         }
+         .pd-sx-tab:last-child{
+           width: 4.6rem;
+         }
       }
-      .van-tab--active{
-        color: #27FCB9!important;
-        background: #161C2C;
-        border-radius: 50px;
-      }
-      .pd-sx{
-        padding: 15px 20px;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        z-index: 999;
-        background: #0D1225;
-        .pd-sx-line{
-           .pd-sx-tab{
-             width: 700px;
-             margin-top:10px;
-           }
-           .pd-sx-tab:last-child{
-             width: 4.6rem;
-           }
-        }
-      }
+    }
 
-      .index-titleLine{
-        margin-top:430px;
-      }
+    .index-titleLine{
+      margin-top:430px;
+    }
 
-      /* 无数据 */
-      .pingdaoNodata{
-        margin-top:30px;
-        img{
-          width: 278px;
-          height: 313px;
-        }
-        div{
-          text-align: center;
-          color: #27FCB9;
-          font-size: 34px;
-          margin-top:10px;
-        }
+    /* 无数据 */
+    .pingdaoNodata{
+      margin-top:30px;
+      img{
+        width: 278px;
+        height: 313px;
       }
+      div{
+        text-align: center;
+        color: #27FCB9;
+        font-size: 34px;
+        margin-top:10px;
+      }
+    }
 
   }
 

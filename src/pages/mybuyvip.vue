@@ -128,6 +128,9 @@ export default {
 </script>
 
 <style lang="less">
+  .ys-goback{
+    background: #161C2C;
+  }
   .buyvip{
     width: 100%;
     padding-top: 85px;

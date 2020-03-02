@@ -44,6 +44,9 @@ export default {
 </script>
 
 <style lang="less">
+  .ys-goback{
+    background: #161C2C;
+  }
   .help{
     padding-top: 88px;
     .about_rule{

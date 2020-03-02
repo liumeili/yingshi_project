@@ -240,8 +240,12 @@ export default {
 </script>
 
 <style lang='less'>
+
   .details{
-    //影片基本信息
+    /* 影片基本信息 */
+    .ys-goback{
+      background: #161C2C;
+    }
     .detais-abstract{
         display: flex;
         padding: 20px;
@@ -289,7 +293,7 @@ export default {
 
     }
 
-    // 简介
+    /* 简介 */
     .details-jjie{
       padding: 0 25px 10px 25px;
       position: relative;
@@ -322,7 +326,7 @@ export default {
       }
     }
 
-    // 集数
+    /* 集数 */
     .details-num{
         background: #161C2C;
         margin-top:25px;

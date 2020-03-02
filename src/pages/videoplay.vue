@@ -299,7 +299,7 @@ export default{
 
 <style lang="less">
   .ys-goback{
-    background: none!important;
+    background: none;
   }
   .videoplay{
     width: 100%;
