@@ -35,12 +35,12 @@
         <span>剧集</span>
         <div @click="xianluOpen()">来源：<span>{{xianluName}}</span></div>
         <div class="xianlu" v-if="xianluStaus">
-          <div v-for="(item,key,index) in xianluList" @click="xianluSelect(item.player_name_zh,index,key)">{{item.player_name_zh}}</div>
+          <div v-for="(item,key,index) in xianluList" :key="index" @click="xianluSelect(item.player_name_zh,index,key)">{{item.player_name_zh}}</div>
         </div>
       </div>
       <div class="details-num6" v-if="allNum==false">
         <ul class="details-num-ul">
-          <li v-for="(item, index) in jilist" @click="selectedNumCLick(index)" :class="{'details-numLiHover':jishuOne==index}" v-if="index<6">
+          <li v-for="(item, index) in jilist" @click="selectedNumCLick(index)" :key="index" :class="{'details-numLiHover':jishuOne==index}" v-if="index<6">
             {{item.title[0]=="第"?item.title.substring(1,item.title.length-1):item.title}}
           </li>
           <div class="clearBoth"></div>
@@ -50,13 +50,13 @@
       <!-- 全部集数 -->
       <div class="details-numAll" v-if="allNum==true">
         <div class="details-numAll-tab">
-          <div class="details-numAll-tabs" v-for="(item, index) in jiTabList" :class="{'numAllActive':jishuStaus == index}"
+          <div class="details-numAll-tabs" v-for="(item, index) in jiTabList" :key="index" :class="{'numAllActive':jishuStaus == index}"
              @click="jishuTab(index)">{{index * 30 + 1}}-{{index * 30 + jiTabList[index].length}}</div>
           <div class="guanbijishu" @click="closeJishu()"><img src="../assets/img/my_vip_guanbi.png"/></div>
         </div>
         <div class="clearBoth"></div>
-        <ul class="details-num-ul" v-for="(item, index) in jiTabList" v-if="jishuStaus == index">
-          <li v-for="(list, ind) in item" @click="selectedNumCLick(index * 30 + ind)" :class="{'details-numLiHover':jishuOne==(index * 30 + ind)}">
+        <ul class="details-num-ul" v-for="(item, index) in jiTabList" :key="index" v-if="jishuStaus == index">
+          <li v-for="(list, ind) in item" :key="ind" @click="selectedNumCLick(index * 30 + ind)" :class="{'details-numLiHover':jishuOne==(index * 30 + ind)}">
             {{list.title.substring(1,list.title.length-1)}}
           </li>
           <div class="clearBoth"></div>
