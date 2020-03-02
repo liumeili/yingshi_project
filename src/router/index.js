@@ -126,6 +126,13 @@ export default new Router({
         title:'帮助'
       }
     },{
+      path: '/paihangList',
+      name: 'paihangList',
+      component:() => import('../pages/paihangList.vue'),
+      meta:{
+        title:'排行榜'
+      }
+    },{
       path: '/test',
       name: 'test',
       component:() => import('../pages/test.vue'),

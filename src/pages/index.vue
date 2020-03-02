@@ -74,7 +74,7 @@
           <!-- 播放排行榜 -->
           <div class="index-titleLine" v-if="ranklist.length>0">
             <span>播放排行榜</span>
-            <span>更多内容</span>
+            <span @click="goHistoryPage('paihangList')">更多内容</span>
           </div>
           <div class="index-tuijian">
             <ul>
@@ -93,7 +93,7 @@
           <div  v-for="(item,index) in otherList" :key="index" v-if="item.movie.length!=0">
             <div class="index-titleLine">
               <span>{{item.list_name}}</span>
-              <span>更多内容</span>
+              <span @click="topNaChoice(index+1, item.list_id)">更多内容</span>
             </div>
             <div class="index-tuijian">
               <ul>
@@ -354,6 +354,9 @@ export default {
 
     // 顶部导航选择
     topNaChoice (index, id) {
+      if (index == 0) {
+        this.mainlistFun()
+      }
       this.topNavIndex = index
       this.pingdaoId = id
       this.getbannerlistFun(id)
@@ -390,14 +393,14 @@ export default {
 
     /* 搜索 */
     .index-topSearch{
-      display: flex;               
+      display: flex;
       align-items: center;
       position: fixed;
       width: 100%;
       height: 60px;
       top:0;
       left: 0;
-      z-index:9999;  
+      z-index:9999;
       padding: 20px;
       background: #0D1225;
       .van-field__left-icon .van-icon{

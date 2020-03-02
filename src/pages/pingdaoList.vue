@@ -275,7 +275,6 @@ export default {
         background: #161C2C;
         border-radius: 50px;
       }
-      // 筛选
       .pd-sx{
         padding: 15px 20px;
         position: fixed;
