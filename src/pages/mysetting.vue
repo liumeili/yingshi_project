@@ -1,6 +1,6 @@
 <template>
   <div class="setting">
-    <div class="GOothers">
+    <!-- <div class="GOothers">
       <div class="setcont">清除应用缓存<div class="setNum">300.86MB</div></div>
       <div class="setcont">允许非WIFI下载
         <div class="setNum" v-if="wifi_checked==true">开启</div>
@@ -19,13 +19,13 @@
         <div class="setNum" v-if="news_checked==false">关闭</div>
         <van-switch :value="news_checked" @input="news_onInput" active-color="#27FCB9" inactive-color="#AEAEAE"/>
       </div>
-    </div>
+    </div> -->
     <div class="GOothers">
       <div class="setcont">APP版本号<div class="setNum">v1.0.60</div></div>
       <div class="setcont">法律文件<img src="../assets/img/my_next.png"/></div>
       <div class="setcont">关于我们<img src="../assets/img/my_next.png"/></div>
     </div>
-    <div class="loginOut">退出登录</div>
+    <div @click="loginOut()" class="loginOut OutBTN">退出登录</div>
   </div>
 </template>
 
@@ -51,6 +51,10 @@ export default {
     },
     news_onInput (checked) {
       this.news_checked = checked
+    },
+    loginOut(){
+      localStorage.clear()
+      this.$router.push({name:'login'})
     }
   }
 }
@@ -101,6 +105,10 @@ export default {
       .setcont:last-child{
         border-bottom: none;
       }
+    }
+    .OutBTN{
+      position: fixed;
+      bottom: 50px;
     }
   }
 </style>

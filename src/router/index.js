@@ -118,6 +118,13 @@ export default new Router({
       meta:{
         title:''
       }
+    },{
+      path: '/help',
+      name: 'help',
+      component:() => import('../pages/help.vue'),
+      meta:{
+        title:'帮助'
+      }
     }
   ]
 })

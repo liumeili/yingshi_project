@@ -8,7 +8,7 @@
                 <div class="details-vodname">{{details.vod_name}}</div>
                 <div class="details-vodyear">年代：{{details.vod_year}}</div>
                 <div class="details-version">导演：{{details.vod_director}}</div>
-                <div class="details-ji">更新至第4集/共37集</div>
+                <div class="details-ji">{{details.vod_area}}</div>
                 <div class="details-actor"><span>主演：{{details.vod_actor}}</span><!--<span>展开</span>--></div>
                 <div class="details-play" @click="playFun()">立即播放</div>
              </div>
@@ -35,7 +35,9 @@
                 </li>
                 <div class="clearBoth"></div>
               </ul>
-              <img src="../assets/img/moreyd.png" class="details-num-more" @click="allNum=true" v-if="allmore">
+              <div class="details-num-more">
+                <img src="../assets/img/moreyd.png" @click="allNum=true" v-if="allmore">
+              </div>
             </div>
             <!-- 全部集数 -->
             <div class="details-numAll" v-if="allNum==true">
@@ -355,6 +357,9 @@ export default {
             background: #0D1225;
             margin-left: 25px;
             margin-top:20px;
+            white-space: normal;
+            word-break: break-all;
+            overflow: hidden;
           }
           .details-numLiHover{
             background: none;
@@ -362,11 +367,16 @@ export default {
           }
         }
         .details-num-more{
-          width: 32px;
-          height: 32px;
+          width: 80px;
+          height: 80px;
           position: absolute;
-          bottom: 40px;
+          bottom: 20px;
           right: 45px;
+          img{
+            width: 32px;
+            height: 32px;
+            margin-top: 28px;
+          }
         }
         .details-numAll{
            .details-numAll-tab{

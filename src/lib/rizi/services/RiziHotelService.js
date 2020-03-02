@@ -60,30 +60,76 @@ class iMService extends AxiosBaseService {
     getlikevod(params) {
         return this.request('?s=App-User-getlikevod', 'get', params);
     }
-    // 获取点赞影片列表接口
-    getlikevod(params) {
-        return this.request('?s=App-User-getlikevod', 'get', params);
-    }
 
     // 获取影视详情页信息的接口
     getmoviedetail(params) {
         return this.request('?s=App-User-getmoviedetail', 'get', params);
     }
 
-	// 获取影视播网页url接口,调这个接口，会累加当日的播放次数
-	getplayurl(params) {
-	    return this.request('?s=App-User-getplayurl', 'get', params);
-	}
-  
-  // 获取用户信息接口,在需要的时候调用
-  getuserinfo(params) {
-      return this.request('?s=App-User-getuserinfo', 'get', params);
-  }
+    // 获取影视播网页url接口,调这个接口，会累加当日的播放次数
+    getplayurl(params) {
+        return this.request('?s=App-User-getplayurl', 'get', params);
+    }
 
+    // 获取用户信息接口,在需要的时候调用
+    getuserinfo(params) {
+        return this.request('?s=App-User-getuserinfo', 'get', params);
+    }
 
+    // 对影片添加喜欢的接口
+    likevod(params) {
+        return this.request('?s=App-User-likevod', 'get', params);
+    }
 
+    // 对影片取消添加喜欢的接口
+    unlikevod(params) {
+        return this.request('?s=App-User-unlikevod', 'get', params);
+    }
 
+    // 对影片添加收藏的接口
+    collectvod(params) {
+        return this.request('?s=App-User-collectvod', 'get', params);
+    }
 
+    // 对影片取消收藏影片接口
+    uncollectvod(params) {
+        return this.request('?s=App-User-uncollectvod', 'get', params);
+    }
+
+    // 获取收藏影片列表接口
+    getcollectvod(params) {
+        return this.request('?s=App-User-getcollectvod', 'get', params);
+    }
+
+    // 获取我的观看历史记录
+    getplayhistory(params) {
+        return this.request('?s=App-User-getplayhistory', 'get', params);
+    }
+
+    // 购买VIP列表
+    vipinit(params) {
+        return this.request('?s=App-User-vipinit', 'get', params);
+    }
+
+    // 热点：列表
+    hotpointlist(params) {
+        return this.request('?s=App-Home-hotpointlist', 'get', params);
+    }
+
+    // 任务：分享推广信息
+    getsharedetail(params) {
+        return this.request('?s=App-User-getsharedetail', 'get', params);
+    }
+
+    // 任务：帮助规则介绍
+    getsharerule(params) {
+        return this.request('?s=App-User-getsharerule', 'get', params);
+    }
+    
+    // 搜索获取大片列表
+    searchresult(params) {
+        return this.request('?s=App-User-searchresult', 'get', params);
+    }
 
 
 

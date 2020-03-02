@@ -1,36 +1,36 @@
 <template>
   <div class="buyvip">
     <div class="buyvip_head">
+      <img :src="userInfoList.user_avatar" class="headBG"/>
       <div class="buyvip_head_hei">
         <div class="touxiang">
-          <div class="myImge"><img src="../assets/img/my_bg.jpg"/></div>
+          <div class="myImge"><img :src="userInfoList.user_avatar"/></div>
         </div>
-        <div class="vipInfo"><span>用户：150****853</span><br><span>剩余VIP时长&nbsp;&nbsp;30天</span></div>
-        <img src="../assets/img/my_vip_bangzhu.png" class="bangzhu"/>
+        <div class="vipInfo">
+          <span>{{userInfoList.user_name}}</span><br>
+          <span class="otherTime" v-if="isVIP.is_vip == 0">您还不是VIP</span>
+          <span class="otherTime" v-if="isVIP.is_vip == 1">剩余VIP时长</span>
+          <img src="../assets/img/my_novip.png" v-if="isVIP.is_vip == 0"/>
+          <img src="../assets/img/my_vip.png" v-if="isVIP.is_vip == 1"/>
+          <span class="otherTime" v-if="isVIP.is_vip == 1">&nbsp;&nbsp;{{isVIP.vip_endtime}}</span>
+        </div>
+        <img src="../assets/img/my_vip_bangzhu.png" class="bangzhu" @click="showPopup"/>
         <div class="buyvip_title">会员购买</div>
       </div>
-      <ul>
-        <li v-for="(item,index) in moneyList" :key="index" @click="getItem(index)" :class="{'activeM':activeMoney==index}">
-          <div>{{item.date}}</div>
-          <div class="vip_money">￥<span>{{item.money}}</span></div>
-        </li>
-      </ul>
+
     </div>
+    <ul class="vipTime">
+      <li v-for="(item,index) in vipList" :key="index" @click="getItem(index)" :class="{'activeM':activeMoney==index}">
+        <div>{{item.vip_detail}}</div>
+        <div class="vip_money">￥<span>{{item.vip_price}}</span></div>
+      </li>
+      <div class="clearBoth"></div>
+    </ul>
     <van-radio-group v-model="radio">
       <div class="pay_way_list">
         <img src="../assets/img/my_vip_zhifubao.png"/>
         <div class="pay_way_name">支付宝</div>
         <van-radio name="1" checked-color="#07c160"></van-radio>
-      </div>
-      <div class="pay_way_list">
-        <img src="../assets/img/my_vip_zhifubao.png"/>
-        <div class="pay_way_name">微信</div>
-        <van-radio name="2" checked-color="#07c160"></van-radio>
-      </div>
-      <div class="pay_way_list">
-        <img src="../assets/img/my_vip_zhifubao.png"/>
-        <div class="pay_way_name">银行卡</div>
-        <van-radio name="3" checked-color="#07c160"></van-radio>
       </div>
     </van-radio-group>
     <div class="index-titleLine">
@@ -50,7 +50,7 @@
         <div class="tequan_title">会员生日</div>
       </li>
     </ul>
-    <div class="loginOut">购买</div>
+    <div class="loginOut" @click="BuyVip()">购买</div>
     <div class="closeALL" @click="showPopup">客服</div>
     <van-popup v-model="show">
       <div class="model_kefu">
@@ -58,12 +58,12 @@
         <div class="title02">联系客服小姐姐，在线解决问题</div>
       </div>
       <img src="../assets/img/my_bg.jpg"/>
-      <div class="close_model"></div>
     </van-popup>
   </div>
 </template>
 
 <script>
+import {IMService} from '../service/RiziServices.js'
 import { RadioGroup, Radio, Popup } from 'vant'
 export default {
   components: {
@@ -76,29 +76,52 @@ export default {
       radio: '1',
       show: false,
       activeMoney: 0,
-      moneyList: [
-        {
-          date: '7天',
-          money: 3.9
-        },
-        {
-          date: '一个月',
-          money: 10
-        },
-        {
-          date: '三个月',
-          money: 30
-        }
-      ]
-
+      vipList: [],
+      userInfoList: {}, // 用户信息
+      isVIP: {} // 判断是否是vip
     }
+  },
+  mounted () {
+    this.getVIPlistFun()
+    this.getUserInfoFun()
   },
   methods: {
     getItem (index) {
       this.activeMoney = index
+      this.vipID = this.vipList[index].id
     },
     showPopup () {
       this.show = true
+    },
+    // 获取观看历史记录
+    getVIPlistFun () {
+      let that = this
+      let objStr = JSON.parse(localStorage.getItem('uidAtoken'))
+      IMService.vipinit(objStr)
+        .then(function (res) {
+          console.log(res)
+          that.vipList = res.data.vip_buy_list
+          that.getItem(0)
+        })
+      IMService.getuserinfo(objStr)
+        .then(function (res) {
+          console.log(res)
+          that.userInfoList = res.data.userinfo
+          that.isVIP = that.userInfoList.vip_info
+        })
+    },
+    getUserInfoFun () {
+      let that = this
+      let objStr = JSON.parse(localStorage.getItem('uidAtoken'))
+      IMService.getuserinfo(objStr)
+        .then(function (res) {
+          console.log(res)
+          that.userInfoList = res.data.userinfo
+          that.isVIP = that.userInfoList.vip_info
+        })
+    },
+    BuyVip () {
+
     }
   }
 }
@@ -112,15 +135,23 @@ export default {
       position: relative;
       width: 100%;
       height: 320px;
-      background-image: url(../assets/img/my_bg.jpg);
-      background-size: 100% 100%;
-      box-shadow: 0px -60px 60px -10px rgba(13, 18, 37, 1) inset;
-       text-align: left;
-       font-size: 30px;
+      text-align: left;
+      font-size: 30px;
+      overflow: hidden;
+      .headBG{
+       position: absolute;
+       top: 50%;
+       left: 50%;
+       transform: translate(-50%,-50%);
+       width: 100%;
+      }
       .buyvip_head_hei{
+        position: absolute;
+        top: 0;
+        left: 0;
         width: 100%;
-        height: 320px;
-        background: -webkit-linear-gradient(top, rgba(13, 18, 37, 0.1), rgba(13, 18, 37, 0.6));
+        height: 100%;
+        background: linear-gradient(to top,rgba(#0D1225, 1),rgba(#0D1225, 0));
         .touxiang{
           float: left;
           height: 158px;
@@ -137,8 +168,12 @@ export default {
           margin: 40px auto 0 18px;
           padding-top: 19px;
           line-height: 40px;
-          span:last-child{
+          .otherTime{
             font-size: 21px;
+          }
+          img{
+            width: 33px;
+            vertical-align: middle;
           }
         }
         .bangzhu{
@@ -155,38 +190,36 @@ export default {
         font-size: 30px;
         padding: 55px 0 0 30px;
       }
-      ul{
-        position: absolute;
-        left: 0;
-        bottom: -208px;
-        margin-left: 55px;
-        li{
-          float: left;
-          width: 189px;
-          height: 183px;
-          margin-right: 30px;
-          background:rgba(22,28,44,1);
-          border:2px solid rgba(100,167,146,0.5);
-          border-radius:10px;
-          text-align: center;
-          padding-top: 70px;
-          .vip_money{
-            color: #27FCB9;
-            font-size: 24px;
-            margin-top: 5px;
-            span{
-              font-size: 60px;
-            }
+
+    }
+    .vipTime{
+      margin-left: 55px;
+      li{
+        float: left;
+        width: 189px;
+        height: 183px;
+        margin: 0 30px 20px 0;
+        background:rgba(22,28,44,1);
+        border:2px solid rgba(100,167,146,0.5);
+        border-radius:10px;
+        text-align: center;
+        padding-top: 70px;
+        .vip_money{
+          color: #27FCB9;
+          font-size: 24px;
+          margin-top: 5px;
+          span{
+            font-size: 60px;
           }
         }
-        .activeM{
-          border:2px solid #27FCB9;
-        }
+      }
+      .activeM{
+        border:2px solid #27FCB9;
       }
     }
     .van-radio-group{
       width: 100%;
-      margin-top: 289px;
+      margin-top: 15px;
       .pay_way_list{
         float: left;
         width: 100%;
@@ -259,36 +292,6 @@ export default {
       line-height: 85px;
       padding: 0 31px;
       color: #D5D5D5;
-    }
-    .van-popup{
-      width: 520px;
-      height: 386px;
-      background: none;
-      .model_kefu{
-        width: 520px;
-        height: 345px;
-        margin-top: 41px;
-        background: #1D202F;
-        border-radius: 22px;
-        padding-top: 130px;
-        .title01{
-          line-height: 60px;
-        }
-        .title02{
-          font-size: 24px;
-          color: #CFCFCF;
-          padding-top: 40px;
-        }
-      }
-      img{
-        position: absolute;
-        top: 0;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 144px;
-        height: 144px;
-        border-radius: 50%;
-      }
     }
   }
 
