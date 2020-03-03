@@ -1,7 +1,8 @@
 <template>
   <div class="videoplay">
     <div class="videoplaying" id="dplayer">
-     <iframe id="show-iframe" frameborder="0" scrolling="no" :src="videoUrl.play_url"></iframe>
+     <iframe id="show-iframe" allowfullscreen="true" webkitallowfullscreen="true"
+     mozallowfullscreen="true" frameborder="0" scrolling="no" :src="videoUrl.play_url"></iframe>
     </div>
     <div class="jieshao">
       <div class="video-titleLine" @click="openCont()">
@@ -20,12 +21,14 @@
         <div class="details_txt" id="details_txt">{{details.vod_content}}</div>
       </div>
       <div class="xiazaiVideo"  v-if="opendetail == false">
-        <span>&nbsp;3100</span>
-        <img src="../assets/img/my_shoucang.png"/>
-        <span>&nbsp;3w+&nbsp;&nbsp;</span>
-        <img src="../assets/img/my_dianzan.png"/>
+        <span @click="shoucang()">&nbsp;{{collectioncount}}</span>
+        <img src="../assets/img/my_shoucangNo.png" @click="shoucang()" v-if="!shoucangStatus"/>
+        <img src="../assets/img/my_shoucang.png" @click="shoucang()" v-if="shoucangStatus"/>
+        <span @click="dianzan()">&nbsp;{{likecount}}&nbsp;&nbsp;</span>
+        <img src="../assets/img/my_dianzan_unlike.png" @click="dianzan()" v-if="!likeStatus"/>
+        <img src="../assets/img/my_dianzan.png" @click="dianzan()" v-if="likeStatus"/>
         <span>&nbsp;下载影片&nbsp;&nbsp;</span>
-        <img src="../assets/img/my_xiazai.png"/>
+        <img src="../assets/img/my_xiazaiNo.png"/>
       </div>
     </div>
 
@@ -45,7 +48,10 @@
           </li>
           <div class="clearBoth"></div>
         </ul>
-        <img src="../assets/img/moreyd.png" class="details-num-more" @click="allNum=true" v-if="allmore">
+        <div class="details-num-more">
+          <img src="../assets/img/moreyd.png" @click="allNum=true" v-if="allmore">
+        </div>
+
       </div>
       <!-- 全部集数 -->
       <div class="details-numAll" v-if="allNum==true">
@@ -113,7 +119,11 @@ export default{
       jishuOne: 0, // 单个集数的状态
       // video_sid: 1, // 播放线路的id号
       // video_pid: 1, // 播放集数id号
-      jiTabList: [] // 全部集数列表分段显示
+      jiTabList: [], // 全部集数列表分段显示
+      likeStatus: false, // 喜欢状态
+      shoucangStatus: false,// 收藏状态
+      collectioncount:'', // 收藏的数量
+      likecount:'' //点赞的数量
     }
   },
   created () {
@@ -151,10 +161,22 @@ export default{
           that.details = res.data
           that.hotsList = res.data.other
           that.xianluList = res.data.vod_play_list
+          that.collectioncount = res.data.vod_collectioncount
+          that.likecount = res.data.vod_likecount
           that.jilist = []
           that.jiTabList = []
           that.xlList = []
           console.log(that.xianluList)
+          if (res.data.vod_islike == 1) {
+            that.likeStatus = true
+          } else {
+            that.likeStatus = false
+          }
+          if (res.data.vod_iscollect == 1) {
+            that.shoucangStatus = true
+          } else {
+            that.shoucangStatus = false
+          }
           for (let i in that.xianluList) {
             that.xlList.push(that.xianluList[i])
           }
@@ -228,6 +250,48 @@ export default{
     // 关闭集数
     closeJishu () {
       this.allNum = false
+    },
+    // 喜欢和取消喜欢
+    dianzan () {
+      let that = this
+      let objStr = JSON.parse(localStorage.getItem('uidAtoken'))
+      objStr.vod_id = this.vodId
+      console.log(objStr)
+      if (!that.likeStatus) {
+        IMService.likevod(objStr)
+          .then(function (res) {
+            that.likeStatus = true
+            that.likecount++
+          })
+      } else {
+        IMService.unlikevod(objStr)
+          .then(function (res) {
+            that.likeStatus = false
+            that.likecount--
+          })
+      }
+    },
+    // 收藏和取消收藏
+    shoucang () {
+      let that = this
+      let objStr = JSON.parse(localStorage.getItem('uidAtoken'))
+      objStr.vod_id = this.vodId
+      console.log(objStr)
+      if (!that.shoucangStatus) {
+        IMService.collectvod(objStr)
+          .then(function (res) {
+            console.log(res)
+            that.shoucangStatus = true
+            that.collectioncount++
+          })
+      } else {
+        IMService.uncollectvod(objStr)
+          .then(function (res) {
+            console.log(res)
+            that.shoucangStatus = false
+            that.collectioncount--
+          })
+      }
     }
   }
 }
@@ -347,6 +411,9 @@ export default{
             background: #0D1225;
             margin-left: 20px;
             margin-top:20px;
+            white-space: normal;
+            word-break: break-all;
+            overflow: hidden;
           }
           .details-numLiHover{
             background: none;
@@ -355,11 +422,16 @@ export default{
 
         }
         .details-num-more{
-          width: 32px;
-          height: 32px;
+          width: 80px;
+          height: 80px;
           position: absolute;
-          bottom: 40px;
+          bottom: 20px;
           right: 45px;
+          img{
+            width: 32px;
+            height: 32px;
+            margin-top: 28px;
+          }
         }
         .details-numAll{
            .details-numAll-tab{

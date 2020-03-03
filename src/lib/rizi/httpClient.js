@@ -23,6 +23,19 @@ httpClient.interceptors.response.use(
            localStorage.setItem('ZDisLogin',0);
           
         }
+        // 判断登录是否过期，过期跳转到登录页
+        let path=window.location.href.split('#');
+
+        if(response.data.code==-1){
+          window.location.href=path[0]+'#'+'/login'
+        }
+        let codeV=response.data.data;
+        if(codeV){
+            if(response.data.data.code==-1){ 
+                window.location.href=path[0]+'#'+'/login';
+            }
+        }
+        
         return response.data;
         
 

@@ -56,12 +56,12 @@
 // 搜索
 .van-search{
  padding: 0px!important;
- width: 580px;
+ width: 630px;
  background: none!important;
 
 }
 .van-search .van-cell{
-    padding:20px 15px!important;
+    // padding:20px 15px!important;
     border-radius: 60px!important;
 }
 .van-search__content{
@@ -69,8 +69,13 @@
     background: #1D2235!important;
     color: #8C8E9A!important;
 }
+.van-search .van-icon-clear{
+    width: 30px;
+    transform: scale(2);
+}
 .van-search .van-field__control{
     color: #8C8E9A!important;
+    height: 60px;
 }
 .van-icon-search{
     font-size: 50px!important;
@@ -225,6 +230,7 @@
            height: 191px;
            img{
              width: 100%;
+             height: auto;
            }
          }
          .shipingName{
@@ -290,4 +296,48 @@
   line-height: 90px;
   font-size: 36px;
   color: #161C2C;
+}
+/* 无数据 */
+.pingdaoNodata{
+ margin-top:30px;
+ img{
+   width: 278px;
+   height: 313px;
+ }
+ div{
+   text-align: center;
+   color: #27FCB9;
+   font-size: 28px;
+   margin-top:10px;
+   letter-spacing: 2px;
+ }
+}
+.van-popup{
+  width: 520px;
+  background: none;
+  .model_kefu{
+    width: 520px;
+    height: 250px;
+    margin-top: 41px;
+    background: #1D202F;
+    border-radius: 22px;
+    padding-top: 130px;
+    .title01{
+      line-height: 60px;
+    }
+    .title02{
+      font-size: 24px;
+      color: #CFCFCF;
+      padding-top: 40px;
+    }
+  }
+  img{
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 144px;
+    height: 144px;
+    border-radius: 50%;
+  }
 }

@@ -30,88 +30,88 @@
 
 <script>
 import {IMService} from '../service/RiziServices.js'
-import {Toast, Button,Field } from 'vant';
+import {Toast, Button, Field } from 'vant'
+import md5 from 'js-md5'
 export default {
   name: 'login',
-  components:{
-     [Button.name]: Button,
-     [Field.name]: Field,
+  components: {
+    [Button.name]: Button,
+    [Field.name]: Field
   },
   data () {
     return {
-      formData:{
-        phone:'',
-        code:'',
-        client_type:2
+      formData: {
+        phone: '',
+        code: '',
+        client_type: 2
       },
-      times:60,
-      showTime:false,
+      times: 60,
+      showTime: false
     }
   },
-  created(){},
-  mounted(){
+  created () {},
+  mounted () {
 
   },
-  methods:{
+  methods: {
     // 点击获取验证码
-    clickCodeFun(){
-      let phone= this.formData.phone;
-      let regMobile = /^1[345789]\d{9}$/;
-      if(phone==''){
-          Toast('请输入的手机号码');
-      }else if (!regMobile.test(phone)) {
-         Toast('输入的手机号码格式不正确');
-      }else{
-         this.regSendCodeFun(phone);
+    clickCodeFun () {
+      let phone = this.formData.phone
+      let regMobile = /^1[345789]\d{9}$/
+      if (phone == '') {
+        Toast('请输入的手机号码')
+      } else if (!regMobile.test(phone)) {
+        Toast('输入的手机号码格式不正确')
+      } else {
+        this.regSendCodeFun(phone)
       }
-
     },
     // 获取验证码
-    regSendCodeFun(phone){
-      let that=this;
-      IMService.regSendCode({phone:phone})
-        .then(function(res){
-           Toast(res.msg);
-           if(res.status==0){
-              that.showTime=true;
-              let timer=setInterval(function(){
-                  that.times-=1;
-                  if(that.times==0){
-                    that.showTime=false;
-                    that.times=60;
-                    clearInterval(timer);
-                  }
-              },1000)
-           }
+    regSendCodeFun (phone) {
+      let that = this
+      IMService.regSendCode({ phone:phone,sign:md5("mobile="+phone+"&wuxhsgttaucchhww")})
+        .then(function (res) {
+          console.log(res)
+          Toast(res.msg)
+          if (res.status == 0) {
+            that.showTime = true
+            let timer = setInterval(function () {
+              that.times -= 1
+              if (that.times == 0) {
+                that.showTime = false
+                that.times = 60
+                clearInterval(timer)
+              }
+            }, 1000)
+          }
         })
     },
 
     // 登录
-    phoneCodeLoginFun(){
-        let that=this;
-        let regMobile = /^1[345789]\d{9}$/;
-        if(this.formData.phone==''){
-          Toast('请输入的手机号码');
-        }else if (!regMobile.test(this.formData.phone)) {
-          Toast('输入的手机号码格式不正确');
-        }else if(this.formData.code==''){
-          Toast('请输入验证码');
-        }else{
-          IMService.phoneCodeLogin(this.formData)
-            .then(function(res){
-
-               if(res.status==1){
-                 let uidAtoken={uid:res.data.user_id,token:res.data.user_token};
-                  localStorage.setItem('uidAtoken',JSON.stringify(uidAtoken));
-                  localStorage.setItem('loginInfo',JSON.stringify(res.data));
-                  localStorage.setItem("isLogin",1);
-                  that.$router.push({name:'index'})
-               }else{
-                 Toast(res.msg);
-               }
-            })
-        }
-    },
+    phoneCodeLoginFun () {
+      let that = this
+      let regMobile = /^1[345789]\d{9}$/
+      if (this.formData.phone == '') {
+        Toast('请输入的手机号码')
+      } else if (!regMobile.test(this.formData.phone)) {
+        Toast('输入的手机号码格式不正确')
+      } else if (this.formData.code == '') {
+        Toast('请输入验证码')
+      } else {
+        IMService.phoneCodeLogin(this.formData)
+          .then(function (res) {
+            if (res.status == 1) {
+              let uidAtoken = {uid: res.data.user_id, token: res.data.user_token}
+              localStorage.setItem('uidAtoken', JSON.stringify(uidAtoken))
+              localStorage.setItem('loginInfo', JSON.stringify(res.data))
+              localStorage.setItem('isLogin', 1)
+              that.$router.push({name: 'index'})
+            } else {
+              Toast(res.msg)
+            }
+          })
+      }
+    }
   }
 
 }

@@ -1,31 +1,72 @@
 <template>
   <div class="myDianzan index-tuijian">
     <div class="contain">
-      <div class="shoucang_title">电视剧</div>
+      <div class="shoucang_title" v-if="shoucangList.length>0">电视剧</div>
       <ul>
-        <li>
-          <div class="tuijian-img">
-            <img src="../assets/img/my_bg.jpg"/>
+        <li v-for="(item,index) in shoucangList" :key='index'>
+          <div class="tuijian-img"  @click="toDetailsFun(item.vod_id)">
+            <img :src="item.vod_pic"/>
           </div>
-          <div class="shipingName">如懿传&nbsp;<span>第50集</span></div>
-          <div class="shipingTime">点赞时间&nbsp;2019年12月4日</div>
-          <img src="../assets/img/mydianzan_close.png" class="close"/>
-        </li>
-        <li>
-          <div class="tuijian-img">
-            <img src="../assets/img/my_bg.jpg"/>
-          </div>
-          <div class="shipingName">如懿传&nbsp;<span>第50集</span></div>
-          <div class="shipingTime">点赞时间&nbsp;2019年12月4日</div>
-          <img src="../assets/img/mydianzan_close.png" class="close"/>
+          <div class="shipingName" @click="toDetailsFun(item.vod_id)">{{item.vod_name}}</div>
+          <div class="shipingTime" @click="toDetailsFun(item.vod_id)">收藏时间<br>{{item.add_time}}</div>
+          <img src="../assets/img/mydianzan_close.png" class="close" @click="noShoucang(index, item.vod_id)"/>
         </li>
       </ul>
+      <div class="pingdaoNodata" v-if="shoucangList.length == 0">
+        <img src="../assets/img/nodata.png">
+        <div>暂无更多数据显示</div>
+      </div>
     </div>
-    <div class="closeALL">清空</div>
+    <!-- <div class="closeALL" @click="closeALL()">清空</div> -->
   </div>
 </template>
 
 <script>
+import {IMService} from '../service/RiziServices.js'
+export default {
+  name: 'mydianzan',
+  data () {
+    return {
+      shoucangList: [] // 点赞数据
+    }
+  },
+  mounted () {
+    this.GetshoucangList() // 列表接口
+  },
+  methods: {
+    // 列表接口
+    GetshoucangList () {
+      let that = this
+      let objStr = JSON.parse(localStorage.getItem('uidAtoken'))
+      objStr.limit = 10
+      objStr.page = 1
+      IMService.getcollectvod(objStr)
+        .then(function (res) {
+          console.log(res)
+          that.shoucangList = res.data.list
+          console.log(that.shoucangList)
+        })
+    },
+    // 取消收藏
+    noShoucang (index, id) {
+      let that = this
+      let objStr = JSON.parse(localStorage.getItem('uidAtoken'))
+      objStr.vod_id = id
+      IMService.uncollectvod(objStr)
+        .then(function (res) {
+          console.log(res)
+          that.GetshoucangList()
+        })
+    },
+    // 影视详情
+    toDetailsFun (id) {
+      this.$router.push({name: 'details', query: {vodId: id}})
+    },
+    closeALL () {
+
+    }
+  }
+}
 </script>
 
 <style lang="less">

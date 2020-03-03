@@ -1,16 +1,21 @@
 <template>
   <div class="myDianzan index-tuijian">
     <div class="contain">
+      <div class="index-titleLine">
+        <span>播放量前十</span>
+      </div>
       <ul>
         <li v-for="(item, index) in HistoryList" :key='index' @click="toDetailsFun(item.vod_id)">
           <div class="tuijian-img">
             <img :src="item.vod_pic"/>
           </div>
           <div class="shipingName">{{item.vod_name}}</div>
-          <div class="shipingTime">{{item.vod_urlname}}
+          <div class="shipingTime">
             <p>主演：{{item.vod_actor}}</p>
-            <span>播放时间：{{item.play_time}}</span>
+            <span>{{item.vod_content}}</span>
           </div>
+          <img src="../assets/img/rankTip.png" class="rankTip" v-if="index<3">
+          <span class="rankTip-number" v-if="index<3">{{index+1}}</span>
         </li>
       </ul>
     </div>
@@ -28,7 +33,7 @@ export default {
   },
   data () {
     return {
-      HistoryList: [], // 历史记录
+      HistoryList: [] // 历史记录
     }
   },
   mounted () {
@@ -37,10 +42,7 @@ export default {
   methods: {
     getHistoryListFun () {
       let that = this
-      let objStr = JSON.parse(localStorage.getItem('uidAtoken'))
-      objStr.page = 1
-      objStr.limit = 10
-      IMService.getplayhistory(objStr)
+      IMService.getranklist({list_id: 0})
         .then(function (res) {
           console.log(res)
           that.HistoryList = res.data.list
@@ -56,29 +58,47 @@ export default {
 
 <style lang="less">
   .contain{
+    .index-titleLine{
+      padding: 10px 25px;
+    }
     ul{
       margin-top: 20px;
       li{
-        height: 280px!important;
+        height: 300px!important;
         .tuijian-img{
           float: left;
-          width: 240px!important;
-          height: 280px!important;
+          width: 220px!important;
+          height: 300px!important;
           img{
-            width: auto!important;
+            width: 100%!important;
             height: 100%!important;
           }
       }
       .shipingName{
-        padding: 30px 15px 0px 15px!important;
+        width: 450px!important;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        padding: 15px 15px 0px 15px!important;
       }
       .shipingTime{
-        font-size: 28px!important;
-        line-height: 55px!important;
+        width: 450px!important;
+        font-size: 26px!important;
+        line-height: 60px!important;
         p{
           overflow: hidden;
           white-space: nowrap;
           text-overflow: ellipsis;
+          color: #FFFFFF;
+          padding-bottom: 10px;
+        }
+        span{
+          overflow: hidden;
+          text-overflow: ellipsis;
+          display: -webkit-box;
+          -webkit-box-orient: vertical;
+          -webkit-line-clamp: 4;
+          line-height: 30px;
         }
       }
     }
