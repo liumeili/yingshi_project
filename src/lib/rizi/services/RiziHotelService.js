@@ -130,6 +130,11 @@ class iMService extends AxiosBaseService {
     searchresult(params) {
         return this.request('?s=App-User-searchresult', 'get', params);
     }
+    
+    // 分享记录数据
+    getsharelog(params) {
+        return this.request('?s=App-User-getsharelog', 'get', params);
+    }
 
 
 

@@ -25,21 +25,39 @@
       <div class="setcont">法律文件<img src="../assets/img/my_next.png"/></div>
       <div class="setcont">关于我们<img src="../assets/img/my_next.png"/></div>
     </div>
-    <div @click="loginOut()" class="loginOut OutBTN">退出登录</div>
+    <div @click="loginOut()" class="loginOut OutBTN">{{nologin == false?"退出登录":"登录"}}</div>
+
+    <van-popup v-model="skipLogin">
+      <div class="model_kefu model_nologin model_skipLogin">
+        <p>是否退出重新登录?</p>
+        <div class="nologin_cancel" @click="nologin_cancel()">取消</div>
+        <div class="nologin_sure" @click="gologinPage()">确定</div>
+      </div>
+    </van-popup>
   </div>
 </template>
 
 <script>
-import { Switch } from 'vant'
+import { Switch, Popup } from 'vant'
 export default {
   components: {
-    [Switch.name]: Switch
+    [Switch.name]: Switch,
+    [Popup.name]: Popup
   },
   data () {
     return {
       wifi_checked: true,
       voice_checked: true,
-      news_checked: true
+      news_checked: true,
+      nologin: false,
+      skipLogin: false
+    }
+  },
+  mounted () {
+    if (localStorage.getItem('uidAtoken') != null) {
+      this.nologin = false
+    } else {
+      this.nologin = true
     }
   },
   methods: {
@@ -52,9 +70,22 @@ export default {
     news_onInput (checked) {
       this.news_checked = checked
     },
-    loginOut(){
+    loginOut () {
+      if (this.nologin) {
+        this.skipLogin = false
+        localStorage.clear()
+        this.$router.push({name: 'login'})
+      } else {
+        this.skipLogin = true
+      }
+    },
+    nologin_cancel () {
+      this.skipLogin = false
+    },
+    gologinPage () {
+      this.skipLogin = false
       localStorage.clear()
-      this.$router.push({name:'login'})
+      this.$router.push({name: 'login'})
     }
   }
 }

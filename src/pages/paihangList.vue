@@ -57,6 +57,9 @@ export default {
 </script>
 
 <style lang="less">
+  .ys-goback{
+    background: #161C2C;
+  }
   .contain{
     .index-titleLine{
       padding: 10px 25px;

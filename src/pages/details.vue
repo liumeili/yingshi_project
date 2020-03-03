@@ -91,6 +91,14 @@
               </div>
           </van-popup>
 
+          <van-popup v-model="nologin">
+            <div class="model_kefu model_nologin">
+              <span>未登录</span>
+              <p>登录即可观看</p>
+              <div class="nologin_cancel" @click="nologin_cancel()">取消</div>
+              <div class="nologin_sure" @click="gologinPage()">确定</div>
+            </div>
+          </van-popup>
   </div>
 </template>
 
@@ -121,14 +129,19 @@ export default {
       jishuOne: 0, // 单个集数的状态
       video_sid: 1, // 播放线路的id号
       video_pid: 1, // 播放集数id号
-      jiTabList: [] // 全部集数列表分段显示
+      jiTabList: [], // 全部集数列表分段显示
+      nologin: false // 未登录提示去登录
     }
   },
   created () {
     this.vodId = this.$route.query.vodId
   },
   mounted () {
-    this.getmoviedetailFun()
+    if (localStorage.getItem('uidAtoken') != null) {
+      this.getmoviedetailFun()
+    } else {
+      this.nologin = true
+    }
   },
   methods: {
     gobackFun () {
@@ -236,14 +249,27 @@ export default {
     // 关闭集数
     closeJishu () {
       this.allNum = false
+    },
+    nologin_cancel () {
+      this.nologin = false
+      this.$router.go(-1)
+    },
+    gologinPage () {
+      this.skipLogin = false
+      localStorage.clear()
+      this.$router.push({name: 'login'})
     }
   }
 }
 </script>
 
 <style lang='less'>
+
   .details{
-    //影片基本信息
+    /* 影片基本信息 */
+    .ys-goback{
+      background: #161C2C;
+    }
     .detais-abstract{
         display: flex;
         padding: 20px;
@@ -291,7 +317,7 @@ export default {
 
     }
 
-    // 简介
+    /* 简介 */
     .details-jjie{
       padding: 0 25px 10px 25px;
       position: relative;
@@ -324,7 +350,7 @@ export default {
       }
     }
 
-    // 集数
+    /* 集数 */
     .details-num{
         background: #161C2C;
         margin-top:25px;
@@ -479,7 +505,12 @@ export default {
       }
 
     }
-
+    .van-overlay{
+      z-index: 999999!important;
+    }
+    .van-popup{
+      z-index: 999999!important;
+    }
   }
 
 </style>

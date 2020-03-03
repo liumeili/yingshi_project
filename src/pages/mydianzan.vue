@@ -63,4 +63,7 @@ export default {
 </script>
 
 <style lang="less">
+  .ys-goback{
+    background: #161C2C;
+  }
 </style>

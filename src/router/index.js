@@ -133,6 +133,13 @@ export default new Router({
         title:'排行榜'
       }
     },{
+      path: '/sharelist',
+      name: 'sharelist',
+      component:() => import('../pages/sharelist.vue'),
+      meta:{
+        title:'分享记录'
+      }
+    },{
       path: '/test',
       name: 'test',
       component:() => import('../pages/test.vue'),
