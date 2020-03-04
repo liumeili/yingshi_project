@@ -8,7 +8,7 @@
           修改信息<img src="../assets/img/my_eidt.png"/>
         </div>
         <div class="touxiang">
-          <div class="myImge">
+          <div class="myImge" @click="editInfo()">
             <img :src="userInfoList.user_avatar" v-if="!nologin"/>
             <img src="../assets/img/nopeople.png" v-if="nologin"/>
           </div>
@@ -115,6 +115,8 @@ export default {
     goMydianzan (url) {
       if (url == 'mybuyhistory' || url == 'mycache') {
         this.future = true
+      } else if (url == 'mysetting') {
+        this.$router.push({name: url})
       } else {
         if (localStorage.getItem('uidAtoken') != null) {
           this.$router.push({name: url})
@@ -137,8 +139,14 @@ export default {
       IMService.getuserinfo(objStr)
         .then(function (res) {
           console.log(res)
-          that.userInfoList = res.data.userinfo
-          that.isVIP = that.userInfoList.vip_info
+          if (res.code == -1) {
+            Toast(res.msg)
+            that.nologin = true
+          }else{
+            that.nologin = false
+            that.userInfoList = res.data.userinfo
+            that.isVIP = that.userInfoList.vip_info
+          }
         })
     },
     // 获取观看历史记录
@@ -149,8 +157,13 @@ export default {
       IMService.getplayhistory(objStr)
         .then(function (res) {
           console.log(res)
-          that.playHistoryList = res.data.list
-          that.HistoryScrollWidth = ((that.playHistoryList.length) * 2.37 + 0.1) + 'rem'
+          if (res.code == -1) {
+            Toast(res.msg)
+          }else{
+            that.playHistoryList = res.data.list
+            that.HistoryScrollWidth = ((that.playHistoryList.length) * 2.37 + 0.1) + 'rem'
+          }
+
         })
     },
     // 影视详情
@@ -165,8 +178,17 @@ export default {
       localStorage.clear()
       this.$router.push({name: 'login'})
     },
+    // 关闭敬请期待框
     future_cancel () {
       this.future = false
+    },
+    editInfo () {
+      if (this.nologin) {
+        localStorage.clear()
+        this.$router.push({name: 'login'})
+      } else {
+        this.$router.push({name: 'myinformationedit'})
+      }
     }
   }
 }

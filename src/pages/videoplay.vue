@@ -27,8 +27,8 @@
         <span @click="dianzan()">&nbsp;{{likecount}}&nbsp;&nbsp;</span>
         <img src="../assets/img/my_dianzan_unlike.png" @click="dianzan()" v-if="!likeStatus"/>
         <img src="../assets/img/my_dianzan.png" @click="dianzan()" v-if="likeStatus"/>
-        <span>&nbsp;下载影片&nbsp;&nbsp;</span>
-        <img src="../assets/img/my_xiazaiNo.png"/>
+        <span @click="downloadVideo()">&nbsp;下载影片&nbsp;&nbsp;</span>
+        <img src="../assets/img/my_xiazaiNo.png" @click="downloadVideo()"/>
       </div>
     </div>
 
@@ -91,16 +91,24 @@
         <div>暂无数据</div>
       </div>
     </div>
+    <van-popup v-model="future">
+      <div class="model_kefu model_nologin model_skipLogin">
+        <p>敬请期待</p>
+        <div class="nologin_cancel" @click="future_cancel()">取消</div>
+        <div class="nologin_sure" @click="future_cancel()">确定</div>
+      </div>
+    </van-popup>
   </div>
 </template>
 
 <script>
 import {IMService} from '../service/RiziServices.js'
 import HelloWorld from '../components/HelloWorld.vue'
-
+import { Popup } from 'vant'
 export default{
   components: {
-    HelloWorld
+    HelloWorld,
+    [Popup.name]: Popup
   },
   data () {
     return {
@@ -121,9 +129,10 @@ export default{
       // video_pid: 1, // 播放集数id号
       jiTabList: [], // 全部集数列表分段显示
       likeStatus: false, // 喜欢状态
-      shoucangStatus: false,// 收藏状态
-      collectioncount:'', // 收藏的数量
-      likecount:'' //点赞的数量
+      shoucangStatus: false, // 收藏状态
+      collectioncount: '', // 收藏的数量
+      likecount: '', // 点赞的数量
+      future: false // 敬请期待显示框
     }
   },
   created () {
@@ -292,6 +301,13 @@ export default{
             that.collectioncount--
           })
       }
+    },
+    downloadVideo () {
+      this.future = true
+    },
+    // 关闭敬请期待框
+    future_cancel () {
+      this.future = false
     }
   }
 }

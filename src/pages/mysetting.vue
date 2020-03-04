@@ -1,29 +1,7 @@
 <template>
   <div class="setting">
-    <!-- <div class="GOothers">
-      <div class="setcont">清除应用缓存<div class="setNum">300.86MB</div></div>
-      <div class="setcont">允许非WIFI下载
-        <div class="setNum" v-if="wifi_checked==true">开启</div>
-        <div class="setNum" v-if="wifi_checked==false">关闭</div>
-        <van-switch :value="wifi_checked" @input="wifi_onInput" active-color="#27FCB9" inactive-color="#AEAEAE"/>
-      </div>
-    </div>
-    <div class="GOothers">
-      <div class="setcont">提示完成音
-        <div class="setNum" v-if="voice_checked==true">开启</div>
-        <div class="setNum" v-if="voice_checked==false">关闭</div>
-        <van-switch :value="voice_checked" @input="voice_onInput" active-color="#27FCB9" inactive-color="#AEAEAE"/>
-      </div>
-      <div class="setcont">消息通知
-        <div class="setNum" v-if="news_checked==true">开启</div>
-        <div class="setNum" v-if="news_checked==false">关闭</div>
-        <van-switch :value="news_checked" @input="news_onInput" active-color="#27FCB9" inactive-color="#AEAEAE"/>
-      </div>
-    </div> -->
     <div class="GOothers">
       <div class="setcont">APP版本号<div class="setNum">v1.0.60</div></div>
-      <div class="setcont">法律文件<img src="../assets/img/my_next.png"/></div>
-      <div class="setcont">关于我们<img src="../assets/img/my_next.png"/></div>
     </div>
     <div @click="loginOut()" class="loginOut OutBTN">{{nologin == false?"退出登录":"登录"}}</div>
 
@@ -38,17 +16,13 @@
 </template>
 
 <script>
-import { Switch, Popup } from 'vant'
+import { Popup } from 'vant'
 export default {
   components: {
-    [Switch.name]: Switch,
     [Popup.name]: Popup
   },
   data () {
     return {
-      wifi_checked: true,
-      voice_checked: true,
-      news_checked: true,
       nologin: false,
       skipLogin: false
     }
@@ -61,15 +35,6 @@ export default {
     }
   },
   methods: {
-    wifi_onInput (checked) {
-      this.wifi_checked = checked
-    },
-    voice_onInput (checked) {
-      this.voice_checked = checked
-    },
-    news_onInput (checked) {
-      this.news_checked = checked
-    },
     loginOut () {
       if (this.nologin) {
         this.skipLogin = false

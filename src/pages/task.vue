@@ -1,14 +1,14 @@
 <template>
   <div class="task">
     <div class="task_title">任务
-      <img src="../assets/img/task_renwu.png" @click="goMydianzan('sharelist')"/>
+      <img src="../assets/img/task_renwu.png" @click="goHelpPage('sharelist')"/>
     </div>
     <div class="buyvip_head">
       <img :src="userInfo.user_avatar" class="headBG" v-if="nologin"/>
       <img src="../assets/img/nopeopleBG.png" class="headBG" v-if="!nologin"/>
       <div class="buyvip_head_hei">
         <div class="touxiang">
-          <div class="myImge">
+          <div class="myImge" @click="editInfo()">
             <img :src="userInfo.user_avatar" v-if="nologin"/>
             <img src="../assets/img/nopeople.png" v-if="!nologin"/>
           </div>
@@ -16,9 +16,9 @@
         <div class="vipInfo">
           <span v-if="nologin">用户：{{userInfo.user_name}}<br></span>
           <p v-if="!nologin" @click="gologinPage()">未登录</p>
-          <span class="openqx" v-if="vipInfo.is_vip == 0" @click="goMydianzan('mybuyvip')">开通VIP享受无限次下载</span>
+          <span class="openqx" v-if="vipInfo.is_vip == 0" @click="goHelpPage('mybuyvip')">开通VIP享受无限次下载</span>
           <span class="openqx" v-if="vipInfo.is_vip == 1">已为你开启所有权限</span>
-          <img src="../assets/img/my_novip.png" v-if="vipInfo.is_vip == 0" @click="goMydianzan('mybuyvip')"/>
+          <img src="../assets/img/my_novip.png" v-if="vipInfo.is_vip == 0" @click="goHelpPage('mybuyvip')"/>
           <img src="../assets/img/my_vip.png" v-if="vipInfo.is_vip == 1"/>
         </div>
         <img src="../assets/img/my_vip_bangzhu.png" class="bangzhu" @click="goHelpPage('help')"/>
@@ -96,7 +96,16 @@ export default {
   methods: {
     // 跳转至帮助页面
     goHelpPage (url) {
-      this.$router.push({name: url})
+
+      if (localStorage.getItem('uidAtoken') != null) {
+        if (this.nologin) {
+          this.$router.push({name: url})
+        } else {
+          Toast('请重新登录!')
+        }
+      } else {
+        Toast('请重新登录!')
+      }
     },
     getshareInfo () {
       let that = this
@@ -104,11 +113,17 @@ export default {
       IMService.getsharedetail(objStr)
         .then(function (res) {
           console.log(res)
-          that.shareList = res.data.info
-          that.userInfo = that.shareList.user_info
-          that.vipInfo = that.shareList.vip_info
-          that.levelDetail = that.shareList.level_detail
-          that.pTXT = that.shareList.share_introduce.replace(/\s/g, '<br/>')
+          if (res.code == -1) {
+            Toast(res.msg)
+            that.nologin = false
+          } else {
+            that.nologin = true
+            that.shareList = res.data.info
+            that.userInfo = that.shareList.user_info
+            that.vipInfo = that.shareList.vip_info
+            that.levelDetail = that.shareList.level_detail
+            that.pTXT = that.shareList.share_introduce.replace(/\s/g, '<br/>')
+          }
         })
     },
     // 复制链接
@@ -128,13 +143,15 @@ export default {
         clipboard.destroy()
       })
     },
-    // 频道跳转
-    goMydianzan (url) {
-      this.$router.push({name: url})
-    },
     gologinPage () {
       localStorage.clear()
       this.$router.push({name: 'login'})
+    },
+    editInfo () {
+      if (!this.nologin) {
+        localStorage.clear()
+        this.$router.push({name: 'login'})
+      }
     }
   }
 }
@@ -167,8 +184,6 @@ export default {
       width: 100%;
       height: 320px;
       margin-top: 88px;
-      background-image: url(../assets/img/my_bg.jpg);
-      background-size: 100% 100%;
       box-shadow: 0px -60px 60px -10px rgba(13, 18, 37, 1) inset;
        text-align: left;
        font-size: 30px;

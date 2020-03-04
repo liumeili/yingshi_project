@@ -125,15 +125,20 @@ class iMService extends AxiosBaseService {
     getsharerule(params) {
         return this.request('?s=App-User-getsharerule', 'get', params);
     }
-    
+
     // 搜索获取大片列表
     searchresult(params) {
         return this.request('?s=App-User-searchresult', 'get', params);
     }
-    
+
     // 分享记录数据
     getsharelog(params) {
         return this.request('?s=App-User-getsharelog', 'get', params);
+    }
+    
+    // 保存修改用户信息接口
+    edituserdata(params) {
+        return this.request('?s=App-User-edituserdata', 'get', params);
     }
 
 

@@ -9,7 +9,10 @@
                 <div class="details-vodyear">年代：{{details.vod_year}}</div>
                 <div class="details-version">导演：{{details.vod_director}}</div>
                 <div class="details-ji">{{details.vod_area}}</div>
-                <div class="details-actor"><span>主演：{{details.vod_actor}}</span><!--<span>展开</span>--></div>
+                <div class="details-actor">
+                  <p :class="actor_show == true?'noallP':'allP'">主演：{{details.vod_actor}}<span v-if="!actor_show" class="actor_shouqi"  @click="actorShow(2)">收起</span></p>
+                  <span class="actor_zhankai" @click="actorShow(1)" v-if="actor_show">展开</span>
+                </div>
                 <div class="details-play" @click="playFun()">立即播放</div>
              </div>
           </div>
@@ -25,13 +28,13 @@
               <span>剧集</span>
               <div @click="xianluOpen()">来源：<span>{{xianluName}}</span></div>
               <div class="xianlu" v-if="xianluStaus">
-                <div v-for="(item,key,index) in xianluList" @click="xianluSelect(item.player_name_zh,index,key)">{{item.player_name_zh}}</div>
+                <div v-for="(item,key,index) in xianluList" :key='index' @click="xianluSelect(item.player_name_zh,index,key)">{{item.player_name_zh}}</div>
               </div>
             </div>
             <div class="details-num6" v-if="allNum==false">
               <ul class="details-num-ul">
-                <li v-for="(item, index) in jilist" @click="selectedNumCLick(index)" :class="{'details-numLiHover':jishuOne==index}" v-if="index<6">
-                  {{item.title[0]=="第"?item.title.substring(1,item.title.length-1):item.title}}
+                <li v-for="(item, index) in jilist" :key='index' @click="selectedNumCLick(index)" :class="{'details-numLiHover':jishuOne==index}" v-if="index<6">
+                  <span :class="item.title.length>4?'numFontsize':''">{{item.title[0]=="第"?item.title.substring(1,item.title.length-1):item.title}}</span>
                 </li>
                 <div class="clearBoth"></div>
               </ul>
@@ -42,14 +45,14 @@
             <!-- 全部集数 -->
             <div class="details-numAll" v-if="allNum==true">
               <div class="details-numAll-tab">
-                <div class="details-numAll-tabs" v-for="(item, index) in jiTabList" :class="{'numAllActive':jishuStaus == index}"
+                <div class="details-numAll-tabs" v-for="(item, index) in jiTabList" :key='index' :class="{'numAllActive':jishuStaus == index}"
                    @click="jishuTab(index)">{{index * 30 + 1}}-{{index * 30 + jiTabList[index].length}}</div>
                 <div class="guanbijishu" @click="closeJishu()"><img src="../assets/img/my_vip_guanbi.png"/></div>
               </div>
               <div class="clearBoth"></div>
-              <ul class="details-num-ul" v-for="(item, index) in jiTabList" v-if="jishuStaus == index">
-                <li v-for="(list, ind) in item" @click="selectedNumCLick(index * 30 + ind)" :class="{'details-numLiHover':jishuOne==(index * 30 + ind)}">
-                  {{list.title.substring(1,list.title.length-1)}}
+              <ul class="details-num-ul" v-for="(item, index) in jiTabList"  :key='index' v-if="jishuStaus == index">
+                <li v-for="(list, ind) in item" :key='ind' @click="selectedNumCLick(index * 30 + ind)" :class="{'details-numLiHover':jishuOne==(index * 30 + ind)}">
+                  <span :class="list.title.length>4?'numFontsize':''">{{list.title.substring(1,list.title.length-1)}}</span>
                 </li>
                 <div class="clearBoth"></div>
               </ul>
@@ -130,7 +133,8 @@ export default {
       video_sid: 1, // 播放线路的id号
       video_pid: 1, // 播放集数id号
       jiTabList: [], // 全部集数列表分段显示
-      nologin: false // 未登录提示去登录
+      nologin: false, // 未登录提示去登录
+      actor_show: true // 是否显示所有主演
     }
   },
   created () {
@@ -211,6 +215,13 @@ export default {
         details.classList.remove('details_txt_all')
         details.classList.add('details_txt')
         zhankai.innerHTML = '展开'
+      }
+    },
+    actorShow (i) {
+      if (i == 1) {
+        this.actor_show = false
+      } else {
+        this.actor_show = true
       }
     },
     // 热播影视
@@ -299,7 +310,27 @@ export default {
            margin-top:10px;
          }
          .details-actor{
+           position: relative;
            margin-top:10px;
+           .noallP{
+             width: 350px;
+             overflow: hidden;
+             white-space: nowrap;
+             text-overflow: ellipsis;
+           }
+           .allP{
+             width: 100%;
+           }
+           .actor_shouqi{
+             padding: 0 20px;
+             color: #27FCB9;
+           }
+           .actor_zhankai{
+             position: absolute;
+             top: 0;
+             right: 0;
+             color: #27FCB9;
+           }
          }
          .details-play{
             background: #1D202F;
@@ -338,11 +369,10 @@ export default {
         position: absolute;
         background: #0D1225;
         display: block;
-        width: 120px;
+        width: 60px;
         padding-left: 8px;
         text-align: left;
         color: #27FCB9;
-        bottom:-20px;
         right: 20px;
         font-size: 26px;
       }
@@ -351,7 +381,7 @@ export default {
     /* 集数 */
     .details-num{
         background: #161C2C;
-        margin-top:25px;
+        margin-top:30px;
         position: relative;
         .details-num-title{
            display: flex;
@@ -386,6 +416,9 @@ export default {
             white-space: normal;
             word-break: break-all;
             overflow: hidden;
+            .numFontsize{
+              font-size: 16px;
+            }
           }
           .details-numLiHover{
             background: none;
@@ -397,7 +430,7 @@ export default {
           height: 80px;
           position: absolute;
           bottom: 20px;
-          right: 45px;
+          right: 25px;
           img{
             width: 32px;
             height: 32px;
@@ -438,7 +471,7 @@ export default {
         }
     }
 
-    // 无数据
+    /* 无数据 */
     .pingdaoNodata{
       margin-top:30px;
       img{
@@ -453,7 +486,7 @@ export default {
       }
     }
 
-    // 弹框
+    /* 弹框 */
     .details-popup{
       background: none!important;
       .details-popupDiv{
