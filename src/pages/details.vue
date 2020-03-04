@@ -28,22 +28,13 @@
               <span>剧集</span>
               <div @click="xianluOpen()">来源：<span>{{xianluName}}</span></div>
               <div class="xianlu" v-if="xianluStaus">
-<<<<<<< HEAD
                 <div v-for="(item,key,index) in xianluList" :key='index' @click="xianluSelect(item.player_name_zh,index,key)">{{item.player_name_zh}}</div>
-=======
-                <div v-for="(item,key,index) in xianluList" :key="index" @click="xianluSelect(item.player_name_zh,index,key)">{{item.player_name_zh}}</div>
->>>>>>> 61355987bf25a3f9dab4c731fc3845f8fd26bf68
               </div>
             </div>
             <div class="details-num6" v-if="allNum==false">
               <ul class="details-num-ul">
-<<<<<<< HEAD
                 <li v-for="(item, index) in jilist" :key='index' @click="selectedNumCLick(index)" :class="{'details-numLiHover':jishuOne==index}" v-if="index<6">
                   <span :class="item.title.length>4?'numFontsize':''">{{item.title[0]=="第"?item.title.substring(1,item.title.length-1):item.title}}</span>
-=======
-                <li v-for="(item, index) in jilist" :key="index" @click="selectedNumCLick(index)" :class="{'details-numLiHover':jishuOne==index}" v-if="index<6">
-                  {{item.title[0]=="第"?item.title.substring(1,item.title.length-1):item.title}}
->>>>>>> 61355987bf25a3f9dab4c731fc3845f8fd26bf68
                 </li>
                 <div class="clearBoth"></div>
               </ul>
@@ -54,11 +45,7 @@
             <!-- 全部集数 -->
             <div class="details-numAll" v-if="allNum==true">
               <div class="details-numAll-tab">
-<<<<<<< HEAD
                 <div class="details-numAll-tabs" v-for="(item, index) in jiTabList" :key='index' :class="{'numAllActive':jishuStaus == index}"
-=======
-                <div class="details-numAll-tabs" v-for="(item, index) in jiTabList" :key="index" :class="{'numAllActive':jishuStaus == index}"
->>>>>>> 61355987bf25a3f9dab4c731fc3845f8fd26bf68
                    @click="jishuTab(index)">{{index * 30 + 1}}-{{index * 30 + jiTabList[index].length}}</div>
                 <div class="guanbijishu" @click="closeJishu()"><img src="../assets/img/my_vip_guanbi.png"/></div>
               </div>
@@ -100,8 +87,8 @@
                      <img src="../assets/img/close.png" class="details-popupClose" @click="tipShow=false">
                      <div class="details-popupText">可看次数不足，可选择一下获取方式</div>
                      <div class="details-popupBtn">
-                       <span>分享</span>
-                       <span>充值</span>6
+                       <span @click="goNextPage('task')">分享</span>
+                       <span @click="goNextPage('mybuyvip')">充值</span>
                      </div>
                   </div>
               </div>
@@ -169,8 +156,8 @@ export default {
     getmoviedetailFun () {
       let that = this
       let objStr = JSON.parse(localStorage.getItem('uidAtoken'))
-      if(objStr){
-          objStr.vod_id = this.$route.query.vodId;
+      if (objStr) {
+        objStr.vod_id = this.$route.query.vodId
       }
       IMService.getmoviedetail(objStr)
         .then(function (res) {
@@ -282,6 +269,9 @@ export default {
       this.skipLogin = false
       localStorage.clear()
       this.$router.push({name: 'login'})
+    },
+    goNextPage (url) {
+      this.$router.push({name: url})
     }
   }
 }
@@ -518,13 +508,12 @@ export default {
               height: 157px;
               position: absolute;
               top:-80px;
-              left: 170px;
             }
             .details-popupClose{
                width: 37px;
                height:37px;
                position: absolute;
-               right: -13px;
+               left: 440px!important;
                top: -15px;
             }
             .details-popupText{
