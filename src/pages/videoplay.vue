@@ -46,7 +46,7 @@
         <ul class="details-num-ul">
           <li v-for="(item, index) in jilist" @click="selectedNumCLick(index)" :key="index" :class="{'details-numLiHover':jishuOne==index}" v-if="index<6">
             <!-- {{item.title[0]=="第"?item.title.substring(1,item.title.length-1):item.title}} -->
-            <span :class="item.title.length>3?'numFontsize':''">{{item.title}}</span>
+            <span :class="item.title.length>4?'numFontsize':''">{{item.title[0]=="第"?item.title.substring(1,item.title.length-1):item.title}}</span>
           </li>
           <div class="clearBoth"></div>
         </ul>
@@ -65,7 +65,7 @@
         <div class="clearBoth"></div>
         <ul class="details-num-ul" v-for="(item, index) in jiTabList" :key="index" v-if="jishuStaus == index">
           <li v-for="(list, ind) in item" :key="ind" @click="selectedNumCLick(index * 30 + ind)" :class="{'details-numLiHover':jishuOne==(index * 30 + ind)}">
-             <span :class="list.title.length>3?'numFontsize':''">{{list.title}}</span>
+             <span :class="list.title.length>3?'numFontsize':''">{{list.title[0]=="第"?list.title.substring(1,list.title.length-1):list.title}}</span>
           </li>
           <div class="clearBoth"></div>
         </ul>

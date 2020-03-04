@@ -7,7 +7,7 @@
         <div class="myImge">
           <img :src="user_avatar"/>
           <div class="editImg">更换头像</div>
-          <input type="file" name="" class="myEdit-addImgS" value=""  @change="tirggerFile($event)"/>
+          <input type="file"  class="myEdit-addImgS" @change="tirggerFile($event)"/>
         </div>
       </div>
     </div>
@@ -68,7 +68,6 @@ export default {
     },
     // 保存修改的信息
     saveinfo () {
-
       let objStr = JSON.parse(localStorage.getItem('uidAtoken'))
       objStr.user_name = this.userName
       objStr.user_avatar = this.user_avatar
@@ -77,12 +76,13 @@ export default {
       } else {
         objStr.user_sex = '2'
       }
-      console.log(objStr)
+      let that = this
       IMService.edituserdata(objStr)
         .then(function (res) {
           console.log(res)
           localStorage.removeItem('loginInfo')
           localStorage.setItem('loginInfo', JSON.stringify(res.data.userinfo))
+          that.$router.push({name: 'my'})
         })
     },
     // 修改头像
@@ -95,15 +95,13 @@ export default {
       param.append('uid', uidToken.uid) // 添加form表单中其他数据
       param.append('token', uidToken.token) // 添加form表单中其他数据
       console.log(param.get('file')) // FormData私有类对象，访问不到，可以通过get判断值是否传进去
-
       let config = { headers: {'Content-Type': 'multipart/form-data'}}
       let path = globalState.serviceBaseUrl + '/index.php?s=App-User-uploadavatar'
       axios.post(path, param, config)
         .then(res => {
-          console.log('修改头像')
-          console.log(res.data)
+          console.log(res)
           that.user_avatar = res.data.data.url
-          console.log(that.user_avatar)
+          Toast('上传成功')
         })
     }
   }
@@ -160,7 +158,8 @@ export default {
              left: 50%;
              top: 50%;
              transform: translate(-50%,-50%);
-             height: 100%;
+             width: 120%;
+             height: auto;
              border-radius: 13px;
           }
           .editImg{

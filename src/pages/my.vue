@@ -9,7 +9,7 @@
         </div>
         <div class="touxiang">
           <div class="myImge" @click="editInfo()">
-            <img :src="userInfoList.user_avatar" v-if="!nologin"/>
+            <img :src="userInfoList.user_avatar" v-if="!nologin" class="myImge_pic"/>
             <img src="../assets/img/nopeople.png" v-if="nologin"/>
           </div>
         </div>
@@ -64,7 +64,7 @@
     </div>
     <van-popup v-model="show">
       <div class="model_kefu">
-        <div class="title01">客服服务热线<br>QQ:123456790</div>
+        <div class="title01">客服服务热线<br>QQ:36077296015</div>
         <div class="title02">联系客服小姐姐，在线解决问题</div>
       </div>
       <img src="../assets/img/my_bg.jpg"/>

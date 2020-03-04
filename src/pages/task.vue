@@ -9,7 +9,7 @@
       <div class="buyvip_head_hei">
         <div class="touxiang">
           <div class="myImge" @click="editInfo()">
-            <img :src="userInfo.user_avatar" v-if="nologin"/>
+            <img :src="userInfo.user_avatar" v-if="nologin" class="myImge_pic"/>
             <img src="../assets/img/nopeople.png" v-if="!nologin"/>
           </div>
         </div>

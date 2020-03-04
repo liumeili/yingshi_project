@@ -10,8 +10,8 @@
                 <div class="details-version">导演：{{details.vod_director}}</div>
                 <div class="details-ji">{{details.vod_area}}</div>
                 <div class="details-actor">
-                  <p :class="actor_show == true?'noallP':'allP'">主演：{{details.vod_actor}}<span v-if="!actor_show" class="actor_shouqi"  @click="actorShow(2)">收起</span></p>
-                  <span class="actor_zhankai" @click="actorShow(1)" v-if="actor_show">展开</span>
+                  <p :class="actor_show == true?'noallP':'allP'" id="actor_pWidth">主演：{{details.vod_actor}}<span v-if="!actor_show&&actorStatus" class="actor_shouqi"  @click="actorShow(2)">收起</span></p>
+                  <span class="actor_zhankai" @click="actorShow(1)" v-if="actor_show&&actorStatus">展开</span>
                 </div>
                 <div class="details-play" @click="playFun()">立即播放</div>
              </div>
@@ -35,7 +35,7 @@
             <div class="details-num6" v-if="allNum==false">
               <ul class="details-num-ul">
                 <li v-for="(item, index) in jilist" :key='index' @click="selectedNumCLick(index)" :class="{'details-numLiHover':jishuOne==index}" v-if="index<6">
-                  <span :class="item.title.length>3?'numFontsize':''">{{item.title}}</span>
+                  <span :class="item.title.length>4?'numFontsize':''">{{item.title[0]=="第"?item.title.substring(1,item.title.length-1):item.title}}</span>
                 </li>
                 <div class="clearBoth"></div>
               </ul>
@@ -53,7 +53,7 @@
               <div class="clearBoth"></div>
               <ul class="details-num-ul" v-for="(item, index) in jiTabList"  :key='index' v-if="jishuStaus == index">
                 <li v-for="(list, ind) in item" :key='ind' class="allNumLi" @click="selectedNumCLick(index * 30 + ind)" :class="{'details-numLiHover':jishuOne==(index * 30 + ind)}">
-                  <span :class="list.title.length>3?'numFontsize':''">{{list.title}}</span>
+                  <span :class="list.title.length>4?'numFontsize':''">{{list.title[0]=="第"?list.title.substring(1,list.title.length-1):list.title}}</span>
                 </li>
                 <div class="clearBoth"></div>
               </ul>
@@ -136,7 +136,8 @@ export default {
       jiTabList: [], // 全部集数列表分段显示
       nologin: false, // 未登录提示去登录
       actor_show: true, // 是否显示所有主演
-      detail_show: true // 是否显示所有简介内容
+      detail_show: true ,// 是否显示所有简介内容
+      actorStatus: false
     }
   },
   created () {
@@ -163,7 +164,14 @@ export default {
       objStr.vod_id = this.vodId
       IMService.getmoviedetail(objStr)
         .then(function (res) {
+          console.log(res)
           that.details = res.data
+          console.log(that.details.vod_actor)
+          if (that.details.vod_actor.length > 10) {
+            that.actorStatus = true
+          }else{
+            that.actorStatus = false
+          }
           that.hotsList = res.data.other
           that.xianluList = res.data.vod_play_list
           for (let i in that.xianluList) {
