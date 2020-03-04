@@ -18,8 +18,9 @@
           </div>
           <!-- 简介 -->
           <div class="details-jjie">
-            <div class="details_txt" id="details_txt">{{details.vod_content}}</div>
-            <span @click="openCont()" id="zhankai">展开</span>
+            <div :class="detail_show == false?'details_txt_all':'details_txt'">{{details.vod_content}}</div>
+            <span @click="openCont(1)" v-if="detail_show">展开</span>
+            <span @click="openCont(2)" v-if="!detail_show">收起</span>
           </div>
 
           <!-- 集数 -->
@@ -34,7 +35,7 @@
             <div class="details-num6" v-if="allNum==false">
               <ul class="details-num-ul">
                 <li v-for="(item, index) in jilist" :key='index' @click="selectedNumCLick(index)" :class="{'details-numLiHover':jishuOne==index}" v-if="index<6">
-                  <span :class="item.title.length>4?'numFontsize':''">{{item.title[0]=="第"?item.title.substring(1,item.title.length-1):item.title}}</span>
+                  <span :class="item.title.length>3?'numFontsize':''">{{item.title}}</span>
                 </li>
                 <div class="clearBoth"></div>
               </ul>
@@ -52,7 +53,7 @@
               <div class="clearBoth"></div>
               <ul class="details-num-ul" v-for="(item, index) in jiTabList"  :key='index' v-if="jishuStaus == index">
                 <li v-for="(list, ind) in item" :key='ind' @click="selectedNumCLick(index * 30 + ind)" :class="{'details-numLiHover':jishuOne==(index * 30 + ind)}">
-                  <span :class="list.title.length>4?'numFontsize':''">{{list.title.substring(1,list.title.length-1)}}</span>
+                  <span :class="list.title.length>3?'numFontsize':''">{{list.title}}</span>
                 </li>
                 <div class="clearBoth"></div>
               </ul>
@@ -134,7 +135,8 @@ export default {
       video_pid: 1, // 播放集数id号
       jiTabList: [], // 全部集数列表分段显示
       nologin: false, // 未登录提示去登录
-      actor_show: true // 是否显示所有主演
+      actor_show: true, // 是否显示所有主演
+      detail_show: true // 是否显示所有简介内容
     }
   },
   created () {
@@ -154,11 +156,11 @@ export default {
 
     //  获取影视详情
     getmoviedetailFun () {
+      this.detail_show = true
+      this.actor_show = true
       let that = this
       let objStr = JSON.parse(localStorage.getItem('uidAtoken'))
-      if (objStr) {
-        objStr.vod_id = this.$route.query.vodId
-      }
+      objStr.vod_id = this.vodId
       IMService.getmoviedetail(objStr)
         .then(function (res) {
           console.log('获取影视详情')
@@ -206,17 +208,11 @@ export default {
     },
 
     // 展开详情
-    openCont () {
-      var details = document.getElementById('details_txt')
-      var zhankai = document.getElementById('zhankai')
-      if (zhankai.innerHTML == '展开') {
-        details.classList.remove('details_txt')
-        details.classList.add('details_txt_all')
-        zhankai.innerHTML = '收起'
+    openCont (i) {
+      if (i == 1) {
+        this.detail_show = false
       } else {
-        details.classList.remove('details_txt_all')
-        details.classList.add('details_txt')
-        zhankai.innerHTML = '展开'
+        this.detail_show = true
       }
     },
     actorShow (i) {
@@ -435,7 +431,7 @@ export default {
           height: 80px;
           position: absolute;
           bottom: 20px;
-          right: 25px;
+          right: 20px;
           img{
             width: 32px;
             height: 32px;

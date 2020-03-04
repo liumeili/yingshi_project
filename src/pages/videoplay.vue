@@ -44,7 +44,8 @@
       <div class="details-num6" v-if="allNum==false">
         <ul class="details-num-ul">
           <li v-for="(item, index) in jilist" @click="selectedNumCLick(index)" :key="index" :class="{'details-numLiHover':jishuOne==index}" v-if="index<6">
-            {{item.title[0]=="第"?item.title.substring(1,item.title.length-1):item.title}}
+            <!-- {{item.title[0]=="第"?item.title.substring(1,item.title.length-1):item.title}} -->
+            <span :class="item.title.length>3?'numFontsize':''">{{item.title}}</span>
           </li>
           <div class="clearBoth"></div>
         </ul>
@@ -63,7 +64,7 @@
         <div class="clearBoth"></div>
         <ul class="details-num-ul" v-for="(item, index) in jiTabList" :key="index" v-if="jishuStaus == index">
           <li v-for="(list, ind) in item" :key="ind" @click="selectedNumCLick(index * 30 + ind)" :class="{'details-numLiHover':jishuOne==(index * 30 + ind)}">
-            {{list.title.substring(1,list.title.length-1)}}
+             <span :class="list.title.length>3?'numFontsize':''">{{list.title}}</span>
           </li>
           <div class="clearBoth"></div>
         </ul>
@@ -74,7 +75,6 @@
     <div class="details-hots">
       <div class="index-titleLine">
         <span>正在热播</span>
-        <span>更多内容</span>
       </div>
       <div class="index-tuijian" v-if="hotsList.length>0">
         <ul>
@@ -425,11 +425,14 @@ export default{
             width: 82.7px;
             padding:20px 0;
             background: #0D1225;
-            margin-left: 20px;
+            margin-left: 25px;
             margin-top:20px;
             white-space: normal;
             word-break: break-all;
             overflow: hidden;
+            .numFontsize{
+              font-size: 16px;
+            }
           }
           .details-numLiHover{
             background: none;
@@ -442,7 +445,7 @@ export default{
           height: 80px;
           position: absolute;
           bottom: 20px;
-          right: 45px;
+          right: 20px;
           img{
             width: 32px;
             height: 32px;
