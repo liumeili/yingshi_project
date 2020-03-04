@@ -90,6 +90,7 @@ export default {
       this.nologin = true
     } else {
       Toast('请重新登录!')
+      this.gologinPage();
       this.nologin = false
     }
   },
@@ -311,8 +312,8 @@ export default {
           height: 80px;
           background:linear-gradient(84deg,rgba(36,217,200,1),rgba(80,208,111,1));
           border-radius:50px;
-          color: #000000;
-          font-size: 32px;
+          color: #fff;
+          font-size: 30px;
         }
         button:last-child{
           margin-left: 50px;

@@ -12,7 +12,7 @@
       <div class="login-form">
         <div class="login-form-input">
           <span class="login-form-span">手机号</span>
-          <van-field v-model="formData.phone" type='tel' placeholder="请输入手机号码" />
+          <van-field v-model="formData.phone" type='tel' maxlength="11" placeholder="请输入手机号码" />
         </div>
         <div class="login-form-input">
           <span class="login-form-span">验证码</span>
