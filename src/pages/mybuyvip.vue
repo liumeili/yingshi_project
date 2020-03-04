@@ -4,7 +4,7 @@
       <img :src="userInfoList.user_avatar" class="headBG"/>
       <div class="buyvip_head_hei">
         <div class="touxiang">
-          <div class="myImge"><img :src="userInfoList.user_avatar"/></div>
+          <div class="myImge"><img :src="userInfoList.user_avatar" class="myImge_pic"/></div>
         </div>
         <div class="vipInfo">
           <span>{{userInfoList.user_name}}</span><br>
