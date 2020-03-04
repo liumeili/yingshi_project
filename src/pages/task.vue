@@ -81,7 +81,6 @@ export default {
       pTXT: '',
       nologin: false,
       nopeople: '../assets/img/nopeople.png'
-
     }
   },
   mounted () {
@@ -90,7 +89,6 @@ export default {
       this.nologin = true
     } else {
       Toast('请重新登录!')
-      this.gologinPage();
       this.nologin = false
     }
   },
