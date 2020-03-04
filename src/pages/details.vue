@@ -52,7 +52,7 @@
               </div>
               <div class="clearBoth"></div>
               <ul class="details-num-ul" v-for="(item, index) in jiTabList"  :key='index' v-if="jishuStaus == index">
-                <li v-for="(list, ind) in item" :key='ind' @click="selectedNumCLick(index * 30 + ind)" :class="{'details-numLiHover':jishuOne==(index * 30 + ind)}">
+                <li v-for="(list, ind) in item" :key='ind' class="allNumLi" @click="selectedNumCLick(index * 30 + ind)" :class="{'details-numLiHover':jishuOne==(index * 30 + ind)}">
                   <span :class="list.title.length>3?'numFontsize':''">{{list.title}}</span>
                 </li>
                 <div class="clearBoth"></div>
@@ -163,12 +163,9 @@ export default {
       objStr.vod_id = this.vodId
       IMService.getmoviedetail(objStr)
         .then(function (res) {
-          console.log('获取影视详情')
-          console.log(res)
           that.details = res.data
           that.hotsList = res.data.other
           that.xianluList = res.data.vod_play_list
-          console.log(that.xianluList)
           for (let i in that.xianluList) {
             that.xlList.push(that.xianluList[i])
           }
@@ -180,7 +177,6 @@ export default {
           for (var i = 0, len = that.jilist.length; i < len; i += 30) {
             that.jiTabList.push(that.jilist.slice(i, i + 30))
           }
-          console.log(that.jiTabList)
           that.jishuTab(0)
         })
     },
@@ -188,7 +184,6 @@ export default {
     selectedNumCLick (index) {
       this.jishuOne = index
       this.video_pid = index + 1
-      console.log(this.video_pid, this.video_sid)
       this.playFun()
     },
     // 立即播放
@@ -198,7 +193,6 @@ export default {
       objStr.vod_id = this.vodId
       IMService.getuserinfo(objStr)
         .then(function (res) {
-          console.log(res.data.userinfo.level_detail)
           if (res.data.userinfo.level_detail.left_play_time == 0) {
             that.tipShow = true
           } else {
@@ -241,7 +235,6 @@ export default {
       this.video_sid = this.xianluList[key].player_sid
       this.jilist = []
       this.jilist = this.xlList[index].son
-      console.log(this.jilist)
       this.jiTabList = []
       for (var i = 0, len = this.jilist.length; i < len; i += 30) {
         this.jiTabList.push(this.jilist.slice(i, i + 30))
@@ -274,7 +267,6 @@ export default {
 </script>
 
 <style lang='less'>
-
   .details{
     /* 影片基本信息 */
     .ys-goback{
@@ -344,9 +336,7 @@ export default {
             margin-top:20px;
          }
        }
-
     }
-
     /* 简介 */
     .details-jjie{
       padding: 0 25px 10px 25px;
@@ -420,6 +410,9 @@ export default {
             .numFontsize{
               font-size: 16px;
             }
+          }
+          .allNumLi{
+            width: 95px;
           }
           .details-numLiHover{
             background: none;

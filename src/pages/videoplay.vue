@@ -18,7 +18,8 @@
       </div>
       <!-- 简介 -->
       <div class="details-jjie">
-        <div class="details_txt" id="details_txt">{{details.vod_content}}</div>
+        <div class="details_txt_all details_actor" v-if="detailShow">主演信息:{{details.vod_actor}}</div>
+        <div :class="detailShow == false?'details_txt':'details_txt_all'">{{details.vod_content}}</div>
       </div>
       <div class="xiazaiVideo"  v-if="opendetail == false">
         <span @click="shoucang()">&nbsp;{{collectioncount}}</span>
@@ -113,7 +114,8 @@ export default{
   data () {
     return {
       details: {}, // 影视详情
-      opendetail: false,
+      opendetail: false, // 是否打开简介
+      detailShow: false, // 是否显示全部详情
       hotsList: [], // 热播
       allNum: false, // 是否展示全部集数
       videoUrl: {},
@@ -147,14 +149,11 @@ export default{
   methods: {
     // 展开详情
     openCont () {
-      var detailsTxt = document.getElementById('details_txt')
       if (this.opendetail === false) {
         this.opendetail = true
-        detailsTxt.classList.remove('details_txt')
-        detailsTxt.classList.add('details_txt_all')
+        this.detailShow = true
       } else {
-        detailsTxt.classList.remove('details_txt_all')
-        detailsTxt.classList.add('details_txt')
+        this.detailShow = false
         this.opendetail = false
       }
     },
@@ -373,6 +372,9 @@ export default{
       overflow: hidden;
       font-size: 0.24rem;
       color: #9D9D9D;
+    }
+    .details_actor{
+      color: #FFFFFF!important;
     }
     .xiazaiVideo{
       width: calc(100% - 35px);
