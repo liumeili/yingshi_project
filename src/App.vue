@@ -40,6 +40,7 @@ export default {
   background: #0D1225;
   color: #fff;
   font-size: 30px;
+  
 }
 
 </style>

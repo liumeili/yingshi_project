@@ -3,7 +3,7 @@
     <div class="hot_title">热点</div>
     <div class="hot_list">
       <ul>
-        <li v-for="(item, index) in hotList" :key="index" @click="goOtherPage(item.h5_url)">
+        <li v-for="(item, index) in hotList" :key="index" @click="goOtherPage(item)">
           <img :src="item.img_url"/>
           <span>{{item.title}}</span>
         </li>
@@ -40,8 +40,13 @@ export default {
           that.hotList = res.data.list
         })
     },
-    goOtherPage (url) {
-      window.location.href = url
+    goOtherPage (item) {
+      if(item.url_type=='1'){
+          this.$router.push({name: 'details', query: {vodId:item.vod_id}})
+      }else{
+        window.location.href = item.h5_url;
+      }
+      
     }
   }
 }

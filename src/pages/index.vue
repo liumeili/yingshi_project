@@ -1,10 +1,13 @@
 <template>
   <div class="index">
+     
       <!-- 搜索 -->
       <div class="index-topSearch">
-          <van-search placeholder="20万部高清大片" v-model="searchVue" @search="onSearch" @focus="focusInput()" v-on:input="change"/>
-          <img src="../assets/img/time.png" class="topSearch-timepImg" v-if="headShow" @click="goHistoryPage('myviewhistory')">
-          <span v-if="!headShow" @click="cancel()" class="cancel_search">取消</span>
+          <form action="搜索">
+            <van-search placeholder="20万部高清大片" v-model="searchVue" @search="onSearch" @focus="focusInput()" v-on:input="change"/>
+            <img src="../assets/img/time.png" class="topSearch-timepImg" v-if="headShow" @click="goHistoryPage('myviewhistory')">
+            <span v-if="!headShow" @click="cancel()" class="cancel_search">取消</span>
+          </form>
       </div>
       <div class="searchPage" v-if="!headShow">
         <div class="history" v-if="historyShow">
@@ -90,26 +93,50 @@
           </div>
 
           <!-- 其他类 -->
-          <div  v-for="(item,index) in otherList" :key="index" v-if="item.movie.length!=0">
-            <div class="index-titleLine">
-              <span>{{item.list_name}}</span>
-              <span @click="topNaChoice(index+1, item.list_id)">更多内容</span>
+          <template v-if="topNavIndex==0">
+            <div  v-for="(item,index) in otherList" :key="index" v-if="item.movie.length!=0">
+              
+              <div class="index-titleLine">
+                <span>{{item.list_name}}</span>
+                <span @click="topNaChoice(index+1, item.list_id)">更多内容</span>
+              </div>
+              <div class="index-tuijian">
+                <ul>
+                  <li v-for="(items,indexs) in item.movie" :key="indexs" @click="toDetailsFun(items.vod_id)">
+                      <div class="tuijian-img"><img :src="items.vod_pic" ></div>
+                      <div class="index-tuijian-name">{{items.vod_name}}</div>
+                      <div class="index-tuijian-dec">{{items.vod_content}}</div>
+                  </li>
+                  <div class="clearBoth"></div>
+                </ul>
+              </div>
+              
             </div>
-            <div class="index-tuijian">
-              <ul>
-                <li v-for="(items,indexs) in item.movie" :key="indexs" @click="toDetailsFun(items.vod_id)">
-                    <div class="tuijian-img"><img :src="items.vod_pic" ></div>
-                    <div class="index-tuijian-name">{{items.vod_name}}</div>
-                    <div class="index-tuijian-dec">{{items.vod_content}}</div>
-                </li>
-                <div class="clearBoth"></div>
-              </ul>
+          </template>
+
+          <template v-if="topNavIndex!=0">
+            <div  v-for="(item,index) in otherList" :key="index" v-if="item.list.length>0">
+              <div class="index-titleLine">
+                <span>{{item.tag}}</span>
+                <span @click="topNaChoice(index+1, item.list_id)">更多内容</span>
+              </div>
+              <div class="index-tuijian">
+                <ul>
+                  <li v-for="(items,indexs) in item.list" :key="indexs" @click="toDetailsFun(items.vod_id)">
+                      <div class="tuijian-img"><img :src="items.vod_pic" ></div>
+                      <div class="index-tuijian-name">{{items.vod_name}}</div>
+                      <div class="index-tuijian-dec">{{items.vod_content}}</div>
+                  </li>
+                  <div class="clearBoth"></div>
+                </ul>
+              </div>
             </div>
-            </div>
+          </template>
       </div>
 
       <!--底部导航  -->
       <Footer></Footer>
+      
   </div>
 </template>
 
@@ -151,12 +178,13 @@ export default {
   mounted () {
     this.mainlistFun() // 首页列表页接口
     this.getbannerlistFun(0) // banner
-    this.getlatestrecommendlistFun() // 最新推荐
+    this.getlatestrecommendlistFun(1) // 最新推荐
     this.getranklistFun(0) // 获取排行榜
     window.addEventListener('scroll', this.scrollToTop)
   },
   methods: {
     onSearch () {
+     
       this.headShow = false
       if (this.historyList != null) {
         this.historyList.push(this.searchVue)
@@ -256,6 +284,7 @@ export default {
       localStorage.removeItem('VideoHistory')
     },
     searchItem (item) {
+      
       let that = this
       if (localStorage.getItem('uidAtoken') != null) {
       } else {
@@ -338,9 +367,9 @@ export default {
     },
 
     // 最新推荐
-    getlatestrecommendlistFun () {
+    getlatestrecommendlistFun (isfirst) {
       let that = this
-      IMService.getlatestrecommendlist({list_id: that.pingdaoId})
+      IMService.getlatestrecommendlist({list_id: that.pingdaoId,is_first:isfirst})
         .then(function (res) {
           console.log('最新推荐')
           console.log(res.data)
@@ -369,7 +398,8 @@ export default {
             console.log('频道列表接口')
             console.log(res)
             that.pingdaoList = res.data.list
-            that.otherList = res.data.list.list
+            that.otherList = res.data.list;
+            console.log('频道其他的：',that.otherList);
           })
       }
     },
@@ -416,28 +446,30 @@ export default {
 
     /* 搜索 */
     .index-topSearch{
-      display: flex;
-      align-items: center;
-      position: fixed;
-      width: 100%;
-      height: 60px;
-      top:0;
-      left: 0;
-      z-index:9999;
-      padding: 20px;
-      background: #0D1225;
-      .van-field__left-icon .van-icon{
-        line-height: normal;
-      }
-      img{
-        margin-left: 15px;
-      }
-      .topSearch-timepImg{
-        width: 44px;
-        height: 44px;
-      }
-      .cancel_search{
-        padding-left: 16px;
+      form{
+        display: flex;
+        align-items: center;
+        position: fixed;
+        width: 100%;
+        height: 60px;
+        top:0;
+        left: 0;
+        z-index:9999;
+        padding: 20px;
+        background: #0D1225;
+        .van-field__left-icon .van-icon{
+          line-height: normal;
+        }
+        img{
+          margin-left: 15px;
+        }
+        .topSearch-timepImg{
+          width: 44px;
+          height: 44px;
+        }
+        .cancel_search{
+          padding-left: 16px;
+        }
       }
     }
     .searchPage{
