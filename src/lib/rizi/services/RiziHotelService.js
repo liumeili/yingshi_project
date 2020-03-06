@@ -135,12 +135,11 @@ class iMService extends AxiosBaseService {
     getsharelog(params) {
         return this.request('?s=App-User-getsharelog', 'get', params);
     }
-    
+
     // 保存修改用户信息接口
     edituserdata(params) {
         return this.request('?s=App-User-edituserdata', 'get', params);
     }
-
 
 
 

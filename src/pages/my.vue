@@ -1,8 +1,8 @@
 <template>
   <div class="my">
     <div class="my_head">
-      <img :src="userInfoList.user_avatar" class="headBG" v-if="!nologin"/>
-      <img src="../assets/img/nopeopleBG.png" class="headBG" v-if="nologin"/>
+      <!-- <img :src="userInfoList.user_avatar" class="headBG" v-if="!nologin"/> -->
+      <img src="../assets/img/nopeopleBG.png" class="headBG"/>
       <div class="head" >
         <div class="editMyinfo" @click="goMydianzan('myinformationedit')">
           修改信息<img src="../assets/img/my_eidt.png"/>
@@ -64,10 +64,10 @@
     </div>
     <van-popup v-model="show">
       <div class="model_kefu">
-        <div class="title01">客服服务热线<br>QQ:36077296015</div>
-        <div class="title02">联系客服小姐姐，在线解决问题</div>
+        <div class="title01">{{kefuList.kefu_title}}<br>QQ:{{kefuList.kefu_qq}}</div>
+        <div class="title02">{{kefuList.kefu_detail}}</div>
       </div>
-      <img src="../assets/img/my_bg.jpg"/>
+      <img :src="kefuList.kefu_portrait"/>
     </van-popup>
     <van-popup v-model="future">
       <div class="model_kefu model_nologin model_skipLogin">
@@ -99,7 +99,8 @@ export default {
       HistoryScrollWidth: '', // 历史记录长度
       show: false, // 隐藏显示客服信息
       nologin: false,
-      future: false // 敬请期待显示框
+      future: false,// 敬请期待显示框
+      kefuList: {} // 客服信息
     }
   },
   mounted () {
@@ -159,11 +160,10 @@ export default {
           console.log(res)
           if (res.code == -1) {
             Toast(res.msg)
-          }else{
+          } else {
             that.playHistoryList = res.data.list
             that.HistoryScrollWidth = ((that.playHistoryList.length) * 2.37 + 0.1) + 'rem'
           }
-
         })
     },
     // 影视详情
@@ -173,6 +173,12 @@ export default {
     // 客服
     showPopup () {
       this.show = true
+      let that = this
+      IMService.getConfig()
+        .then(function (res) {
+          console.log(res)
+          that.kefuList = res.data
+        })
     },
     gologinPage () {
       localStorage.clear()
@@ -215,7 +221,7 @@ export default {
         top: 0;
         left: 0;
         width: 100%;
-        height: 100%;
+        height: 325px;
         background: linear-gradient(to top,rgba(#0D1225, 1),rgba(#0D1225, 0));
         .editMyinfo{
           float: right;
