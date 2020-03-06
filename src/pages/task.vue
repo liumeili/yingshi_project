@@ -14,7 +14,7 @@
           </div>
         </div>
         <div class="vipInfo">
-          <span v-if="nologin">用户：{{userInfo.user_name}}<br></span>
+          <span v-if="nologin">{{userInfo.user_name}}<br></span>
           <p v-if="!nologin" @click="gologinPage()">未登录</p>
           <span class="openqx" v-if="vipInfo.is_vip == 0" @click="goHelpPage('mybuyvip')">开通VIP享受无限次下载</span>
           <span class="openqx" v-if="vipInfo.is_vip == 1">已为你开启所有权限</span>

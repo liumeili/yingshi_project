@@ -99,6 +99,9 @@
         <div class="nologin_sure" @click="future_cancel()">确定</div>
       </div>
     </van-popup>
+
+    <!-- gif下载 -->
+    <img :src="configInfo.gif_img" class="videoPlay_gifImg" v-if="configInfo.gif_isopen=='1'" @click="gifImgFun">
   </div>
 </template>
 
@@ -106,13 +109,15 @@
 import {IMService} from '../service/RiziServices.js'
 import HelloWorld from '../components/HelloWorld.vue'
 import { Popup } from 'vant'
-export default{
-  components: {
+export default {
+  
+  components:{
     HelloWorld,
     [Popup.name]: Popup
   },
   data () {
     return {
+      configInfo:{},  //公共配置信息
       details: {}, // 影视详情
       opendetail: false, // 是否打开简介
       detailShow: false, // 是否显示全部详情
@@ -145,8 +150,23 @@ export default{
   mounted () {
     this.getmoviedetailFun()
     this.getplayurl()
+    this.getConfigFun();
   },
-  methods: {
+  methods:{
+    // 公共配置信息
+    getConfigFun(){
+         let that=this;
+         IMService.getConfig()
+            .then(function(res){
+               console.log('公共配置信息：',res.data);
+               that.configInfo=res.data;
+            })
+    },
+
+    // gif跳转
+    gifImgFun(){
+       window.location.href=this.configInfo.gif_url;
+    },
     // 展开详情
     openCont () {
       if (this.opendetail === false) {
@@ -501,5 +521,13 @@ export default{
         margin-top:10px;
       }
     }
+  }
+  .videoPlay_gifImg{
+    position: fixed;
+    width: 100px;
+    height: 100px;
+    right: 10px;
+    bottom: 100px;
+    border-radius: 10px;
   }
 </style>

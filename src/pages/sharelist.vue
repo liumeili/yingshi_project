@@ -9,9 +9,9 @@
       </ul>
       <ul>
         <li v-for="(item, index) in shareList" :key='index'>
-          <div></div>
-          <div></div>
-          <div></div>
+          <div>{{index+1}}</div>
+          <div>{{item.user_name}}</div>
+          <div>{{item.add_time}}</div>
         </li>
       </ul>
       <div class="pingdaoNodata" v-if="shareList.length == 0">
