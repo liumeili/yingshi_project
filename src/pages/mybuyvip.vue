@@ -160,7 +160,7 @@ export default {
         top: 0;
         left: 0;
         width: 100%;
-        height: 100%;
+        height: 360px;
         background: linear-gradient(to top,rgba(#0D1225, 1),rgba(#0D1225, 0));
         .touxiang{
           float: left;
@@ -254,6 +254,7 @@ export default {
           margin: 40px 30px;
           .van-radio__icon{
             height: auto;
+            font-size: 30px!important;
           }
         }
         .van-icon-success{

@@ -81,7 +81,7 @@
           </div>
 
           <!--弹框  -->
-          <van-popup v-model="tipShow" round class="details-popup">
+          <van-popup v-model="tipShow" class="details-popup">
               <div class="details-popupDiv">
                   <div class="details-popupDiv2">
                      <img src="../assets/img/kuFace.png" class="details-popupkuFace">
@@ -494,6 +494,7 @@ export default {
       .details-popupDiv{
           background: none!important;
           padding: 100px 50px 0 50px;
+          overflow: hidden;
          .details-popupDiv2{
             width:450px;
             height: 300px;

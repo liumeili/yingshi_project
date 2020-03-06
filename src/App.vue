@@ -6,25 +6,14 @@
 </template>
 
 <script>
-import {IMService} from '@/service/RiziServices.js'
 export default {
   name: 'App',
   mounted () {
-    this.getConfigFun()
   },
   methods: {
     // 返回
     gobackFun () {
       this.$router.go(-1)
-    },
-
-    //  获取公共配置
-    getConfigFun () {
-      IMService.getConfig()
-        .then(function (res) {
-          console.log('获取公共配置')
-          console.log(res)
-        })
     }
   }
 }

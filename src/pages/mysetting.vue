@@ -1,13 +1,14 @@
 <template>
   <div class="setting">
     <div class="GOothers">
-      <div class="setcont">APP版本号<div class="setNum">v1.0.60</div></div>
+      <div class="setcont" @click="godownloadApp()">APP版本号<div class="setNum">v1.{{versionNum}}有更新</div></div>
     </div>
     <div @click="loginOut()" class="loginOut OutBTN">{{nologin == false?"退出登录":"登录"}}</div>
 
     <van-popup v-model="skipLogin">
       <div class="model_kefu model_nologin model_skipLogin">
-        <p>是否退出重新登录?</p>
+        <p v-if="!versionStatus">是否退出重新登录?</p>
+        <p v-if="versionStatus">是否更新?</p>
         <div class="nologin_cancel" @click="nologin_cancel()">取消</div>
         <div class="nologin_sure" @click="gologinPage()">确定</div>
       </div>
@@ -16,6 +17,7 @@
 </template>
 
 <script>
+import {IMService} from '@/service/RiziServices.js'
 import { Popup } from 'vant'
 export default {
   components: {
@@ -24,7 +26,11 @@ export default {
   data () {
     return {
       nologin: false,
-      skipLogin: false
+      skipLogin: false,
+      versionNum: '',
+      versionStatus: false,
+      versionList: {},
+      appUrl:''
     }
   },
   mounted () {
@@ -33,9 +39,11 @@ export default {
     } else {
       this.nologin = true
     }
+    this.getVersionFun()
   },
   methods: {
     loginOut () {
+      this.versionStatus = false
       if (this.nologin) {
         this.skipLogin = false
         localStorage.clear()
@@ -49,8 +57,36 @@ export default {
     },
     gologinPage () {
       this.skipLogin = false
-      localStorage.clear()
-      this.$router.push({name: 'login'})
+      if (this.versionStatus) {
+        window.open(this.appUrl)
+      } else {
+        localStorage.clear()
+        this.$router.push({name: 'login'})
+      }
+    },
+    // 根据ios和android下载app
+    getVersionFun () {
+      let that = this
+      IMService.getConfig()
+        .then(function (res) {
+          console.log(res)
+          that.versionList = res.data
+          var u = navigator.userAgent
+          var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Linux') > -1
+          var isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/) // ios终端
+          if (isAndroid) {
+          	that.versionNum = that.versionList.android_version
+            that.appUrl = that.versionList.android_download_url
+          }
+          if (isIOS) {
+          	that.versionNum = that.versionList.ios_version
+            that.appUrl = that.versionList.ios_download_url
+          }
+        })
+    },
+    godownloadApp () {
+      this.skipLogin = true
+      this.versionStatus = true
     }
   }
 }

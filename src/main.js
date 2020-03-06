@@ -11,6 +11,11 @@ Vue.config.productionTip = false
 window.Hls = require('hls.js');
 Vue.use(require('vue-wechat-title'))
 
+import Router from 'vue-router'
+const originalPush = Router.prototype.push
+Router.prototype.push = function push(location) {
+return originalPush.call(this, location).catch(err => err)
+}
 
 import VideoPlayer from 'vue-video-player';
 import 'video.js/dist/video-js.css';
@@ -18,7 +23,7 @@ import 'vue-video-player/src/custom-theme.css';
 import videojs from 'video.js';
 window.videojs = videojs;
 require('videojs-contrib-hls/dist/videojs-contrib-hls.js');
- 
+
 Vue.use(VideoPlayer);
 
 
