@@ -53,11 +53,13 @@ export default {
       IMService.unlikevod(objStr)
         .then(function (res) {
           console.log(res)
-          // that.dianzanList = []
           that.GetdianzanList()
         })
+    },
+    // 影视详情
+    toDetailsFun (id) {
+      this.$router.push({name: 'details', query: {vodId: id}})
     }
-
   }
 }
 </script>

@@ -4,8 +4,8 @@
     <div class="bg02"></div>
     <div class="login_contain">
       <div class="login-logo">
-        <img src="../assets/img/test.png" class="login-logoImg">
-        <div class="login-logoTitle">视频直播</div>
+        <img src="../assets/img/loginLogo.png" class="login-logoImg">
+        <div class="login-logoTitle">黑寡妇影视</div>
       </div>
 
       <!-- form -->
@@ -73,7 +73,7 @@ export default {
         .then(function (res) {
           console.log(res)
           Toast(res.msg)
-          if (res.status == 0) {
+          if (res.code == 0) {
             that.showTime = true
             let timer = setInterval(function () {
               that.times -= 1
@@ -118,6 +118,9 @@ export default {
 </script>
 
 <style lang='less' >
+  .ys-goback{
+    background: none;
+  }
  .bg01{
     position: absolute;
     top: -3rem;
@@ -209,6 +212,7 @@ export default {
        .login-logoImg{
          width: 184px;
          height: 184px;
+         border-radius: 50%;
        }
        .login-logoTitle{
          margin-top:10px;

@@ -12,7 +12,7 @@
           <span class="otherTime" v-if="isVIP.is_vip == 1">剩余VIP时长</span>
           <img src="../assets/img/my_novip.png" v-if="isVIP.is_vip == 0"/>
           <img src="../assets/img/my_vip.png" v-if="isVIP.is_vip == 1"/>
-          <span class="otherTime" v-if="isVIP.is_vip == 1">&nbsp;&nbsp;{{isVIP.vip_endtime}}</span>
+          <span class="otherTime" v-if="isVIP.is_vip == 1">&nbsp;&nbsp;{{isVIP.vip_endtime_str}}</span>
         </div>
         <img src="../assets/img/my_vip_bangzhu.png" class="bangzhu" @click="showPopup"/>
         <div class="buyvip_title">会员购买</div>
@@ -54,10 +54,10 @@
     <div class="closeALL" @click="showPopup">客服</div>
     <van-popup v-model="show">
       <div class="model_kefu">
-        <div class="title01">客服服务热线<br>QQ:123456790</div>
-        <div class="title02">联系客服小姐姐，在线解决问题</div>
+        <div class="title01">{{kefuList.kefu_title}}<br>QQ:{{kefuList.kefu_qq}}</div>
+        <div class="title02">{{kefuList.kefu_detail}}</div>
       </div>
-      <img src="../assets/img/my_bg.jpg"/>
+      <img :src="kefuList.kefu_portrait"/>
     </van-popup>
   </div>
 </template>
@@ -78,7 +78,8 @@ export default {
       activeMoney: 0,
       vipList: [],
       userInfoList: {}, // 用户信息
-      isVIP: {} // 判断是否是vip
+      isVIP: {}, // 判断是否是vip
+      kefuList: {} // 客服信息
     }
   },
   mounted () {
@@ -92,6 +93,12 @@ export default {
     },
     showPopup () {
       this.show = true
+      let that = this
+      IMService.getConfig()
+        .then(function (res) {
+          console.log(res)
+          that.kefuList = res.data
+        })
     },
     // 获取观看历史记录
     getVIPlistFun () {

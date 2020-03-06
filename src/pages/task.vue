@@ -22,7 +22,7 @@
           <img src="../assets/img/my_vip.png" v-if="vipInfo.is_vip == 1"/>
         </div>
         <img src="../assets/img/my_vip_bangzhu.png" class="bangzhu" @click="goHelpPage('help')"/>
-        <div class="buyvip_title">共分享{{userInfo.user_level_share_num}}&nbsp;享有特权</div>
+        <div class="buyvip_title">共分享{{userInfo.user_total_share_num}}&nbsp;享有特权</div>
       </div>
 
     </div>
@@ -39,15 +39,19 @@
       </ul>
     </div>
     <div class="level">
-      <van-progress :percentage="(userInfo.user_level_share_num/levelDetail.share_num)*100" stroke-width="4" v-if="userInfo.user_level_share_num"/>
-      <span v-if="levelDetail.next_level_detail">等级{{levelDetail.level}}&nbsp;下一级&nbsp;等级{{levelDetail.next_level_detail.level}}</span>
-      <span class="level_times">分享{{userInfo.user_level_share_num}}/{{levelDetail.share_num}}</span>
+      <van-progress :percentage="levelDetail.share_num =='0'?100:(userInfo.user_level_share_num/levelDetail.share_num)*100" stroke-width="4" v-if="userInfo.user_level_share_num"/>
+      <p v-if="levelDetail.next_level_detail">等级{{levelDetail.level}}&nbsp;
+        <span v-if="levelDetail.share_num != '0'">下一级&nbsp;等级{{levelDetail.next_level_detail.level}}</span>
+        <span v-if="levelDetail.share_num == '0'">恭喜您已满级</span>
+      </p>
+      <span class="level_times" v-if="levelDetail.share_num != '0'">分享{{userInfo.user_level_share_num}}/{{levelDetail.share_num}}</span>
     </div>
+    <div class="clearBoth"></div>
     <div class="ToPromote">
       <div class="index-titleLine"><span>推广链接</span></div>
       <img :src="shareList.share_code_base64"/>
       <div class="btn">
-        <button>长按保存二维码</button>
+        <button>长按二维码保存</button>
         <button class="code" :data-clipboard-text="shareList.share_url"  @click="copyFun">复制链接</button>
       </div>
       <div class="shareInfo">
@@ -272,7 +276,8 @@ export default {
           }
           div{
             float: left;
-            padding: 15px;
+            width: calc(100% - 140px);
+            padding: 15px 0 15px 15px;
             font-size: 26px;
           }
         }
@@ -288,6 +293,9 @@ export default {
         width: 100%;
         .van-progress__portion{background: #27FCB9;}
         .van-progress__pivot{display: none;}
+      }
+      p{
+        float: left;
       }
       .level_times{
         float: right;
