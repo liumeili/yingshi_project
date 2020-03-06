@@ -207,7 +207,7 @@ export default {
     .my_head{
       position: relative;
       width: 100%;
-      height: 330px;
+      height: 320px;
       overflow: hidden;
       .headBG{
         position: absolute;
@@ -221,7 +221,7 @@ export default {
         top: 0;
         left: 0;
         width: 100%;
-        height: 325px;
+        height: 330px;
         background: linear-gradient(to top,rgba(#0D1225, 1),rgba(#0D1225, 0));
         .editMyinfo{
           float: right;
