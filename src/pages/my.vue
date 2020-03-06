@@ -207,7 +207,7 @@ export default {
     .my_head{
       position: relative;
       width: 100%;
-      height: 320px;
+      height: 325px;
       overflow: hidden;
       .headBG{
         position: absolute;
