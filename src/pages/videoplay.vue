@@ -1,5 +1,6 @@
 <template>
   <div class="videoplay">
+    <div class="ys-goback" @click="gobackFun()"></div>
     <div class="videoplaying" id="dplayer">
      <iframe id="show-iframe" allowfullscreen="true" webkitallowfullscreen="true"
      mozallowfullscreen="true" frameborder="0" scrolling="no" :src="videoUrl.play_url"></iframe>
@@ -65,7 +66,7 @@
         <div class="clearBoth"></div>
         <ul class="details-num-ul" v-for="(item, index) in jiTabList" :key="index" v-if="jishuStaus == index">
           <li v-for="(list, ind) in item" :key="ind" @click="selectedNumCLick(index * 30 + ind)" :class="{'details-numLiHover':jishuOne==(index * 30 + ind)}">
-             <span :class="list.title.length>3?'numFontsize':''">{{list.title[0]=="第"?list.title.substring(1,list.title.length-1):list.title}}</span>
+             <span :class="list.title.length>4?'numFontsize':''">{{list.title[0]=="第"?list.title.substring(1,list.title.length-1):list.title}}</span>
           </li>
           <div class="clearBoth"></div>
         </ul>
@@ -110,14 +111,14 @@ import {IMService} from '../service/RiziServices.js'
 import HelloWorld from '../components/HelloWorld.vue'
 import { Popup } from 'vant'
 export default {
-  
-  components:{
+
+  components: {
     HelloWorld,
     [Popup.name]: Popup
   },
   data () {
     return {
-      configInfo:{},  //公共配置信息
+      configInfo: {}, // 公共配置信息
       details: {}, // 影视详情
       opendetail: false, // 是否打开简介
       detailShow: false, // 是否显示全部详情
@@ -150,22 +151,23 @@ export default {
   mounted () {
     this.getmoviedetailFun()
     this.getplayurl()
-    this.getConfigFun();
+    this.getConfigFun()
   },
-  methods:{
+  methods: {
     // 公共配置信息
-    getConfigFun(){
-         let that=this;
-         IMService.getConfig()
-            .then(function(res){
-               console.log('公共配置信息：',res.data);
-               that.configInfo=res.data;
-            })
+    getConfigFun () {
+      let that = this
+      IMService.getConfig()
+        .then(function (res) {
+          that.configInfo = res.data
+        })
     },
-
+    gobackFun () {
+      this.$router.go(-1)
+    },
     // gif跳转
-    gifImgFun(){
-       window.location.href=this.configInfo.gif_url;
+    gifImgFun () {
+      window.location.href = this.configInfo.gif_url
     },
     // 展开详情
     openCont () {

@@ -69,7 +69,7 @@ export default {
     // 获取验证码
     regSendCodeFun (phone) {
       let that = this
-      IMService.regSendCode({ phone:phone,sign:md5("mobile="+phone+"&wuxhsgttaucchhww")})
+      IMService.regSendCode({ phone: phone, sign: md5('mobile=' + phone + '&wuxhsgttaucchhww')})
         .then(function (res) {
           console.log(res)
           Toast(res.msg)
@@ -90,6 +90,36 @@ export default {
     // 登录
     phoneCodeLoginFun () {
       let that = this
+      var ua = window.navigator.userAgent.toLowerCase()
+      if (ua.match(/MicroMessenger/i) == 'micromessenger') {
+        alert('微信')
+        this.formData.client_type = 4
+      } else {
+        var system = {
+          win: false,
+          mac: false,
+          xll: false
+        }
+        // 检测平台
+        var p = navigator.platform
+        system.win = p.indexOf('Win') == 0
+        system.mac = p.indexOf('Mac') == 0
+        system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0)
+        // 跳转语句，如果是手机访问就自动跳转到页面
+        if (system.win || system.mac || system.xll) {
+          this.formData.client_type = 1
+        } else {
+          var u = navigator.userAgent
+          var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Linux') > -1
+          var isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/) // ios终端
+          if (isAndroid) {
+            this.formData.client_type = 2
+          }
+          if (isIOS) {
+            this.formData.client_type = 3
+          }
+        }
+      }
       let regMobile = /^1[345789]\d{9}$/
       if (this.formData.phone == '') {
         Toast('请输入的手机号码')
