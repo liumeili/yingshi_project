@@ -80,6 +80,7 @@ export default {
       IMService.edituserdata(objStr)
         .then(function (res) {
           console.log(res)
+          Toast('保存成功')
           localStorage.removeItem('loginInfo')
           localStorage.setItem('loginInfo', JSON.stringify(res.data.userinfo))
           that.$router.push({name: 'my'})
