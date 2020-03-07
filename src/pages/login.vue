@@ -130,12 +130,13 @@ export default {
       } else {
         IMService.phoneCodeLogin(this.formData)
           .then(function (res) {
-            if (res.status == 1) {
+            if (res.code == 0) {
               let uidAtoken = {uid: res.data.user_id, token: res.data.user_token}
               localStorage.setItem('uidAtoken', JSON.stringify(uidAtoken))
               localStorage.setItem('loginInfo', JSON.stringify(res.data))
               localStorage.setItem('isLogin', 1)
               that.$router.push({name: 'index'})
+              Toast(res.msg);
             } else {
               Toast(res.msg)
             }

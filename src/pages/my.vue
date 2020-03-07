@@ -59,7 +59,7 @@
     </div>
     <div class="GOothers">
       <div class="tiaozhuan" @click="goMydianzan('mysetting')">设置<img src="../assets/img/my_next.png"/></div>
-      <div class="tiaozhuan" @click="goMydianzan('mybuyhistory')">购买记录<img src="../assets/img/my_next.png"/></div>
+      <!-- <div class="tiaozhuan" @click="goMydianzan('mybuyhistory')">购买记录<img src="../assets/img/my_next.png"/></div> -->
       <div class="tiaozhuan lianxi" @click="showPopup">联系客服<img src="../assets/img/my_next.png"/></div>
     </div>
     <van-popup v-model="show">
