@@ -1,6 +1,6 @@
 <template>
   <div class="index">
-     
+
       <!-- 搜索 -->
       <div class="index-topSearch">
           <form action="搜索">
@@ -95,7 +95,7 @@
           <!-- 其他类 -->
           <template v-if="topNavIndex==0">
             <div  v-for="(item,index) in otherList" :key="index" v-if="item.movie.length!=0">
-              
+
               <div class="index-titleLine">
                 <span>{{item.list_name}}</span>
                 <span @click="topNaChoice(index+1, item.list_id)">更多内容</span>
@@ -110,7 +110,7 @@
                   <div class="clearBoth"></div>
                 </ul>
               </div>
-              
+
             </div>
           </template>
 
@@ -136,7 +136,7 @@
 
       <!--底部导航  -->
       <Footer></Footer>
-      
+
   </div>
 </template>
 
@@ -184,7 +184,6 @@ export default {
   },
   methods: {
     onSearch () {
-     
       this.headShow = false
       if (this.historyList != null) {
         this.historyList.push(this.searchVue)
@@ -213,7 +212,9 @@ export default {
       let that = this
       if (localStorage.getItem('uidAtoken') != null) {
       } else {
-        Toast('请重新登录')
+        Toast('请登录')
+        localStorage.clear()
+        this.$router.push({name: 'login'})
         return
       }
       let objStr = JSON.parse(localStorage.getItem('uidAtoken'))
@@ -284,11 +285,13 @@ export default {
       localStorage.removeItem('VideoHistory')
     },
     searchItem (item) {
-      
+
       let that = this
       if (localStorage.getItem('uidAtoken') != null) {
       } else {
-        Toast('请重新登录')
+        Toast('请登录')
+        localStorage.clear()
+        this.$router.push({name: 'login'})
         return
       }
       let objStr = JSON.parse(localStorage.getItem('uidAtoken'))
@@ -318,7 +321,7 @@ export default {
         if (localStorage.getItem('uidAtoken') != null) {
           this.$router.push({name: url})
         } else {
-          Toast('请重新登录！')
+          Toast('请登录！')
           localStorage.clear()
           this.$router.push({name: 'login'})
         }
@@ -442,7 +445,6 @@ export default {
         white-space: nowrap;
         text-overflow:ellipsis;
     }
-
     /* 搜索 */
     .index-topSearch{
       form{
@@ -475,9 +477,11 @@ export default {
       position: fixed;
       top: 1rem;
       width: 100%;
-      height: calc(100% - 2.08rem);
+      height: calc(100% - 2.02rem);
       background: #0D1225;
-      z-index: 99999;
+      z-index: 9999999;
+      overflow-y: hidden;
+      -webkit-overflow-scrolling: none;
       .history{
         position: fixed;
         top: 110px;
