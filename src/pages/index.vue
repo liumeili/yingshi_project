@@ -296,7 +296,7 @@ export default {
       } else {
         this.$router.push({name: url})
       }
-      
+
     },
     // 首页列表页接口
     mainlistFun () {
@@ -411,7 +411,6 @@ export default {
         overflow:hidden;
         white-space: nowrap;
         text-overflow:ellipsis;
-
     }
 
     /* 搜索 */
@@ -570,11 +569,20 @@ export default {
         }
       }
     }
-
+    .content_BOX{
+      position: fixed;
+      top: 190px;
+      left: 0;
+      width: 100%;
+      height: calc(100% - 298px);
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      z-index: 999999;
+    }
     /* 轮播 */
     .index-swipe{
       height: 314px;
-      margin-top:15px;
+      /* margin-top:15px; */
       .swipe_div{
         position: relative;
         width: calc(100% - 50px);

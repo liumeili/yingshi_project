@@ -171,7 +171,6 @@ export default {
         .then(function (res) {
           console.log(res)
           that.details = res.data
-          console.log(that.details.vod_actor)
           if (that.details.vod_actor.length > 10) {
             that.actorStatus = true
           } else {
@@ -201,18 +200,20 @@ export default {
     },
     // 立即播放
     playFun () {
-      console.log(this.details)
       let that = this
       let objStr = JSON.parse(localStorage.getItem('uidAtoken'))
       IMService.getplayhistory(objStr)
         .then(function (res) {
           console.log(res)
-          res.data.list.forEach(e => {
-            console.log(e)
-            console.log(that.details.vod_id)
-            if (that.details.vod_id == e.vod_id && that.video_pid == e.pid) {
-              that.$router.push({name: 'videoplay', query: {vodId: that.vodId, pid: that.video_pid, sid: that.video_sid}})
-            } else {
+          if (res.data.list.length == 0) {
+            that.$router.push({name: 'videoplay', query: {vodId: that.vodId, pid: that.video_pid, sid: that.video_sid}})
+          } else {
+            var result = res.data.list.some(e => {
+              if (that.details.vod_id == e.vod_id && that.video_pid == e.pid) {
+                return true
+              }
+            })
+            if (!result) {
               objStr.vod_id = that.vodId
               IMService.getuserinfo(objStr)
                 .then(function (res) {
@@ -223,8 +224,10 @@ export default {
                     that.$router.push({name: 'videoplay', query: {vodId: that.vodId, pid: that.video_pid, sid: that.video_sid}})
                   }
                 })
+            } else {
+              that.$router.push({name: 'videoplay', query: {vodId: that.vodId, pid: that.video_pid, sid: that.video_sid}})
             }
-          })
+          }
         })
     },
 
@@ -306,7 +309,7 @@ export default {
   .details{
     /* 影片基本信息 */
     .ys-goback{
-      background: #161C2C;
+      background: #161C2C!important;
     }
     .detais-abstract{
         display: flex;
@@ -555,7 +558,12 @@ export default {
                }
                span:nth-child(1){
                  background: #090F1D;
-                 border-bottom-left-radius: 15px;
+                 border-bottom-left-radius: 15px;.van-overlay{
+      z-index: 999999!important;
+    }
+    .van-popup{
+      z-index: 999999!important;
+    }
                }
                span:nth-child(2){
                  background:linear-gradient(to right,#24D9C8,#50D06F);
@@ -566,12 +574,7 @@ export default {
       }
 
     }
-    .van-overlay{
-      z-index: 999999!important;
-    }
-    .van-popup{
-      z-index: 999999!important;
-    }
+
   }
 
 </style>

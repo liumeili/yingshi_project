@@ -100,7 +100,20 @@
         <div class="nologin_sure" @click="future_cancel()">确定</div>
       </div>
     </van-popup>
-
+    <!--弹框  -->
+    <van-popup v-model="tipShow" class="details-popup">
+        <div class="details-popupDiv">
+            <div class="details-popupDiv2">
+               <img src="../assets/img/kuFace.png" class="details-popupkuFace">
+               <img src="../assets/img/close.png" class="details-popupClose" @click="tipShow=false">
+               <div class="details-popupText">可看次数不足，可选择一下获取方式</div>
+               <div class="details-popupBtn">
+                 <span @click="goNextPage('task')">分享</span>
+                 <span @click="goNextPage('mybuyvip')">充值</span>
+               </div>
+            </div>
+        </div>
+    </van-popup>
     <!-- gif下载 -->
     <img :src="configInfo.gif_img" class="videoPlay_gifImg" v-if="configInfo.gif_isopen=='1'" @click="gifImgFun">
   </div>
@@ -140,7 +153,9 @@ export default {
       shoucangStatus: false, // 收藏状态
       collectioncount: '', // 收藏的数量
       likecount: '', // 点赞的数量
-      future: false // 敬请期待显示框
+      future: false, // 敬请期待显示框
+      tipShow: false, // 弹框展示
+      videoDetail: [] // 视频信息
     }
   },
   created () {
@@ -241,14 +256,49 @@ export default {
           console.log(res)
           that.videoUrl = res.data
           console.log(that.videoUrl)
+          if(that.videoUrl.could_play ==0){
+            that.tipShow = true
+          }
         })
     },
     // 展示全部集数
     selectedNumCLick (index) {
       this.jishuOne = index
       this.video_pid = index + 1
-      this.getplayurl()
-      console.log(this.video_pid, this.video_sid)
+
+      let that = this
+      let objStr = JSON.parse(localStorage.getItem('uidAtoken'))
+      IMService.getplayhistory(objStr)
+        .then(function (res) {
+          console.log(res)
+          if (res.data.list.length == 0) {
+            that.getplayurl()
+          } else {
+            var result = res.data.list.some(e => {
+              if (that.details.vod_id == e.vod_id && that.video_pid == e.pid) {
+                return true
+              }
+            })
+            if (!result) {
+              objStr.vod_id = that.vodId
+              IMService.getuserinfo(objStr)
+                .then(function (res) {
+                  console.log(res)
+                  if (res.data.userinfo.level_detail.left_play_time == 0) {
+                    that.tipShow = true
+                    console.log('播放不了')
+                    that.videoUrl = {}
+                  } else {
+                    that.getplayurl()
+                  }
+                })
+            } else {
+              console.log('可以播放')
+              that.getplayurl()
+              that.tipShow = false
+            }
+          }
+        })
     },
     toDetailsFun (id) {
       // this.details = {}
@@ -271,7 +321,7 @@ export default {
       this.selectedNumCLick(0)
       this.xianluName = name
       this.video_sid = this.xianluList[key].player_sid
-      this.getplayurl()
+      // this.getplayurl()
       this.xianluStaus = false
     },
     // 集数范围选择
@@ -337,7 +387,7 @@ export default {
 
 <style lang="less">
   .ys-goback{
-    background: none;
+    background: none!important;
   }
   .videoplay{
     width: 100%;
@@ -524,6 +574,61 @@ export default {
         margin-top:10px;
       }
     }
+  }
+  /* 弹框 */
+  .details-popup{
+    background: none!important;
+    .details-popupDiv{
+        background: none!important;
+        padding: 100px 50px 0 50px;
+        overflow: hidden;
+       .details-popupDiv2{
+          width:450px;
+          height: 300px;
+          position: relative;
+          background: #1D202F;
+          border-radius: 15px;
+          .details-popupkuFace{
+            width: 157px;
+            height: 157px;
+            position: absolute;
+            top:-80px;
+          }
+          .details-popupClose{
+             width: 37px;
+             height:37px;
+             position: absolute;
+             left: 440px!important;
+             top: -15px;
+          }
+          .details-popupText{
+            padding:100px 40px 40px 40px;
+          }
+          .details-popupBtn{
+            display: flex;
+            align-items: center;
+             span{
+               width: 50%;
+               display: block;
+               padding: 20px 0;
+             }
+             span:nth-child(1){
+               background: #090F1D;
+               border-bottom-left-radius: 15px;
+             }
+             span:nth-child(2){
+               background:linear-gradient(to right,#24D9C8,#50D06F);
+               border-bottom-right-radius: 15px;
+             }
+          }
+       }
+    }
+  }
+  .van-overlay{
+    z-index: 999999!important;
+  }
+  .van-popup{
+    z-index: 999999!important;
   }
   .videoPlay_gifImg{
     position: fixed;
