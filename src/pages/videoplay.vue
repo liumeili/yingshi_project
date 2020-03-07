@@ -210,7 +210,7 @@ export default {
           for (let i in that.xianluList) {
             that.xlList.push(that.xianluList[i])
           }
-          that.xianluName = that.xlList[0].player_name_zh
+          that.xianluName = that.xlList[that.video_sid - 1].player_name_zh
           that.jilist = that.xlList[0].son
           console.log(that.jilist)
           if (that.jilist.length > 6) {
@@ -251,11 +251,12 @@ export default {
       console.log(this.video_pid, this.video_sid)
     },
     toDetailsFun (id) {
-      this.details = {}
-      this.vodId = id
-      this.getmoviedetailFun()
-      this.jishuTab(0)
-      this.selectedNumCLick(0)
+      // this.details = {}
+      // this.vodId = id
+      // this.getmoviedetailFun()
+      // this.jishuTab(0)
+      // this.selectedNumCLick(0)
+      this.$router.push({name: 'details', query: {vodId: id}})
     },
     // 显示来源线路
     xianluOpen () {
