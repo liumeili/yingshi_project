@@ -1,5 +1,5 @@
 <template>
-  <div class="details">
+  <div class="details" id="target">
            <div class="ys-goback" @click="gobackFun()"><span>{{details.vod_name}}</span></div>
            <!-- 影片基本信息 -->
           <div class="detais-abstract">
@@ -63,6 +63,7 @@
           <div class="details-hots">
             <div class="index-titleLine">
               <span>热播</span>
+
             </div>
             <div class="index-tuijian" v-if="hotsList.length>0">
               <ul>
@@ -108,7 +109,7 @@
 
 <script>
 import {IMService} from '../service/RiziServices.js'
-import {Tab, Tabs, Popup} from 'vant'
+import {Tab, Tabs, Popup, Toast} from 'vant'
 export default {
   name: 'details',
   components: {
@@ -144,21 +145,17 @@ export default {
     this.vodId = this.$route.query.vodId
   },
   mounted () {
+    target.scrollIntoView()
+    this.vodId = this.$route.query.vodId
     if (localStorage.getItem('uidAtoken') != null) {
       this.getmoviedetailFun()
     } else {
       this.nologin = true
     }
-    window.addEventListener('scroll', this.showbtn, true)
   },
   methods: {
     gobackFun () {
       this.$router.go(-1)
-    },
-    showbtn () {
-      let that = this
-      let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
-      that.scrollTop = scrollTop
     },
     //  获取影视详情
     getmoviedetailFun () {
@@ -171,25 +168,29 @@ export default {
         .then(function (res) {
           console.log(res)
           that.details = res.data
-          if (that.details.vod_actor.length > 10) {
-            that.actorStatus = true
+          if (res.code == 0) {
+            if (that.details.vod_actor.length > 10) {
+              that.actorStatus = true
+            } else {
+              that.actorStatus = false
+            }
+            that.hotsList = res.data.other
+            that.xianluList = res.data.vod_play_list
+            for (let i in that.xianluList) {
+              that.xlList.push(that.xianluList[i])
+            }
+            that.xianluName = that.xlList[0].player_name_zh
+            that.jilist = that.xlList[0].son
+            if (that.jilist.length > 6) {
+              that.allmore = true
+            }
+            for (var i = 0, len = that.jilist.length; i < len; i += 30) {
+              that.jiTabList.push(that.jilist.slice(i, i + 30))
+            }
+            that.jishuTab(0)
           } else {
-            that.actorStatus = false
+            Toast(res.msg)
           }
-          that.hotsList = res.data.other
-          that.xianluList = res.data.vod_play_list
-          for (let i in that.xianluList) {
-            that.xlList.push(that.xianluList[i])
-          }
-          that.xianluName = that.xlList[0].player_name_zh
-          that.jilist = that.xlList[0].son
-          if (that.jilist.length > 6) {
-            that.allmore = true
-          }
-          for (var i = 0, len = that.jilist.length; i < len; i += 30) {
-            that.jiTabList.push(that.jilist.slice(i, i + 30))
-          }
-          that.jishuTab(0)
         })
     },
     // 展示全部集数
@@ -230,7 +231,6 @@ export default {
           }
         })
     },
-
     // 展开详情
     openCont (i) {
       if (i == 1) {
@@ -248,15 +248,10 @@ export default {
     },
     // 热播影视
     toDetailsFun (id) {
-      var timer = setInterval(function () {
-        let osTop = document.documentElement.scrollTop || document.body.scrollTop
-        let ispeed = Math.floor(-osTop / 5)
-        document.documentElement.scrollTop = document.body.scrollTop = osTop + ispeed
-        this.isTop = true
-        if (osTop === 0) {
-          clearInterval(timer)
-        }
-      }, 0)
+      // document.body.scrollTop = 0
+      // document.documentElement.scrollTop = 0
+      // window.pageYOffset = 0
+      target.scrollIntoView()
       this.details = {}
       this.vodId = id
       this.getmoviedetailFun()
@@ -301,6 +296,9 @@ export default {
     goNextPage (url) {
       this.$router.push({name: url})
     }
+  },
+  destory () {
+  	window.removeEventListener('scroll', this.onScroll)
   }
 }
 </script>
@@ -308,13 +306,13 @@ export default {
 <style lang='less'>
   .details{
     /* 影片基本信息 */
+    padding-top: 100px;
     .ys-goback{
       background: #161C2C!important;
     }
     .detais-abstract{
         display: flex;
-        padding: 20px;
-        margin-top:90px;
+        padding: 0 20px 20px 20px;
        .details-infoImg{
           position: relative;
           width: 270px;
@@ -475,7 +473,7 @@ export default {
              padding-top: 20px;
              .details-numAll-tabs{
                float: left;
-               width: 150px;
+               width: 140px;
                padding: 16px 0;
                margin-bottom: 5px;
                text-align: center;
@@ -525,7 +523,6 @@ export default {
       .details-popupDiv{
           background: none!important;
           padding: 100px 50px 0 50px;
-          overflow: hidden;
          .details-popupDiv2{
             width:450px;
             height: 300px;
@@ -546,11 +543,14 @@ export default {
                top: -15px;
             }
             .details-popupText{
-              padding:100px 40px 40px 40px;
+              width: calc(100% - 100px);
+              height: 120px;
+              padding: 100px 50px 0 50px;
             }
             .details-popupBtn{
               display: flex;
               align-items: center;
+              height: 80px;
                span{
                  width: 50%;
                  display: block;
@@ -558,12 +558,7 @@ export default {
                }
                span:nth-child(1){
                  background: #090F1D;
-                 border-bottom-left-radius: 15px;.van-overlay{
-      z-index: 999999!important;
-    }
-    .van-popup{
-      z-index: 999999!important;
-    }
+                 border-bottom-left-radius: 15px;
                }
                span:nth-child(2){
                  background:linear-gradient(to right,#24D9C8,#50D06F);
@@ -572,9 +567,13 @@ export default {
             }
          }
       }
-
     }
-
+    .van-overlay{
+      z-index: 999999!important;
+    }
+    .van-popup{
+      z-index: 999999!important;
+    }
   }
 
 </style>

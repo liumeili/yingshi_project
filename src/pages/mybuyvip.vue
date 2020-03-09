@@ -1,7 +1,7 @@
 <template>
   <div class="buyvip">
     <div class="buyvip_head">
-      <img :src="userInfoList.user_avatar" class="headBG"/>
+      <img src="../assets/img/nopeopleBG.png" class="headBG"/>
       <div class="buyvip_head_hei">
         <div class="touxiang">
           <div class="myImge"><img :src="userInfoList.user_avatar" class="myImge_pic"/></div>
@@ -9,13 +9,13 @@
         <div class="vipInfo">
           <span>{{userInfoList.user_name}}</span><br>
           <span class="otherTime" v-if="isVIP.is_vip == 0">您还不是VIP</span>
-          <span class="otherTime" v-if="isVIP.is_vip == 1">剩余VIP时长</span>
+          <span class="otherTime" v-if="isVIP.is_vip == 1">尊贵VIP&nbsp;&nbsp;</span>
           <img src="../assets/img/my_novip.png" v-if="isVIP.is_vip == 0"/>
           <img src="../assets/img/my_vip.png" v-if="isVIP.is_vip == 1"/>
-          <span class="otherTime" v-if="isVIP.is_vip == 1">&nbsp;&nbsp;{{isVIP.vip_endtime_str}}</span>
         </div>
         <img src="../assets/img/my_vip_bangzhu.png" class="bangzhu" @click="showPopup"/>
-        <div class="buyvip_title">会员购买</div>
+        <div class="buyvip_title" v-if="isVIP.is_vip == 0">会员购买</div>
+        <div class="buyvip_title" v-if="isVIP.is_vip == 1">{{isVIP.vip_endtime_str}}到期,续费购买</div>
       </div>
 
     </div>
