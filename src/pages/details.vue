@@ -136,7 +136,7 @@ export default {
       jiTabList: [], // 全部集数列表分段显示
       nologin: false, // 未登录提示去登录
       actor_show: true, // 是否显示所有主演
-      detail_show: true ,// 是否显示所有简介内容
+      detail_show: true, // 是否显示所有简介内容
       actorStatus: false
     }
   },
@@ -149,12 +149,17 @@ export default {
     } else {
       this.nologin = true
     }
+    window.addEventListener('scroll', this.showbtn, true)
   },
   methods: {
     gobackFun () {
       this.$router.go(-1)
     },
-
+    showbtn () {
+      let that = this
+      let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
+      that.scrollTop = scrollTop
+    },
     //  获取影视详情
     getmoviedetailFun () {
       this.detail_show = true
@@ -166,10 +171,9 @@ export default {
         .then(function (res) {
           console.log(res)
           that.details = res.data
-          console.log(that.details.vod_actor)
           if (that.details.vod_actor.length > 10) {
             that.actorStatus = true
-          }else{
+          } else {
             that.actorStatus = false
           }
           that.hotsList = res.data.other
@@ -198,13 +202,31 @@ export default {
     playFun () {
       let that = this
       let objStr = JSON.parse(localStorage.getItem('uidAtoken'))
-      objStr.vod_id = this.vodId
-      IMService.getuserinfo(objStr)
+      IMService.getplayhistory(objStr)
         .then(function (res) {
-          if (res.data.userinfo.level_detail.left_play_time == 0) {
-            that.tipShow = true
-          } else {
+          console.log(res)
+          if (res.data.list.length == 0) {
             that.$router.push({name: 'videoplay', query: {vodId: that.vodId, pid: that.video_pid, sid: that.video_sid}})
+          } else {
+            var result = res.data.list.some(e => {
+              if (that.details.vod_id == e.vod_id && that.video_pid == e.pid) {
+                return true
+              }
+            })
+            if (!result) {
+              objStr.vod_id = that.vodId
+              IMService.getuserinfo(objStr)
+                .then(function (res) {
+                  console.log(res)
+                  if (res.data.userinfo.level_detail.left_play_time == 0) {
+                    that.tipShow = true
+                  } else {
+                    that.$router.push({name: 'videoplay', query: {vodId: that.vodId, pid: that.video_pid, sid: that.video_sid}})
+                  }
+                })
+            } else {
+              that.$router.push({name: 'videoplay', query: {vodId: that.vodId, pid: that.video_pid, sid: that.video_sid}})
+            }
           }
         })
     },
@@ -226,6 +248,15 @@ export default {
     },
     // 热播影视
     toDetailsFun (id) {
+      var timer = setInterval(function () {
+        let osTop = document.documentElement.scrollTop || document.body.scrollTop
+        let ispeed = Math.floor(-osTop / 5)
+        document.documentElement.scrollTop = document.body.scrollTop = osTop + ispeed
+        this.isTop = true
+        if (osTop === 0) {
+          clearInterval(timer)
+        }
+      }, 0)
       this.details = {}
       this.vodId = id
       this.getmoviedetailFun()
@@ -278,7 +309,7 @@ export default {
   .details{
     /* 影片基本信息 */
     .ys-goback{
-      background: #161C2C;
+      background: #161C2C!important;
     }
     .detais-abstract{
         display: flex;
@@ -527,7 +558,12 @@ export default {
                }
                span:nth-child(1){
                  background: #090F1D;
-                 border-bottom-left-radius: 15px;
+                 border-bottom-left-radius: 15px;.van-overlay{
+      z-index: 999999!important;
+    }
+    .van-popup{
+      z-index: 999999!important;
+    }
                }
                span:nth-child(2){
                  background:linear-gradient(to right,#24D9C8,#50D06F);
@@ -538,12 +574,7 @@ export default {
       }
 
     }
-    .van-overlay{
-      z-index: 999999!important;
-    }
-    .van-popup{
-      z-index: 999999!important;
-    }
+
   }
 
 </style>
