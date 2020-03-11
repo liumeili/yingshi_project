@@ -1,14 +1,13 @@
 <template>
   <div class="setting">
     <div class="GOothers">
-      <div class="setcont" @click="godownloadApp()">APP版本号<div class="setNum">v1.{{versionNum}}有更新</div></div>
+      <div class="setcont">APP版本号<div class="setNum">v0.{{versionNum}}版本</div></div>
     </div>
     <div @click="loginOut()" class="loginOut OutBTN">{{nologin == false?"退出登录":"登录"}}</div>
 
     <van-popup v-model="skipLogin">
       <div class="model_kefu model_nologin model_skipLogin">
-        <p v-if="!versionStatus">是否退出重新登录?</p>
-        <p v-if="versionStatus">是否更新?</p>
+        <p>是否退出重新登录?</p>
         <div class="nologin_cancel" @click="nologin_cancel()">取消</div>
         <div class="nologin_sure" @click="gologinPage()">确定</div>
       </div>
@@ -28,7 +27,6 @@ export default {
       nologin: false,
       skipLogin: false,
       versionNum: '',
-      versionStatus: false,
       versionList: {},
       appUrl:''
     }
@@ -43,7 +41,6 @@ export default {
   },
   methods: {
     loginOut () {
-      this.versionStatus = false
       if (this.nologin) {
         this.skipLogin = false
         localStorage.clear()
@@ -57,12 +54,8 @@ export default {
     },
     gologinPage () {
       this.skipLogin = false
-      if (this.versionStatus) {
-        window.open(this.appUrl)
-      } else {
-        localStorage.clear()
-        this.$router.push({name: 'login'})
-      }
+      localStorage.clear()
+      this.$router.push({name: 'login'})
     },
     // 根据ios和android下载app
     getVersionFun () {
@@ -76,17 +69,11 @@ export default {
           var isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/) // ios终端
           if (isAndroid) {
           	that.versionNum = that.versionList.android_version
-            that.appUrl = that.versionList.android_download_url
           }
           if (isIOS) {
           	that.versionNum = that.versionList.ios_version
-            that.appUrl = that.versionList.ios_download_url
           }
         })
-    },
-    godownloadApp () {
-      this.skipLogin = true
-      this.versionStatus = true
     }
   }
 }

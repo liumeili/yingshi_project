@@ -634,8 +634,8 @@ export default {
   }
   .videoPlay_gifImg{
     position: fixed;
-    width: 100px;
-    height: 100px;
+    width: 120px;
+    height: 120px;
     right: 10px;
     bottom: 100px;
     border-radius: 10px;

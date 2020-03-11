@@ -100,7 +100,7 @@ export default {
                 that.times = 60
                 clearInterval(timer)
               }
-            }, 1000)
+            }, 500)
           }
         })
     },

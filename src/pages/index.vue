@@ -491,6 +491,7 @@ export default {
         width: calc(100% - 25px);
         margin-left: 25px;
         text-align: left;
+        z-index: 99992;
         span{
           font-size: 32px;
         }
