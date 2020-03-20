@@ -112,9 +112,10 @@
     </div>
     <van-popup v-model="future">
       <div class="model_kefu model_nologin model_skipLogin">
-        <p>敬请期待</p>
-        <div class="nologin_cancel" @click="future_cancel()">取消</div>
-        <div class="nologin_sure" @click="future_cancel()">确定</div>
+        <p v-if="downAPP">敬请期待</p>
+        <p v-if="!downAPP" class="noplay">该视频为加密私品<br>请下载APP播放</p>
+        <div class="nologin_cancel" @click="future_cancel(1)">取消</div>
+        <div class="nologin_sure" @click="future_cancel(2)">确定</div>
       </div>
     </van-popup>
     <!--弹框  -->
@@ -139,14 +140,14 @@
 <script>
 import {IMService} from '../service/RiziServices.js'
 import HelloWorld from '../components/HelloWorld.vue'
-import { Popup, Swipe, SwipeItem } from 'vant'
+import { Popup, Swipe, SwipeItem, Toast } from 'vant'
 export default {
 
   components: {
     HelloWorld,
     [Popup.name]: Popup,
     [Swipe.name]: Swipe,
-    [SwipeItem.name]: SwipeItem,
+    [SwipeItem.name]: SwipeItem
   },
   data () {
     return {
@@ -176,8 +177,10 @@ export default {
       tipShow: false, // 弹框展示
       videoDetail: [], // 视频信息
       DetailBannerList: {}, // 播放页面的轮播图
-      playBannerList: {} ,// 播放里的轮播图
-      closeSwipe:false // 显示隐藏播放中的轮播图
+      playBannerList: {}, // 播放里的轮播图
+      closeSwipe: false, // 显示隐藏播放中的轮播图
+      downAPP: false,
+      downloadUrl:''
     }
   },
   created () {
@@ -190,6 +193,20 @@ export default {
     this.getplayurl()
     this.getConfigFun()
     this.getPlayDetailBanner()
+    let that = this
+    IMService.getConfig()
+      .then(function (res) {
+        console.log(res)
+        var u = navigator.userAgent
+        var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Linux') > -1
+        var isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/) // ios终端
+        if (isAndroid) {
+        	that.downloadUrl = res.data.android_download_url
+        }
+        if (isIOS) {
+        	that.downloadUrl = res.data.ios_download_url
+        }
+      })
   },
   methods: {
     // 公共配置信息
@@ -277,11 +294,19 @@ export default {
         .then(function (res) {
           console.log('获取播放url')
           console.log(res)
-          that.videoUrl = res.data
           console.log(that.videoUrl)
-          if(that.videoUrl.could_play ==0){
-            that.tipShow = true
+          if(res.data.vod_upload_type == 0){
+            that.videoUrl = res.data
+            if(res.data.could_play ==0){
+              that.tipShow = true
+            }
+          }else if(res.data.vod_upload_type == 1){
+            that.downAPP = false
+            that.future = true
+          }else{
+            Toast("未能识别的播放器类型")
           }
+
         })
     },
     // 展示全部集数
@@ -401,7 +426,10 @@ export default {
       this.future = true
     },
     // 关闭敬请期待框
-    future_cancel () {
+    future_cancel (i) {
+      if (i == 2&&!this.downAPP) {
+        window.location.href = this.downloadUrl
+      }
       this.future = false
     },
     getPlayDetailBanner () {
