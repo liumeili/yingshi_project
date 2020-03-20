@@ -3,70 +3,78 @@
     <div class="task_title">任务
       <img src="../assets/img/task_renwu.png" @click="goHelpPage('sharelist')"/>
     </div>
-    <div class="buyvip_head">
-      <img :src="userInfo.user_avatar" class="headBG" v-if="nologin"/>
-      <img src="../assets/img/nopeopleBG.png" class="headBG" v-if="!nologin"/>
-      <div class="buyvip_head_hei">
-        <div class="touxiang">
-          <div class="myImge" @click="editInfo()">
-            <img :src="userInfo.user_avatar" v-if="nologin" class="myImge_pic"/>
-            <img src="../assets/img/nopeople.png" v-if="!nologin"/>
+    <div class="ALLscrollOne">
+      <div class="buyvip_head">
+        <img :src="userInfo.user_avatar" class="headBG" v-if="nologin"/>
+        <img src="../assets/img/nopeopleBG.png" class="headBG" v-if="!nologin"/>
+        <div class="buyvip_head_hei">
+          <div class="touxiang">
+            <div class="myImge" @click="editInfo()">
+              <img :src="userInfo.user_avatar" v-if="nologin" class="myImge_pic"/>
+              <img src="../assets/img/nopeople.png" v-if="!nologin"/>
+            </div>
           </div>
+          <div class="vipInfo">
+            <span v-if="nologin">{{userInfo.user_name}}<br></span>
+            <p v-if="!nologin" @click="gologinPage()">未登录</p>
+            <span class="openqx" v-if="vipInfo.is_vip == 0" @click="goHelpPage('mybuyvip')">开通VIP享受无限次下载</span>
+            <span class="openqx" v-if="vipInfo.is_vip == 1">已为你开启所有权限</span>
+            <img src="../assets/img/my_novip.png" v-if="vipInfo.is_vip == 0" @click="goHelpPage('mybuyvip')"/>
+            <img src="../assets/img/my_vip.png" v-if="vipInfo.is_vip == 1"/>
+          </div>
+          <img src="../assets/img/my_vip_bangzhu.png" class="bangzhu" @click="goHelpPage('help')"/>
+          <div class="buyvip_title">共分享{{userInfo.user_total_share_num}}&nbsp;享有特权</div>
         </div>
-        <div class="vipInfo">
-          <span v-if="nologin">{{userInfo.user_name}}<br></span>
-          <p v-if="!nologin" @click="gologinPage()">未登录</p>
-          <span class="openqx" v-if="vipInfo.is_vip == 0" @click="goHelpPage('mybuyvip')">开通VIP享受无限次下载</span>
-          <span class="openqx" v-if="vipInfo.is_vip == 1">已为你开启所有权限</span>
-          <img src="../assets/img/my_novip.png" v-if="vipInfo.is_vip == 0" @click="goHelpPage('mybuyvip')"/>
-          <img src="../assets/img/my_vip.png" v-if="vipInfo.is_vip == 1"/>
-        </div>
-        <img src="../assets/img/my_vip_bangzhu.png" class="bangzhu" @click="goHelpPage('help')"/>
-        <div class="buyvip_title">共分享{{userInfo.user_total_share_num}}&nbsp;享有特权</div>
       </div>
-
-    </div>
-    <div class="timesBlock">
-      <ul class="times">
-        <li>
-          <img src="../assets/img/my_vip_yanjing.png"/>
-          <div>观看次数<p>{{shareList.watch_time_str}}</p></div>
-        </li>
-        <li>
-          <img src="../assets/img/my_vip_xiazai.png"/>
-          <div>下载次数<p>{{shareList.donwload_time_str}}</p></div>
-        </li>
-      </ul>
-    </div>
-    <div class="level">
-      <van-progress :percentage="levelDetail.share_num =='0'?100:(userInfo.user_level_share_num/levelDetail.share_num)*100" stroke-width="4" v-if="userInfo.user_level_share_num"/>
-      <p v-if="levelDetail.next_level_detail">等级{{levelDetail.level}}&nbsp;
-        <span v-if="levelDetail.share_num != '0'">下一级&nbsp;等级{{levelDetail.next_level_detail.level}}</span>
-        <span v-if="levelDetail.share_num == '0'">恭喜您已满级</span>
-      </p>
-      <span class="level_times" v-if="levelDetail.share_num != '0'">分享{{userInfo.user_level_share_num}}/{{levelDetail.share_num}}</span>
-    </div>
-    <div class="clearBoth"></div>
-    <div class="ToPromote">
-      <div class="index-titleLine"><span>推广链接</span></div>
-      <img :src="shareList.share_code_base64"/>
-      <div class="btn">
-        <button>长按二维码保存</button>
-        <button class="code" :data-clipboard-text="shareList.share_url"  @click="copyFun">复制链接</button>
+      <div class="timesBlock">
+        <ul class="times">
+          <li>
+            <img src="../assets/img/my_vip_yanjing.png"/>
+            <div>观看次数<p>{{shareList.watch_time_str}}</p></div>
+          </li>
+          <li>
+            <img src="../assets/img/my_vip_xiazai.png"/>
+            <div>下载次数<p>{{shareList.donwload_time_str}}</p></div>
+          </li>
+        </ul>
       </div>
-      <div class="shareInfo">
-        <span>分享说明</span>
-        <p v-html="pTXT">{{pTXT}}
+      <div class="level">
+        <van-progress :percentage="levelDetail.share_num =='0'?100:(userInfo.user_level_share_num/levelDetail.share_num)*100" stroke-width="4" v-if="userInfo.user_level_share_num"/>
+        <p v-if="levelDetail.next_level_detail">等级{{levelDetail.level}}&nbsp;
+          <span v-if="levelDetail.share_num != '0'">下一级&nbsp;等级{{levelDetail.next_level_detail.level}}</span>
+          <span v-if="levelDetail.share_num == '0'">恭喜您已满级</span>
         </p>
+        <span class="level_times" v-if="levelDetail.share_num != '0'">分享{{userInfo.user_level_share_num}}/{{levelDetail.share_num}}</span>
+      </div>
+      <div class="clearBoth"></div>
+      <div class="ToPromote">
+        <div class="index-titleLine"><span>推广链接</span></div>
+        <img :src="shareList.share_code_base64"/>
+        <div class="btn">
+          <button>长按二维码保存</button>
+          <button class="code" :data-clipboard-text="shareList.share_url"  @click="copyFun">复制链接</button>
+        </div>
+        <div class="shareInfo">
+          <span>分享说明</span>
+          <p v-html="pTXT">{{pTXT}}
+          </p>
+        </div>
       </div>
     </div>
+    <van-popup v-model="downAPP">
+      <div class="model_kefu model_nologin model_skipLogin">
+        <p>是否下载APP</p>
+        <div class="nologin_cancel" @click="future_cancel(1)">取消</div>
+        <div class="nologin_sure" @click="future_cancel(2)">确定</div>
+      </div>
+    </van-popup>
     <Footer></Footer>
   </div>
 </template>
 
 <script>
 import {IMService} from '../service/RiziServices.js'
-import { Toast, Button, Progress } from 'vant'
+import { Toast, Button, Progress, Popup } from 'vant'
 import Footer from '../components/footer.vue'
 import Clipboard from 'clipboard'
 export default {
@@ -74,6 +82,7 @@ export default {
   components: {
     [Button.name]: Button,
     [Progress.name]: Progress,
+    [Popup.name]: Popup,
     Footer
   },
   data () {
@@ -84,7 +93,9 @@ export default {
       levelDetail: {}, // 用户等级信息
       pTXT: '',
       nologin: false,
-      nopeople: '../assets/img/nopeople.png'
+      nopeople: '../assets/img/nopeople.png',
+      downloadUrl:'',
+      downAPP:false
     }
   },
   mounted () {
@@ -99,15 +110,31 @@ export default {
   methods: {
     // 跳转至帮助页面
     goHelpPage (url) {
-
-      if (localStorage.getItem('uidAtoken') != null) {
-        if (this.nologin) {
-          this.$router.push({name: url})
+      if(url == 'mybuyvip'){
+        this.downAPP = true
+        let that = this
+        IMService.getConfig()
+          .then(function (res) {
+            var u = navigator.userAgent
+            var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Linux') > -1
+            var isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/) // ios终端
+            if (isAndroid) {
+            	that.downloadUrl = res.data.android_download_url
+            }
+            if (isIOS) {
+            	that.downloadUrl = res.data.ios_download_url
+            }
+          })
+      }else{
+        if (localStorage.getItem('uidAtoken') != null) {
+          if (this.nologin) {
+            this.$router.push({name: url})
+          } else {
+            Toast('请重新登录!')
+          }
         } else {
           Toast('请重新登录!')
         }
-      } else {
-        Toast('请重新登录!')
       }
     },
     getshareInfo () {
@@ -155,6 +182,13 @@ export default {
         localStorage.clear()
         this.$router.push({name: 'login'})
       }
+    },
+    // 关闭下载app提示框
+    future_cancel (i) {
+      if (i == 2) {
+        window.location.href = this.downloadUrl
+      }
+      this.downAPP = false
     }
   }
 }
@@ -186,7 +220,6 @@ export default {
       position: relative;
       width: 100%;
       height: 320px;
-      margin-top: 88px;
       box-shadow: 0px -60px 60px -10px rgba(13, 18, 37, 1) inset;
        text-align: left;
        font-size: 30px;
@@ -303,7 +336,7 @@ export default {
     }
     .ToPromote{
       width: 100%;
-      margin-bottom: 120px;
+      margin-bottom: 10px;
       background: #161C2C;
       img{
         width: 340px;

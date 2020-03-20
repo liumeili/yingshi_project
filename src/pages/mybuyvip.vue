@@ -1,60 +1,62 @@
 <template>
   <div class="buyvip">
-    <div class="buyvip_head">
-      <img src="../assets/img/nopeopleBG.png" class="headBG"/>
-      <div class="buyvip_head_hei">
-        <div class="touxiang">
-          <div class="myImge"><img :src="userInfoList.user_avatar" class="myImge_pic"/></div>
+    <div class="ALLscrollTwo">
+      <div class="buyvip_head">
+        <img src="../assets/img/nopeopleBG.png" class="headBG"/>
+        <div class="buyvip_head_hei">
+          <div class="touxiang">
+            <div class="myImge"><img :src="userInfoList.user_avatar" class="myImge_pic"/></div>
+          </div>
+          <div class="vipInfo">
+            <span>{{userInfoList.user_name}}</span><br>
+            <span class="otherTime" v-if="isVIP.is_vip == 0">您还不是VIP</span>
+            <span class="otherTime" v-if="isVIP.is_vip == 1">尊贵VIP&nbsp;&nbsp;</span>
+            <img src="../assets/img/my_novip.png" v-if="isVIP.is_vip == 0"/>
+            <img src="../assets/img/my_vip.png" v-if="isVIP.is_vip == 1"/>
+          </div>
+          <img src="../assets/img/my_vip_bangzhu.png" class="bangzhu" @click="showPopup"/>
+          <div class="buyvip_title" v-if="isVIP.is_vip == 0">会员购买</div>
+          <div class="buyvip_title" v-if="isVIP.is_vip == 1">{{isVIP.vip_endtime_str}}到期,续费购买</div>
         </div>
-        <div class="vipInfo">
-          <span>{{userInfoList.user_name}}</span><br>
-          <span class="otherTime" v-if="isVIP.is_vip == 0">您还不是VIP</span>
-          <span class="otherTime" v-if="isVIP.is_vip == 1">尊贵VIP&nbsp;&nbsp;</span>
-          <img src="../assets/img/my_novip.png" v-if="isVIP.is_vip == 0"/>
-          <img src="../assets/img/my_vip.png" v-if="isVIP.is_vip == 1"/>
-        </div>
-        <img src="../assets/img/my_vip_bangzhu.png" class="bangzhu" @click="showPopup"/>
-        <div class="buyvip_title" v-if="isVIP.is_vip == 0">会员购买</div>
-        <div class="buyvip_title" v-if="isVIP.is_vip == 1">{{isVIP.vip_endtime_str}}到期,续费购买</div>
+      
       </div>
-
-    </div>
-    <div>
-      <ul class="vipTime">
-        <li v-for="(item,index) in vipList" :key="index" @click="getItem(index)" :class="{'activeM':activeMoney==index}">
-          <div>{{item.vip_detail}}</div>
-          <div class="vip_money">￥<span>{{item.vip_price}}</span></div>
+      <div>
+        <ul class="vipTime">
+          <li v-for="(item,index) in vipList" :key="index" @click="getItem(index)" :class="{'activeM':activeMoney==index}">
+            <div>{{item.vip_detail}}</div>
+            <div class="vip_money">￥<span>{{item.vip_price}}</span></div>
+          </li>
+          <div class="clearBoth"></div>
+        </ul>
+      </div>
+      
+      <van-radio-group v-model="radio">
+        <div class="pay_way_list">
+          <img src="../assets/img/my_vip_zhifubao.png"/>
+          <div class="pay_way_name">支付宝</div>
+          <van-radio name="1" checked-color="#07c160"></van-radio>
+        </div>
+      </van-radio-group>
+      <div class="index-titleLine">
+        <span>特权说明</span>
+      </div>
+      <ul class="tequan">
+        <li>
+          <img src="../assets/img/my_vip_yanjing.png"/>
+          <div class="tequan_title">无限观看电影</div>
         </li>
-        <div class="clearBoth"></div>
+        <li>
+          <img src="../assets/img/my_vip_xiazai.png"/>
+          <div class="tequan_title">无限下载电影</div>
+        </li>
+        <li>
+          <img src="../assets/img/my_vip_birthday.png"/>
+          <div class="tequan_title">会员生日</div>
+        </li>
       </ul>
+      <div class="loginOut" @click="BuyVip()">购买</div>
+      <div class="closeALL" @click="showPopup()">客服</div>
     </div>
-
-    <van-radio-group v-model="radio">
-      <div class="pay_way_list">
-        <img src="../assets/img/my_vip_zhifubao.png"/>
-        <div class="pay_way_name">支付宝</div>
-        <van-radio name="1" checked-color="#07c160"></van-radio>
-      </div>
-    </van-radio-group>
-    <div class="index-titleLine">
-      <span>特权说明</span>
-    </div>
-    <ul class="tequan">
-      <li>
-        <img src="../assets/img/my_vip_yanjing.png"/>
-        <div class="tequan_title">无限观看电影</div>
-      </li>
-      <li>
-        <img src="../assets/img/my_vip_xiazai.png"/>
-        <div class="tequan_title">无限下载电影</div>
-      </li>
-      <li>
-        <img src="../assets/img/my_vip_birthday.png"/>
-        <div class="tequan_title">会员生日</div>
-      </li>
-    </ul>
-    <div class="loginOut" @click="BuyVip()">购买</div>
-    <div class="closeALL" @click="showPopup()">客服</div>
     <van-popup v-model="show">
       <div class="model_kefu">
         <div class="title01">{{kefuList.kefu_title}}<br>QQ:{{kefuList.kefu_qq}}</div>

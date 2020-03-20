@@ -1,67 +1,70 @@
 <template>
   <div class="my">
-    <div class="my_head">
-      <!-- <img :src="userInfoList.user_avatar" class="headBG" v-if="!nologin"/> -->
-      <img src="../assets/img/nopeopleBG.png" class="headBG"/>
-      <div class="head" >
-        <div class="editMyinfo" @click="goMydianzan('myinformationedit')">
-          修改信息<img src="../assets/img/my_eidt.png"/>
-        </div>
-        <div class="touxiang">
-          <div class="myImge" @click="editInfo()">
-            <img :src="userInfoList.user_avatar" v-if="!nologin" class="myImge_pic"/>
-            <img src="../assets/img/nopeople.png" v-if="nologin"/>
+    <div class="ALLscroll">
+      <div class="my_head">
+        <!-- <img :src="userInfoList.user_avatar" class="headBG" v-if="!nologin"/> -->
+        <img src="../assets/img/nopeopleBG.png" class="headBG"/>
+        <div class="head" >
+          <div class="editMyinfo" @click="goMydianzan('myinformationedit')">
+            修改信息<img src="../assets/img/my_eidt.png"/>
+          </div>
+          <div class="touxiang">
+            <div class="myImge" @click="editInfo()">
+              <img :src="userInfoList.user_avatar" v-if="!nologin" class="myImge_pic"/>
+              <img src="../assets/img/nopeople.png" v-if="nologin"/>
+            </div>
+          </div>
+          <div class="my_name">
+            <span v-if="!nologin">{{userInfoList.user_name}}</span>
+            <p v-if="nologin" @click="gologinPage()">未登录</p>
+            <img src="../assets/img/my_man.png" v-if="userInfoList.user_sex == 1"/>
+            <img src="../assets/img/my_woman.png" v-if="userInfoList.user_sex == 0||userInfoList.user_sex == 2"/>
+            <img src="../assets/img/my_novip.png" v-if="isVIP.is_vip == 0"/>
+            <img src="../assets/img/my_vip.png" v-if="isVIP.is_vip == 1"/>
           </div>
         </div>
-        <div class="my_name">
-          <span v-if="!nologin">{{userInfoList.user_name}}</span>
-          <p v-if="nologin" @click="gologinPage()">未登录</p>
-          <img src="../assets/img/my_man.png" v-if="userInfoList.user_sex == 1"/>
-          <img src="../assets/img/my_woman.png" v-if="userInfoList.user_sex == 0||userInfoList.user_sex == 2"/>
-          <img src="../assets/img/my_novip.png" v-if="isVIP.is_vip == 0"/>
-          <img src="../assets/img/my_vip.png" v-if="isVIP.is_vip == 1"/>
-        </div>
+      </div>
+      <div class="openVIP" @click="showPopup(1)"><span>开通VIP</span><br><span>首月优惠</span></div>
+      <div class="openVIP" @click="showPopup(1)"><span>会员享受</span><br><span>免费一万多部电影</span></div>
+      <div class="my_dianzan" @click="goMydianzan('mydianzan')">
+        <img src="../assets/img/my_dianzan.png"/>
+        <div>我的点赞</div>
+        <div class="dianzanNum">{{userInfoList.user_like_num?userInfoList.user_like_num:0}}</div>
+      </div>
+      <div class="my_dianzan" @click="goMydianzan('myshoucang')">
+        <img src="../assets/img/my_shoucang.png"/>
+        <div>我的收藏</div>
+        <div class="dianzanNum">{{userInfoList.user_collection_num?userInfoList.user_collection_num:0}}</div>
+      </div>
+      <div class="my_dianzan" @click="goMydianzan('mycache')">
+        <img src="../assets/img/my_xiazai.png" class="xiazaiImg"/>
+        <div>我的缓存</div>
+        <div class="dianzanNum">0</div>
+      </div>
+      <div class="index-titleLine">
+        <span>观看历史</span>
+        <span @click="goMydianzan('myviewhistory')">更多历史</span>
+      </div>
+      <div class="index-tuijian">
+        <ul :style="{width:HistoryScrollWidth}">
+          <li v-for="(item, index) in playHistoryList" :key='index' @click="toDetailsFun(item.vod_id)">
+              <div class="tuijian-img firstImg"><img :src="item.vod_pic"></div>
+              <div class="index-tuijian-name">{{item.vod_name}}</div>
+              <div class="index-tuijian-dec">{{item.vod_content}}</div>
+          </li>
+          <div class="clearBoth"></div>
+        </ul>
+      </div>
+      <div class="index-titleLine others">
+        <span>其他</span>
+      </div>
+      <div class="GOothers">
+        <div class="tiaozhuan" @click="goMydianzan('mysetting')">设置<img src="../assets/img/my_next.png"/></div>
+        <!-- <div class="tiaozhuan" @click="goMydianzan('mybuyhistory')">购买记录<img src="../assets/img/my_next.png"/></div> -->
+        <div class="tiaozhuan lianxi" @click="showPopup(2)">联系客服<img src="../assets/img/my_next.png"/></div>
       </div>
     </div>
-    <div class="openVIP" @click="goMydianzan('mybuyvip')"><span>开通VIP</span><br><span>首月优惠</span></div>
-    <div class="openVIP" @click="goMydianzan('mybuyvip')"><span>会员享受</span><br><span>免费一万多部电影</span></div>
-    <div class="my_dianzan" @click="goMydianzan('mydianzan')">
-      <img src="../assets/img/my_dianzan.png"/>
-      <div>我的点赞</div>
-      <div class="dianzanNum">{{userInfoList.user_like_num?userInfoList.user_like_num:0}}</div>
-    </div>
-    <div class="my_dianzan" @click="goMydianzan('myshoucang')">
-      <img src="../assets/img/my_shoucang.png"/>
-      <div>我的收藏</div>
-      <div class="dianzanNum">{{userInfoList.user_collection_num?userInfoList.user_collection_num:0}}</div>
-    </div>
-    <div class="my_dianzan" @click="goMydianzan('mycache')">
-      <img src="../assets/img/my_xiazai.png" class="xiazaiImg"/>
-      <div>我的缓存</div>
-      <div class="dianzanNum">0</div>
-    </div>
-    <div class="index-titleLine">
-      <span>观看历史</span>
-      <span @click="goMydianzan('myviewhistory')">更多历史</span>
-    </div>
-    <div class="index-tuijian">
-      <ul :style="{width:HistoryScrollWidth}">
-        <li v-for="(item, index) in playHistoryList" :key='index' @click="toDetailsFun(item.vod_id)">
-            <div class="tuijian-img firstImg"><img :src="item.vod_pic"></div>
-            <div class="index-tuijian-name">{{item.vod_name}}</div>
-            <div class="index-tuijian-dec">{{item.vod_content}}</div>
-        </li>
-        <div class="clearBoth"></div>
-      </ul>
-    </div>
-    <div class="index-titleLine others">
-      <span>其他</span>
-    </div>
-    <div class="GOothers">
-      <div class="tiaozhuan" @click="goMydianzan('mysetting')">设置<img src="../assets/img/my_next.png"/></div>
-      <!-- <div class="tiaozhuan" @click="goMydianzan('mybuyhistory')">购买记录<img src="../assets/img/my_next.png"/></div> -->
-      <div class="tiaozhuan lianxi" @click="showPopup">联系客服<img src="../assets/img/my_next.png"/></div>
-    </div>
+
     <van-popup v-model="show">
       <div class="model_kefu">
         <div class="title01">{{kefuList.kefu_title}}<br>QQ:{{kefuList.kefu_qq}}</div>
@@ -71,12 +74,13 @@
     </van-popup>
     <van-popup v-model="future">
       <div class="model_kefu model_nologin model_skipLogin">
-        <p>敬请期待</p>
-        <div class="nologin_cancel" @click="future_cancel()">取消</div>
-        <div class="nologin_sure" @click="future_cancel()">确定</div>
+        <p v-if="downAPP">敬请期待</p>
+        <p v-if="!downAPP">是否下载APP</p>
+        <div class="nologin_cancel" @click="future_cancel(1)">取消</div>
+        <div class="nologin_sure" @click="future_cancel(2)">确定</div>
       </div>
     </van-popup>
-     <Footer></Footer>
+    <Footer></Footer>
   </div>
 </template>
 
@@ -99,8 +103,10 @@ export default {
       HistoryScrollWidth: '', // 历史记录长度
       show: false, // 隐藏显示客服信息
       nologin: false,
-      future: false,// 敬请期待显示框
-      kefuList: {} // 客服信息
+      future: false, // 敬请期待显示框
+      kefuList: {}, // 客服信息
+      downloadUrl: '',
+      downAPP: false
     }
   },
   mounted () {
@@ -116,6 +122,7 @@ export default {
     goMydianzan (url) {
       if (url == 'mybuyhistory' || url == 'mycache') {
         this.future = true
+        this.downAPP = true
       } else if (url == 'mysetting') {
         this.$router.push({name: url})
       } else {
@@ -143,7 +150,7 @@ export default {
           if (res.code == -1) {
             Toast(res.msg)
             that.nologin = true
-          }else{
+          } else {
             that.nologin = false
             that.userInfoList = res.data.userinfo
             that.isVIP = that.userInfoList.vip_info
@@ -171,13 +178,29 @@ export default {
       this.$router.push({name: 'details', query: {vodId: id}})
     },
     // 客服
-    showPopup () {
-      this.show = true
+    showPopup (i) {
+      if (i == 1) {
+        this.show = false
+        this.downAPP = false
+        this.future = true
+      } else {
+        this.show = true
+        this.downAPP = true
+      }
       let that = this
       IMService.getConfig()
         .then(function (res) {
           console.log(res)
           that.kefuList = res.data
+          var u = navigator.userAgent
+          var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Linux') > -1
+          var isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/) // ios终端
+          if (isAndroid) {
+          	that.downloadUrl = that.kefuList.android_download_url
+          }
+          if (isIOS) {
+          	that.downloadUrl = that.kefuList.ios_download_url
+          }
         })
     },
     gologinPage () {
@@ -185,7 +208,10 @@ export default {
       this.$router.push({name: 'login'})
     },
     // 关闭敬请期待框
-    future_cancel () {
+    future_cancel (i) {
+      if (i == 2&&!this.downAPP) {
+        window.location.href = this.downloadUrl
+      }
       this.future = false
     },
     editInfo () {
@@ -204,6 +230,12 @@ export default {
 <style lang='less' >
   .my{
     width: 100%;
+    .ALLscroll{
+      position: fixed;
+      width: 100%;
+      height: calc(100% - 108px);
+      overflow-y: auto;
+    }
     .my_head{
       position: relative;
       width: 100%;
@@ -331,7 +363,7 @@ export default {
         }
       }
       .lianxi{
-        margin-bottom: 150px;
+        margin-bottom: 10px;
         border-bottom: none;
       }
     }

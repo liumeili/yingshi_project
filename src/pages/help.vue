@@ -1,14 +1,16 @@
 <template>
   <div class="help">
-    <div class="about_rule">
-      <span>关于规则</span>
-      <p v-html="helpIntroduce">{{helpIntroduce}}</p>
-    </div>
-    <div class="help_title">关于规则</div>
-    <div class="about_rule about_rule_level" v-for="(item, index) in levelIntroduce" :key="index">
-      <span class="levelTitle">等级{{item.level}}</span>
-      <p class="levelCont">升下一级：{{item.share_num}}次分享<br>拥有权限：{{item.could_watch_time < 0?"无限":item.could_watch_time}}次免费观影次数 {{item.could_download_time < 0?"无限":item.could_download_time}}次免费观影次数</p>
-      <div v-if="item.is_reach == 1">达成</div>
+    <div class="ALLscrollTwo">
+      <div class="about_rule">
+        <span>关于规则</span>
+        <p v-html="helpIntroduce">{{helpIntroduce}}</p>
+      </div>
+      <div class="help_title">关于规则</div>
+      <div class="about_rule about_rule_level" v-for="(item, index) in levelIntroduce" :key="index">
+        <span class="levelTitle">等级{{item.level}}</span>
+        <p class="levelCont">升下一级：{{item.share_num}}次分享<br>拥有权限：{{item.could_watch_time < 0?"无限":item.could_watch_time}}次免费观影次数 {{item.could_download_time < 0?"无限":item.could_download_time}}次免费观影次数</p>
+        <div v-if="item.is_reach == 1">达成</div>
+      </div>
     </div>
   </div>
 </template>
@@ -48,7 +50,6 @@ export default {
     background: #161C2C;
   }
   .help{
-    padding-top: 88px;
     .about_rule{
       width: calc(100% - 100px);
       margin: auto;

@@ -44,8 +44,8 @@
 
       <div class="content_BOX">
           <!-- 轮播 -->
-          <van-swipe :autoplay="3000" class="index-swipe">
-            <van-swipe-item v-for="(image, index) in bannerList" :key="index" @click="indexSwipFun(image.h5_url)">
+          <van-swipe :autoplay="3000" class="index-swipe"  id="target">
+            <van-swipe-item v-for="(image, index) in bannerList" :key="index" @click="indexSwipFun(image)">
               <div class="swipe_div">
                 <img :src="image.img_url"  class="index-swipeImg"/>
               </div>
@@ -94,7 +94,7 @@
 
           <!-- 其他类 -->
           <template v-if="topNavIndex==0">
-            <div  v-for="(item,index) in otherList" :key="index" v-if="item.movie.length!=0">
+            <div  v-for="(item,index) in otherList" :key="index" v-if="item.movie.length>0">
 
               <div class="index-titleLine">
                 <span>{{item.list_name}}</span>
@@ -363,8 +363,12 @@ export default {
     },
 
     // 轮播点击跳转
-    indexSwipFun (url) {
-      window.location.href = url
+    indexSwipFun (item) {
+      if(item.url_type=='1'){
+          this.$router.push({name: 'details', query: {vodId:item.vod_id}})
+      }else{
+        window.location.href = item.h5_url
+      }
     },
 
     // 最新推荐
@@ -407,7 +411,8 @@ export default {
 
     // 顶部导航选择
     topNaChoice (index, id) {
-      document.body.scrollTop = document.documentElement.scrollTop = 0
+      // document.body.scrollTop = document.documentElement.scrollTop = 0
+      target.scrollIntoView()
       if (index == 0) {
         this.mainlistFun()
       }
@@ -441,7 +446,7 @@ export default {
     position: fixed;
     width: 100%;
     height: 100%;
-    overflow-y: hidden;
+    overflow: hidden;
     -webkit-overflow-scrolling: none;
     .div_ellipsis{
         overflow:hidden;
@@ -454,7 +459,7 @@ export default {
         display: flex;
         align-items: center;
         position: fixed;
-        width: 100%;
+        width: calc(100% - 40px);
         height: 60px;
         top:0;
         left: 0;

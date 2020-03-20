@@ -4,93 +4,110 @@
     <div class="videoplaying" id="dplayer">
      <iframe id="show-iframe" allowfullscreen="true" webkitallowfullscreen="true"
      mozallowfullscreen="true" frameborder="0" scrolling="no" :src="videoUrl.play_url"></iframe>
+     <div class="play-swipe" v-if="closeSwipe">
+       <van-swipe :autoplay="3000" class="index-swipe ">
+         <van-swipe-item v-for="(image, index) in playBannerList" :key="index" @click="indexSwipFun(image.url)">
+           <div class="swipe_div">
+             <img :src="image.img_url" class="index-swipeImg"/>
+           </div>
+         </van-swipe-item>
+       </van-swipe>
+       <img src="../assets/img/my_vip_guanbi.png" class="close-swipe" @click="closeSwipeFun()"/>
+     </div>
     </div>
-    <div class="jieshao">
-      <div class="video-titleLine" @click="openCont()">
-        <span>{{details.vod_name}}</span>
-        <img src="~@/assets/img/moreIcon.png" v-if="opendetail == false"/>
-        <span id="jianjie" v-if="opendetail == false">简介</span>
-        <img src="~@/assets/img/moreCloseIcon.png" class="shouqiImg" v-if="opendetail == true"/>
-        <span id="shouqi" v-if="opendetail == true">收起</span>
-      </div>
-      <div class="jieshao_xinxi">
-        评分<span>{{details.vod_gold}}</span>&nbsp;&nbsp;年份<span>{{details.vod_year}}</span>&nbsp;&nbsp;
-        分类<span>{{details.vod_type}}</span>&nbsp;&nbsp;<span>{{details.vod_up}}</span>次播放
-      </div>
-      <!-- 简介 -->
-      <div class="details-jjie">
-        <div class="details_txt_all details_actor" v-if="detailShow" @click="openCont()">主演信息:{{details.vod_actor}}</div>
-        <div :class="detailShow == false?'details_txt':'details_txt_all'" @click="openCont()">{{details.vod_content}}</div>
-      </div>
-      <div class="xiazaiVideo"  v-if="opendetail == false">
-        <span @click="shoucang()">&nbsp;{{collectioncount}}</span>
-        <img src="../assets/img/my_shoucangNo.png" @click="shoucang()" v-if="!shoucangStatus"/>
-        <img src="../assets/img/my_shoucang.png" @click="shoucang()" v-if="shoucangStatus"/>
-        <span @click="dianzan()">&nbsp;{{likecount}}&nbsp;&nbsp;</span>
-        <img src="../assets/img/my_dianzan_unlike.png" @click="dianzan()" v-if="!likeStatus"/>
-        <img src="../assets/img/my_dianzan.png" @click="dianzan()" v-if="likeStatus"/>
-        <span @click="downloadVideo()">&nbsp;下载影片&nbsp;&nbsp;</span>
-        <img src="../assets/img/my_xiazaiNo.png" @click="downloadVideo()"/>
-      </div>
-    </div>
-
-    <!-- 集数 -->
-    <div class="details-num">
-      <div class="details-num-title">
-        <span>剧集</span>
-        <div @click="xianluOpen()">来源：<span>{{xianluName}}</span></div>
-        <div class="xianlu" v-if="xianluStaus">
-          <div v-for="(item,key,index) in xianluList" :key="index" @click="xianluSelect(item.player_name_zh,index,key)">{{item.player_name_zh}}</div>
+    <div class="ALLscroll">
+      <!-- 轮播 -->
+      <van-swipe :autoplay="3000" class="index-swipe">
+        <van-swipe-item v-for="(image, index) in DetailBannerList" :key="index" @click="indexSwipFun(image.url)">
+          <div class="swipe_div">
+            <img :src="image.img_url" class="index-swipeImg"/>
+          </div>
+        </van-swipe-item>
+      </van-swipe>
+      <div class="jieshao">
+        <div class="video-titleLine" @click="openCont()">
+          <span>{{details.vod_name}}</span>
+          <img src="~@/assets/img/moreIcon.png" v-if="opendetail == false"/>
+          <span id="jianjie" v-if="opendetail == false">简介</span>
+          <img src="~@/assets/img/moreCloseIcon.png" class="shouqiImg" v-if="opendetail == true"/>
+          <span id="shouqi" v-if="opendetail == true">收起</span>
+        </div>
+        <div class="jieshao_xinxi">
+          评分<span>{{details.vod_gold}}</span>&nbsp;&nbsp;年份<span>{{details.vod_year}}</span>&nbsp;&nbsp;
+          分类<span>{{details.vod_type}}</span>&nbsp;&nbsp;<span>{{details.vod_up}}</span>次播放
+        </div>
+        <!-- 简介 -->
+        <div class="details-jjie">
+          <div class="details_txt_all details_actor" v-if="detailShow" @click="openCont()">主演信息:{{details.vod_actor}}</div>
+          <div :class="detailShow == false?'details_txt':'details_txt_all'" @click="openCont()">{{details.vod_content}}</div>
+        </div>
+        <div class="xiazaiVideo"  v-if="opendetail == false">
+          <span @click="shoucang()">&nbsp;{{collectioncount}}</span>
+          <img src="../assets/img/my_shoucangNo.png" @click="shoucang()" v-if="!shoucangStatus"/>
+          <img src="../assets/img/my_shoucang.png" @click="shoucang()" v-if="shoucangStatus"/>
+          <span @click="dianzan()">&nbsp;{{likecount}}&nbsp;&nbsp;</span>
+          <img src="../assets/img/my_dianzan_unlike.png" @click="dianzan()" v-if="!likeStatus"/>
+          <img src="../assets/img/my_dianzan.png" @click="dianzan()" v-if="likeStatus"/>
+          <span @click="downloadVideo()">&nbsp;下载影片&nbsp;&nbsp;</span>
+          <img src="../assets/img/my_xiazaiNo.png" @click="downloadVideo()"/>
         </div>
       </div>
-      <div class="details-num6" v-if="allNum==false">
-        <ul class="details-num-ul">
-          <li v-for="(item, index) in jilist" @click="selectedNumCLick(index)" :key="index" :class="{'details-numLiHover':jishuOne==index}" v-if="index<6">
-            <!-- {{item.title[0]=="第"?item.title.substring(1,item.title.length-1):item.title}} -->
-            <span :class="item.title.length>4?'numFontsize':''">{{item.title[0]=="第"?item.title.substring(1,item.title.length-1):item.title}}</span>
-          </li>
-          <div class="clearBoth"></div>
-        </ul>
-        <div class="details-num-more">
-          <img src="../assets/img/moreyd.png" @click="allNum=true" v-if="allmore">
+      <!-- 集数 -->
+      <div class="details-num">
+        <div class="details-num-title">
+          <span>剧集</span>
+          <div @click="xianluOpen()">来源：<span>{{xianluName}}</span></div>
+          <div class="xianlu" v-if="xianluStaus">
+            <div v-for="(item,key,index) in xianluList" :key="index" @click="xianluSelect(item.player_name_zh,index,key)">{{item.player_name_zh}}</div>
+          </div>
         </div>
-
-      </div>
-      <!-- 全部集数 -->
-      <div class="details-numAll" v-if="allNum==true">
-        <div class="details-numAll-tab">
-          <div class="details-numAll-tabs" v-for="(item, index) in jiTabList" :key="index" :class="{'numAllActive':jishuStaus == index}"
-             @click="jishuTab(index)">{{index * 30 + 1}}-{{index * 30 + jiTabList[index].length}}</div>
-          <div class="guanbijishu" @click="closeJishu()"><img src="../assets/img/my_vip_guanbi.png"/></div>
+        <div class="details-num6" v-if="allNum==false">
+          <ul class="details-num-ul">
+            <li v-for="(item, index) in jilist" @click="selectedNumCLick(index)" :key="index" :class="{'details-numLiHover':jishuOne==index}" v-if="index<6">
+              <!-- {{item.title[0]=="第"?item.title.substring(1,item.title.length-1):item.title}} -->
+              <span :class="item.title.length>4?'numFontsize':''">{{item.title[0]=="第"?item.title.substring(1,item.title.length-1):item.title}}</span>
+            </li>
+            <div class="clearBoth"></div>
+          </ul>
+          <div class="details-num-more">
+            <img src="../assets/img/moreyd.png" @click="allNum=true" v-if="allmore">
+          </div>
         </div>
-        <div class="clearBoth"></div>
-        <ul class="details-num-ul" v-for="(item, index) in jiTabList" :key="index" v-if="jishuStaus == index">
-          <li v-for="(list, ind) in item" :key="ind" @click="selectedNumCLick(index * 30 + ind)" :class="{'details-numLiHover':jishuOne==(index * 30 + ind)}">
-             <span :class="list.title.length>4?'numFontsize':''">{{list.title[0]=="第"?list.title.substring(1,list.title.length-1):list.title}}</span>
-          </li>
+        <!-- 全部集数 -->
+        <div class="details-numAll" v-if="allNum==true">
+          <div class="details-numAll-tab">
+            <div class="details-numAll-tabs" v-for="(item, index) in jiTabList" :key="index" :class="{'numAllActive':jishuStaus == index}"
+               @click="jishuTab(index)">{{index * 30 + 1}}-{{index * 30 + jiTabList[index].length}}</div>
+            <div class="guanbijishu" @click="closeJishu()"><img src="../assets/img/my_vip_guanbi.png"/></div>
+          </div>
           <div class="clearBoth"></div>
-        </ul>
+          <ul class="details-num-ul" v-for="(item, index) in jiTabList" :key="index" v-if="jishuStaus == index">
+            <li v-for="(list, ind) in item" :key="ind" @click="selectedNumCLick(index * 30 + ind)" :class="{'details-numLiHover':jishuOne==(index * 30 + ind)}">
+               <span :class="list.title.length>4?'numFontsize':''">{{list.title[0]=="第"?list.title.substring(1,list.title.length-1):list.title}}</span>
+            </li>
+            <div class="clearBoth"></div>
+          </ul>
+        </div>
       </div>
-    </div>
-
-    <!-- 热播 -->
-    <div class="details-hots">
-      <div class="index-titleLine">
-        <span>正在热播</span>
-      </div>
-      <div class="index-tuijian" v-if="hotsList.length>0">
-        <ul>
-          <li v-for="(item,index) in hotsList" :key="index" @click="toDetailsFun(item.vod_id)">
-              <div class="tuijian-img"><img :src="item.vod_pic" ></div>
-              <div class="index-tuijian-name">{{item.vod_name}}</div>
-              <div class="index-tuijian-dec">{{item.vod_content}}</div>
-          </li>
-          <div class="clearBoth"></div>
-        </ul>
-      </div>
-      <div class="pingdaoNodata" v-if="hotsList.length<1">
-        <img src="../assets/img/nodata.png">
-        <div>暂无数据</div>
+      <!-- 热播 -->
+      <div class="details-hots">
+        <div class="index-titleLine">
+          <span>正在热播</span>
+        </div>
+        <div class="index-tuijian" v-if="hotsList.length>0">
+          <ul>
+            <li v-for="(item,index) in hotsList" :key="index" @click="toDetailsFun(item.vod_id)">
+                <div class="tuijian-img"><img :src="item.vod_pic" ></div>
+                <div class="index-tuijian-name">{{item.vod_name}}</div>
+                <div class="index-tuijian-dec">{{item.vod_content}}</div>
+            </li>
+            <div class="clearBoth"></div>
+          </ul>
+        </div>
+        <div class="pingdaoNodata" v-if="hotsList.length<1">
+          <img src="../assets/img/nodata.png">
+          <div>暂无数据</div>
+        </div>
       </div>
     </div>
     <van-popup v-model="future">
@@ -122,12 +139,14 @@
 <script>
 import {IMService} from '../service/RiziServices.js'
 import HelloWorld from '../components/HelloWorld.vue'
-import { Popup } from 'vant'
+import { Popup, Swipe, SwipeItem } from 'vant'
 export default {
 
   components: {
     HelloWorld,
-    [Popup.name]: Popup
+    [Popup.name]: Popup,
+    [Swipe.name]: Swipe,
+    [SwipeItem.name]: SwipeItem,
   },
   data () {
     return {
@@ -155,7 +174,10 @@ export default {
       likecount: '', // 点赞的数量
       future: false, // 敬请期待显示框
       tipShow: false, // 弹框展示
-      videoDetail: [] // 视频信息
+      videoDetail: [], // 视频信息
+      DetailBannerList: {}, // 播放页面的轮播图
+      playBannerList: {} ,// 播放里的轮播图
+      closeSwipe:false // 显示隐藏播放中的轮播图
     }
   },
   created () {
@@ -167,6 +189,7 @@ export default {
     this.getmoviedetailFun()
     this.getplayurl()
     this.getConfigFun()
+    this.getPlayDetailBanner()
   },
   methods: {
     // 公共配置信息
@@ -380,6 +403,32 @@ export default {
     // 关闭敬请期待框
     future_cancel () {
       this.future = false
+    },
+    getPlayDetailBanner () {
+      let that = this
+      let objStr = JSON.parse(localStorage.getItem('uidAtoken'))
+      IMService.getPlayDetailBanner(objStr)
+        .then(function (res) {
+          console.log(res)
+          that.DetailBannerList = res.data.list
+        })
+      IMService.getPlayBanner(objStr)
+        .then(function (res) {
+          console.log(res)
+          that.playBannerList = res.data.list
+          if(that.playBannerList.length == 0){
+            that.closeSwipe = false
+          }else{
+            that.closeSwipe = true
+          }
+        })
+    },
+    // 轮播点击跳转
+    indexSwipFun (url) {
+      window.location.href = url
+    },
+    closeSwipeFun(){
+      this.closeSwipe = false
     }
   }
 }
@@ -392,11 +441,61 @@ export default {
   .videoplay{
     width: 100%;
     .videoplaying{
+      position: relative;
       width: 100%;
       height: 407px;
       iframe{
         width: 100%;
         height: 407px;
+      }
+      .play-swipe{
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 50%;
+        transform: translate(-50%,-50%);
+        .close-swipe{
+          position: absolute;
+          top: 25px;
+          right: 15px;
+          width: 35px;
+        }
+      }
+    }
+    .ALLscroll{
+      position: fixed;
+      top: 407px;
+      width: 100%;
+      height: calc(100% - 407px);
+      overflow-y: auto;
+    }
+    /* 轮播 */
+    .index-swipe{
+      height: 180px;
+      margin-top: 10px;
+      .swipe_div{
+        position: relative;
+        width: 100%;
+        height: 180px;
+        border-radius: 15px;
+        overflow: hidden;
+      }
+       .index-swipeImg{
+         position: absolute;
+         left: 50%;
+         top: 50%;
+         transform: translate(-50%,-50%);
+         width: 100%;
+         height: 100%;
+         border-radius: 15px;
+       }
+    }
+    .play-swipe{
+      .index-swipe{
+        height: 210px;
+        .swipe_div{
+          height: 210px;
+        }
       }
     }
     .video-titleLine{

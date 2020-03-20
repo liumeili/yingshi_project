@@ -4,7 +4,7 @@
       <ul>
         <li>
           <div class="tuijian-img">
-            <img src="../assets/img/my_bg.jpg"/>
+            <img src="../assets/img/nopeople.png"/>
           </div>
           <div class="shipingName">如懿传&nbsp;<span>第50集</span></div>
           <div class="shipingTime">正在缓存</div>
@@ -15,7 +15,7 @@
         </li>
         <li>
           <div class="tuijian-img">
-            <img src="../assets/img/my_bg.jpg"/>
+            <img src="../assets/img/nopeople.png"/>
           </div>
           <div class="shipingName">如懿传&nbsp;<span>第50集</span></div>
           <div class="shipingTime">已暂停</div>
@@ -26,7 +26,7 @@
         </li>
         <li>
           <div class="tuijian-img">
-            <img src="../assets/img/my_bg.jpg"/>
+            <img src="../assets/img/nopeople.png"/>
           </div>
           <div class="shipingName">如懿传&nbsp;<span>第50集</span></div>
           <div class="shipingTime finished">缓存完成</div>
