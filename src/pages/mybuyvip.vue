@@ -1,7 +1,7 @@
 <template>
   <div class="buyvip">
     <div class="buyvip_head">
-      <img :src="userInfoList.user_avatar" class="headBG"/>
+      <img src="../assets/img/nopeopleBG.png" class="headBG"/>
       <div class="buyvip_head_hei">
         <div class="touxiang">
           <div class="myImge"><img :src="userInfoList.user_avatar" class="myImge_pic"/></div>
@@ -9,23 +9,26 @@
         <div class="vipInfo">
           <span>{{userInfoList.user_name}}</span><br>
           <span class="otherTime" v-if="isVIP.is_vip == 0">您还不是VIP</span>
-          <span class="otherTime" v-if="isVIP.is_vip == 1">剩余VIP时长</span>
+          <span class="otherTime" v-if="isVIP.is_vip == 1">尊贵VIP&nbsp;&nbsp;</span>
           <img src="../assets/img/my_novip.png" v-if="isVIP.is_vip == 0"/>
           <img src="../assets/img/my_vip.png" v-if="isVIP.is_vip == 1"/>
-          <span class="otherTime" v-if="isVIP.is_vip == 1">&nbsp;&nbsp;{{isVIP.vip_endtime_str}}</span>
         </div>
         <img src="../assets/img/my_vip_bangzhu.png" class="bangzhu" @click="showPopup"/>
-        <div class="buyvip_title">会员购买</div>
+        <div class="buyvip_title" v-if="isVIP.is_vip == 0">会员购买</div>
+        <div class="buyvip_title" v-if="isVIP.is_vip == 1">{{isVIP.vip_endtime_str}}到期,续费购买</div>
       </div>
 
     </div>
-    <ul class="vipTime">
-      <li v-for="(item,index) in vipList" :key="index" @click="getItem(index)" :class="{'activeM':activeMoney==index}">
-        <div>{{item.vip_detail}}</div>
-        <div class="vip_money">￥<span>{{item.vip_price}}</span></div>
-      </li>
-      <div class="clearBoth"></div>
-    </ul>
+    <div>
+      <ul class="vipTime">
+        <li v-for="(item,index) in vipList" :key="index" @click="getItem(index)" :class="{'activeM':activeMoney==index}">
+          <div>{{item.vip_detail}}</div>
+          <div class="vip_money">￥<span>{{item.vip_price}}</span></div>
+        </li>
+        <div class="clearBoth"></div>
+      </ul>
+    </div>
+
     <van-radio-group v-model="radio">
       <div class="pay_way_list">
         <img src="../assets/img/my_vip_zhifubao.png"/>
@@ -51,7 +54,7 @@
       </li>
     </ul>
     <div class="loginOut" @click="BuyVip()">购买</div>
-    <div class="closeALL" @click="showPopup">客服</div>
+    <div class="closeALL" @click="showPopup()">客服</div>
     <van-popup v-model="show">
       <div class="model_kefu">
         <div class="title01">{{kefuList.kefu_title}}<br>QQ:{{kefuList.kefu_qq}}</div>
@@ -64,7 +67,7 @@
 
 <script>
 import {IMService} from '../service/RiziServices.js'
-import { RadioGroup, Radio, Popup } from 'vant'
+import { RadioGroup, Radio, Popup, Toast } from 'vant'
 export default {
   components: {
     [RadioGroup.name]: RadioGroup,
@@ -92,6 +95,10 @@ export default {
       this.vipID = this.vipList[index].id
     },
     showPopup () {
+      // if (event.target.disabled) {
+      //   Toast("点击太频繁了")
+      //   return
+      // }
       this.show = true
       let that = this
       IMService.getConfig()
@@ -144,10 +151,12 @@ export default {
     .buyvip_head{
       position: relative;
       width: 100%;
-      height: 320px;
+      height: 350px;
       text-align: left;
       font-size: 30px;
       overflow: hidden;
+      padding: 0;
+      margin: 0;
       .headBG{
        position: absolute;
        top: 50%;
@@ -200,7 +209,6 @@ export default {
         font-size: 30px;
         padding: 55px 0 0 30px;
       }
-
     }
     .vipTime{
       margin-left: 55px;
@@ -296,14 +304,15 @@ export default {
       margin-top: 0;
     }
     .closeALL{
-      position: absolute;
+      position: fixed;
       top: 0;
       right: 0;
-      z-index: 99999;
+      z-index: 99997;
       line-height: 85px;
       padding: 0 31px;
       color: #D5D5D5;
     }
   }
-
+  .van-overlay{z-index: 99998!important;}
+  .van-popup{z-index: 99999!important;}
 </style>

@@ -9,6 +9,9 @@
 export default {
   name: 'App',
   mounted () {
+    document.body.addEventListener('touchmove', function (event) {
+      event.preventDefault()
+    }, false)
   },
   methods: {
     // 返回
@@ -29,7 +32,7 @@ export default {
   background: #0D1225;
   color: #fff;
   font-size: 30px;
-  
+
 }
 
 </style>

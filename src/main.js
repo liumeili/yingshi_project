@@ -4,6 +4,7 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import 'vant/lib/index.less'
+import preventReClick from '@/lib/utils/preventReClick.js'
 import VueWechatTitle from 'vue-wechat-title'
 Vue.use(VueWechatTitle)
 

@@ -19,8 +19,8 @@
       </div>
       <!-- 简介 -->
       <div class="details-jjie">
-        <div class="details_txt_all details_actor" v-if="detailShow">主演信息:{{details.vod_actor}}</div>
-        <div :class="detailShow == false?'details_txt':'details_txt_all'">{{details.vod_content}}</div>
+        <div class="details_txt_all details_actor" v-if="detailShow" @click="openCont()">主演信息:{{details.vod_actor}}</div>
+        <div :class="detailShow == false?'details_txt':'details_txt_all'" @click="openCont()">{{details.vod_content}}</div>
       </div>
       <div class="xiazaiVideo"  v-if="opendetail == false">
         <span @click="shoucang()">&nbsp;{{collectioncount}}</span>
@@ -581,7 +581,6 @@ export default {
     .details-popupDiv{
         background: none!important;
         padding: 100px 50px 0 50px;
-        overflow: hidden;
        .details-popupDiv2{
           width:450px;
           height: 300px;
@@ -602,11 +601,14 @@ export default {
              top: -15px;
           }
           .details-popupText{
-            padding:100px 40px 40px 40px;
+            width: calc(100% - 100px);
+            height: 120px;
+            padding: 100px 50px 0 50px;
           }
           .details-popupBtn{
             display: flex;
             align-items: center;
+            height: 80px;
              span{
                width: 50%;
                display: block;
@@ -632,8 +634,8 @@ export default {
   }
   .videoPlay_gifImg{
     position: fixed;
-    width: 100px;
-    height: 100px;
+    width: 120px;
+    height: 120px;
     right: 10px;
     bottom: 100px;
     border-radius: 10px;

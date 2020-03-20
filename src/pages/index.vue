@@ -45,7 +45,7 @@
       <div class="content_BOX">
           <!-- 轮播 -->
           <van-swipe :autoplay="3000" class="index-swipe">
-            <van-swipe-item v-for="(image, index) in bannerList" :key="index" @click="indexSwipFun(image.h5_url)">
+            <van-swipe-item v-for="(image, index) in bannerList" :key="index" @click="indexSwipFun(image)">
               <div class="swipe_div">
                 <img :src="image.img_url"  class="index-swipeImg"/>
               </div>
@@ -285,7 +285,6 @@ export default {
       localStorage.removeItem('VideoHistory')
     },
     searchItem (item) {
-
       let that = this
       if (localStorage.getItem('uidAtoken') != null) {
       } else {
@@ -328,7 +327,6 @@ export default {
       } else {
         this.$router.push({name: url})
       }
-
     },
     // 首页列表页接口
     mainlistFun () {
@@ -365,14 +363,19 @@ export default {
     },
 
     // 轮播点击跳转
-    indexSwipFun (url) {
-      window.location.href = url
+    indexSwipFun (item) {
+      if(item.url_type==1){
+          this.$router.push({name: 'details', query: {vodId: item.id}})
+      }else{
+          window.location.href = item.img_url;
+      }
+      
     },
 
     // 最新推荐
     getlatestrecommendlistFun (isfirst) {
       let that = this
-      IMService.getlatestrecommendlist({list_id: that.pingdaoId,is_first:isfirst})
+      IMService.getlatestrecommendlist({list_id: that.pingdaoId, is_first: isfirst})
         .then(function (res) {
           console.log('最新推荐')
           console.log(res.data)
@@ -393,7 +396,7 @@ export default {
 
     // 频道列表接口
     getchannelmovielistFun (id) {
-      if(id > 0){
+      if (id > 0) {
         console.log(id)
         let that = this
         IMService.getchannelmovielist({list_id: id})
@@ -401,8 +404,8 @@ export default {
             console.log('频道列表接口')
             console.log(res)
             that.pingdaoList = res.data.list
-            that.otherList = res.data.list;
-            console.log('频道其他的：',that.otherList);
+            that.otherList = res.data.list
+            console.log('频道其他的：', that.otherList)
           })
       }
     },
@@ -440,6 +443,11 @@ export default {
 <style lang='less'>
   .index{
     /* 公用部分 */
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: none;
     .div_ellipsis{
         overflow:hidden;
         white-space: nowrap;
@@ -479,7 +487,7 @@ export default {
       width: 100%;
       height: calc(100% - 2.02rem);
       background: #0D1225;
-      z-index: 9999999;
+      z-index: 99991;
       overflow-y: hidden;
       -webkit-overflow-scrolling: none;
       .history{
@@ -488,6 +496,7 @@ export default {
         width: calc(100% - 25px);
         margin-left: 25px;
         text-align: left;
+        z-index: 99992;
         span{
           font-size: 32px;
         }
@@ -613,7 +622,7 @@ export default {
       height: calc(100% - 298px);
       overflow-y: auto;
       -webkit-overflow-scrolling: touch;
-      z-index: 999999;
+      z-index: 99;
     }
     /* 轮播 */
     .index-swipe{

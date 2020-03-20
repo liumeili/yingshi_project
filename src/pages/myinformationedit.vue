@@ -1,5 +1,6 @@
 <template>
   <div class="edit">
+    <div class="ys-goback" @click="gobackFun()"><span>编辑资料</span></div>
     <div class="saveinfo" @click="saveinfo()">保存</div>
     <div class="edit_head">
       <img src="../assets/img/nopeopleBG.png" class="headBG"/>
@@ -21,6 +22,14 @@
         <div @click="sexSelect('2')">女</div>
       </div>
     </van-popup>
+    <van-popup v-model="baocun">
+      <div class="model_kefu model_nologin ">
+        <span>注意</span>
+        <p>编辑资料，确定保存</p>
+        <div class="nologin_cancel" @click="baocun_cancel()">取消</div>
+        <div class="nologin_sure" @click="baocun_sure()">确定</div>
+      </div>
+    </van-popup>
   </div>
 </template>
 
@@ -30,7 +39,7 @@ import { IMService } from '../service/RiziServices.js'
 import globalState from '@/lib/rizi/globalstate.js'
 import { Popup, Toast } from 'vant'
 export default {
-  name: 'my',
+  name: 'myinformationedit',
   components: {
     [Popup.name]: Popup
   },
@@ -39,7 +48,9 @@ export default {
       userName: '', // 用户名
       user_sex: '', // 用户的性别
       user_avatar: '', // 用户头像
-      sexShow: false // 隐藏性别选择
+      sexShow: false, // 隐藏性别选择
+      baocun: false, // 退出页面提示编辑保存
+      editChange:0 // 是否改变了资料
     }
   },
   mounted () {
@@ -65,6 +76,7 @@ export default {
       } else {
         this.user_sex = '女'
       }
+      this.editChange = 1
     },
     // 保存修改的信息
     saveinfo () {
@@ -103,7 +115,30 @@ export default {
           console.log(res)
           that.user_avatar = res.data.data.url
           Toast('上传成功')
+          that.editChange = 1
         })
+    },
+    // 模态框确认和取消
+    baocun_sure () {
+      this.baocun = false
+      this.saveinfo()
+    },
+    baocun_cancel () {
+      this.baocun = false
+      this.$router.push({name: 'my'})
+    },
+    gobackFun () {
+      let user_Name = JSON.parse(localStorage.getItem('loginInfo')).user_name
+      if(this.userName == user_Name){
+        if (this.editChange == 0) {
+          this.$router.push({name: 'my'})
+        } else {
+          this.editChange = 1
+          this.baocun = true
+        }
+      } else {
+        this.baocun = true
+      }
     }
   }
 }
@@ -115,6 +150,8 @@ export default {
   }
   .edit{
     width: 100%;
+    overflow: hidden;
+    -webkit-overflow-scrolling: none;
     .saveinfo{
       position: absolute;
       top: 0;
@@ -128,7 +165,7 @@ export default {
       position: relative;
       width: 100%;
       height: 320px;
-      margin-top: 85px;
+      margin-top: 115px;
       box-shadow: 0px -100px 80px -10px rgba(13, 18, 37, 1) inset;
       .headBG{
         position: absolute;
@@ -159,8 +196,8 @@ export default {
              left: 50%;
              top: 50%;
              transform: translate(-50%,-50%);
-             width: 120%;
-             height: auto;
+             height: 100%;
+             min-width: 100%;
              border-radius: 13px;
           }
           .editImg{
@@ -219,10 +256,9 @@ export default {
     }
     .van-overlay{z-index: 99998!important;}
     .van-popup{
-      width: 450px!important;
       z-index: 99999!important;
       .model_sex{
-        width: 450px;
+        width: 520px;
         height: 200px;
         background: #1D202F;
         border-radius: 15px;
