@@ -140,8 +140,16 @@ class iMService extends AxiosBaseService {
     edituserdata(params) {
         return this.request('?s=App-User-edituserdata', 'get', params);
     }
-
-
+    
+    // 播放页面的播放器广告
+    getPlayBanner(params) {
+        return this.request('?s=App-User-getPlayBanner', 'get', params);
+    }
+    
+    // 播放页面的轮播图广告
+    getPlayDetailBanner(params) {
+        return this.request('?s=App-User-getPlayDetailBanner', 'get', params);
+    }
 
 
 

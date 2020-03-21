@@ -1,8 +1,8 @@
 <template>
   <div class="setting">
-    <div class="GOothers">
+    <!-- <div class="GOothers">
       <div class="setcont">APP版本号<div class="setNum">v0.{{versionNum}}版本</div></div>
-    </div>
+    </div> -->
     <div @click="loginOut()" class="loginOut OutBTN">{{nologin == false?"退出登录":"登录"}}</div>
 
     <van-popup v-model="skipLogin">
@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import {IMService} from '@/service/RiziServices.js'
+// import {IMService} from '@/service/RiziServices.js'
 import { Popup } from 'vant'
 export default {
   components: {
@@ -26,9 +26,9 @@ export default {
     return {
       nologin: false,
       skipLogin: false,
-      versionNum: '',
+      // versionNum: '',
       versionList: {},
-      appUrl:''
+      appUrl: ''
     }
   },
   mounted () {
@@ -57,24 +57,24 @@ export default {
       localStorage.clear()
       this.$router.push({name: 'login'})
     },
-    // 根据ios和android下载app
-    getVersionFun () {
-      let that = this
-      IMService.getConfig()
-        .then(function (res) {
-          console.log(res)
-          that.versionList = res.data
-          var u = navigator.userAgent
-          var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Linux') > -1
-          var isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/) // ios终端
-          if (isAndroid) {
-          	that.versionNum = that.versionList.android_version
-          }
-          if (isIOS) {
-          	that.versionNum = that.versionList.ios_version
-          }
-        })
-    }
+    //根据ios和android下载app
+    // getVersionFun () {
+    //   let that = this
+    //   IMService.getConfig()
+    //     .then(function (res) {
+    //       console.log(res)
+    //       that.versionList = res.data
+    //       var u = navigator.userAgent
+    //       var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Linux') > -1
+    //       var isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/) // ios终端
+    //       if (isAndroid) {
+    //       	that.versionNum = that.versionList.android_version
+    //       }
+    //       if (isIOS) {
+    //       	that.versionNum = that.versionList.ios_version
+    //       }
+    //     })
+    // }
   }
 }
 </script>

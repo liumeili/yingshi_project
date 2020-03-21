@@ -1,18 +1,24 @@
 <template>
   <div class="myDianzan index-tuijian">
     <div class="contain">
-      <ul>
-        <li v-for="(item, index) in HistoryList" :key='index' @click="toDetailsFun(item.vod_id)">
-          <div class="tuijian-img">
-            <img :src="item.vod_pic"/>
-          </div>
-          <div class="shipingName">{{item.vod_name}}</div>
-          <div class="shipingTime">{{item.vod_urlname}}
-            <p>主演：{{item.vod_actor}}</p>
-            <span>播放时间：{{item.play_time}}</span>
-          </div>
-        </li>
-      </ul>
+      <div class="ALLscrollTwo">
+        <ul>
+          <li v-for="(item, index) in HistoryList" :key='index' @click="toDetailsFun(item.vod_id)">
+            <div class="tuijian-img">
+              <img :src="item.vod_pic"/>
+            </div>
+            <div class="shipingName">{{item.vod_name}}</div>
+            <div class="shipingTime">{{item.vod_urlname}}
+              <p>主演：{{item.vod_actor}}</p>
+              <span>播放时间：{{item.play_time}}</span>
+            </div>
+          </li>
+        </ul>
+        <div class="pingdaoNodata" v-if="HistoryList.length == 0">
+          <img src="../assets/img/nodata.png">
+          <div>暂无更多数据显示</div>
+        </div>
+      </div>
     </div>
   </div>
 </template>

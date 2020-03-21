@@ -1,109 +1,116 @@
 <template>
-  <div class="details" id="target">
-           <div class="ys-goback" @click="gobackFun()"><span>{{details.vod_name}}</span></div>
-           <!-- 影片基本信息 -->
-          <div class="detais-abstract">
-             <div class="details-infoImg"><img :src="details.vod_pic"></div>
-             <div class="details-rg">
-                <div class="details-vodname">{{details.vod_name}}</div>
-                <div class="details-vodyear">年代：{{details.vod_year}}</div>
-                <div class="details-version">导演：{{details.vod_director}}</div>
-                <div class="details-ji">{{details.vod_area}}</div>
-                <div class="details-actor">
-                  <p :class="actor_show == true?'noallP':'allP'" id="actor_pWidth">主演：{{details.vod_actor}}<span v-if="!actor_show&&actorStatus" class="actor_shouqi"  @click="actorShow(2)">收起</span></p>
-                  <span class="actor_zhankai" @click="actorShow(1)" v-if="actor_show&&actorStatus">展开</span>
-                </div>
-                <div class="details-play" @click="playFun()">立即播放</div>
+  <div class="details">
+     <div class="ys-goback" @click="gobackFun()"><span>{{details.vod_name}}</span></div>
+     <!-- 影片基本信息 -->
+     <div class="ALLscrollTwo">
+       <div class="detais-abstract" id="target">
+          <div class="details-infoImg"><img :src="details.vod_pic"></div>
+          <div class="details-rg">
+             <div class="details-vodname">{{details.vod_name}}</div>
+             <div class="details-vodyear">年代：{{details.vod_year}}</div>
+             <div class="details-version">导演：{{details.vod_director}}</div>
+             <div class="details-ji">{{details.vod_area}}</div>
+             <div class="details-actor">
+               <p :class="actor_show == true?'noallP':'allP'" id="actor_pWidth">主演：{{details.vod_actor}}<span v-if="!actor_show&&actorStatus" class="actor_shouqi"  @click="actorShow(2)">收起</span></p>
+               <span class="actor_zhankai" @click="actorShow(1)" v-if="actor_show&&actorStatus">展开</span>
              </div>
+             <div class="details-play" @click="playFun()">立即播放</div>
           </div>
-          <!-- 简介 -->
-          <div class="details-jjie">
-            <div :class="detail_show == false?'details_txt_all':'details_txt'">{{details.vod_content}}</div>
-            <span @click="openCont(1)" v-if="detail_show">展开</span>
-            <span @click="openCont(2)" v-if="!detail_show">收起</span>
-          </div>
+       </div>
+       <!-- 简介 -->
+       <div class="details-jjie">
+         <div :class="detail_show == false?'details_txt_all':'details_txt'">{{details.vod_content}}</div>
+         <span @click="openCont(1)" v-if="detail_show">展开</span>
+         <span @click="openCont(2)" v-if="!detail_show">收起</span>
+       </div>
+       <!-- 集数 -->
+       <div class="details-num">
+         <div class="details-num-title">
+           <span>剧集</span>
+           <div @click="xianluOpen()">来源：<span>{{xianluName}}</span></div>
+           <div class="xianlu" v-if="xianluStaus">
+             <div v-for="(item,key,index) in xianluList" :key='index' @click="xianluSelect(item.player_name_zh,index,key)">{{item.player_name_zh}}</div>
+           </div>
+         </div>
+         <div class="details-num6" v-if="allNum==false">
+           <ul class="details-num-ul">
+             <li v-for="(item, index) in jilist" :key='index' @click="selectedNumCLick(index)" :class="{'details-numLiHover':jishuOne==index}" v-if="index<6">
+               <span :class="item.title.length>4?'numFontsize':''">{{item.title[0]=="第"?item.title.substring(1,item.title.length-1):item.title}}</span>
+             </li>
+             <div class="clearBoth"></div>
+           </ul>
+           <div class="details-num-more">
+             <img src="../assets/img/moreyd.png" @click="allNum=true" v-if="allmore">
+           </div>
+         </div>
+         <!-- 全部集数 -->
+         <div class="details-numAll" v-if="allNum==true">
+           <div class="details-numAll-tab">
+             <div class="details-numAll-tabs" v-for="(item, index) in jiTabList" :key='index' :class="{'numAllActive':jishuStaus == index}"
+                @click="jishuTab(index)">{{index * 30 + 1}}-{{index * 30 + jiTabList[index].length}}</div>
+             <div class="guanbijishu" @click="closeJishu()"><img src="../assets/img/my_vip_guanbi.png"/></div>
+           </div>
+           <div class="clearBoth"></div>
+           <ul class="details-num-ul" v-for="(item, index) in jiTabList"  :key='index' v-if="jishuStaus == index">
+             <li v-for="(list, ind) in item" :key='ind' class="allNumLi" @click="selectedNumCLick(index * 30 + ind)" :class="{'details-numLiHover':jishuOne==(index * 30 + ind)}">
+               <span :class="list.title.length>4?'numFontsize':''">{{list.title[0]=="第"?list.title.substring(1,list.title.length-1):list.title}}</span>
+             </li>
+             <div class="clearBoth"></div>
+           </ul>
+         </div>
+       </div>
+       <!-- 热播 -->
+       <div class="details-hots">
+         <div class="index-titleLine">
+           <span>热播</span>
+         </div>
+         <div class="index-tuijian" v-if="hotsList.length>0">
+           <ul>
+             <li v-for="(item,index) in hotsList" :key="index" @click="toDetailsFun(item.vod_id)">
+                 <div class="tuijian-img"><img :src="item.vod_pic" ></div>
+                 <div class="index-tuijian-name">{{item.vod_name}}</div>
+                 <div class="index-tuijian-dec">{{item.vod_content}}</div>
+             </li>
+             <div class="clearBoth"></div>
+           </ul>
+         </div>
+         <div class="pingdaoNodata" v-if="hotsList.length<1">
+           <img src="../assets/img/nodata.png">
+           <div>暂无数据</div>
+         </div>
+       </div>
+     </div>
 
-          <!-- 集数 -->
-          <div class="details-num">
-            <div class="details-num-title">
-              <span>剧集</span>
-              <div @click="xianluOpen()">来源：<span>{{xianluName}}</span></div>
-              <div class="xianlu" v-if="xianluStaus">
-                <div v-for="(item,key,index) in xianluList" :key='index' @click="xianluSelect(item.player_name_zh,index,key)">{{item.player_name_zh}}</div>
-              </div>
+    <!--弹框  -->
+    <van-popup v-model="tipShow" class="details-popup">
+        <div class="details-popupDiv">
+            <div class="details-popupDiv2">
+               <img src="../assets/img/kuFace.png" class="details-popupkuFace">
+               <img src="../assets/img/close.png" class="details-popupClose" @click="tipShow=false">
+               <div class="details-popupText">可看次数不足，可选择一下获取方式</div>
+               <div class="details-popupBtn">
+                 <span @click="goNextPage('task')">分享</span>
+                 <span @click="goNextPage('mybuyvip')">充值</span>
+               </div>
             </div>
-            <div class="details-num6" v-if="allNum==false">
-              <ul class="details-num-ul">
-                <li v-for="(item, index) in jilist" :key='index' @click="selectedNumCLick(index)" :class="{'details-numLiHover':jishuOne==index}" v-if="index<6">
-                  <span :class="item.title.length>4?'numFontsize':''">{{item.title[0]=="第"?item.title.substring(1,item.title.length-1):item.title}}</span>
-                </li>
-                <div class="clearBoth"></div>
-              </ul>
-              <div class="details-num-more">
-                <img src="../assets/img/moreyd.png" @click="allNum=true" v-if="allmore">
-              </div>
-            </div>
-            <!-- 全部集数 -->
-            <div class="details-numAll" v-if="allNum==true">
-              <div class="details-numAll-tab">
-                <div class="details-numAll-tabs" v-for="(item, index) in jiTabList" :key='index' :class="{'numAllActive':jishuStaus == index}"
-                   @click="jishuTab(index)">{{index * 30 + 1}}-{{index * 30 + jiTabList[index].length}}</div>
-                <div class="guanbijishu" @click="closeJishu()"><img src="../assets/img/my_vip_guanbi.png"/></div>
-              </div>
-              <div class="clearBoth"></div>
-              <ul class="details-num-ul" v-for="(item, index) in jiTabList"  :key='index' v-if="jishuStaus == index">
-                <li v-for="(list, ind) in item" :key='ind' class="allNumLi" @click="selectedNumCLick(index * 30 + ind)" :class="{'details-numLiHover':jishuOne==(index * 30 + ind)}">
-                  <span :class="list.title.length>4?'numFontsize':''">{{list.title[0]=="第"?list.title.substring(1,list.title.length-1):list.title}}</span>
-                </li>
-                <div class="clearBoth"></div>
-              </ul>
-            </div>
-          </div>
-          <!-- 热播 -->
-          <div class="details-hots">
-            <div class="index-titleLine">
-              <span>热播</span>
+        </div>
+    </van-popup>
 
-            </div>
-            <div class="index-tuijian" v-if="hotsList.length>0">
-              <ul>
-                <li v-for="(item,index) in hotsList" :key="index" @click="toDetailsFun(item.vod_id)">
-                    <div class="tuijian-img"><img :src="item.vod_pic" ></div>
-                    <div class="index-tuijian-name">{{item.vod_name}}</div>
-                    <div class="index-tuijian-dec">{{item.vod_content}}</div>
-                </li>
-                <div class="clearBoth"></div>
-              </ul>
-            </div>
-            <div class="pingdaoNodata" v-if="hotsList.length<1">
-              <img src="../assets/img/nodata.png">
-              <div>暂无数据</div>
-            </div>
-          </div>
-
-          <!--弹框  -->
-          <van-popup v-model="tipShow" class="details-popup">
-              <div class="details-popupDiv">
-                  <div class="details-popupDiv2">
-                     <img src="../assets/img/kuFace.png" class="details-popupkuFace">
-                     <img src="../assets/img/close.png" class="details-popupClose" @click="tipShow=false">
-                     <div class="details-popupText">可看次数不足，可选择一下获取方式</div>
-                     <div class="details-popupBtn">
-                       <span @click="goNextPage('task')">分享</span>
-                       <span @click="goNextPage('mybuyvip')">充值</span>
-                     </div>
-                  </div>
-              </div>
-          </van-popup>
-
-          <van-popup v-model="nologin">
-            <div class="model_kefu model_nologin">
-              <span>未登录</span>
-              <p>登录即可观看</p>
-              <div class="nologin_cancel" @click="nologin_cancel()">取消</div>
-              <div class="nologin_sure" @click="gologinPage()">确定</div>
-            </div>
-          </van-popup>
+    <van-popup v-model="nologin">
+      <div class="model_kefu model_nologin">
+        <span>未登录</span>
+        <p>登录即可观看</p>
+        <div class="nologin_cancel" @click="nologin_cancel()">取消</div>
+        <div class="nologin_sure" @click="gologinPage()">确定</div>
+      </div>
+    </van-popup>
+    <van-popup v-model="downAPP">
+      <div class="model_kefu model_nologin model_skipLogin">
+        <p>是否下载APP</p>
+        <div class="nologin_cancel" @click="future_cancel(1)">取消</div>
+        <div class="nologin_sure" @click="future_cancel(2)">确定</div>
+      </div>
+    </van-popup>
   </div>
 </template>
 
@@ -138,7 +145,9 @@ export default {
       nologin: false, // 未登录提示去登录
       actor_show: true, // 是否显示所有主演
       detail_show: true, // 是否显示所有简介内容
-      actorStatus: false
+      actorStatus: false,
+      downloadUrl: '',
+      downAPP: false
     }
   },
   created () {
@@ -248,9 +257,6 @@ export default {
     },
     // 热播影视
     toDetailsFun (id) {
-      // document.body.scrollTop = 0
-      // document.documentElement.scrollTop = 0
-      // window.pageYOffset = 0
       target.scrollIntoView()
       this.details = {}
       this.vodId = id
@@ -294,7 +300,32 @@ export default {
       this.$router.push({name: 'login'})
     },
     goNextPage (url) {
-      this.$router.push({name: url})
+      if(url == 'mybuyvip'){
+        this.downAPP = true
+        this.tipShow = false
+        let that = this
+        IMService.getConfig()
+          .then(function (res) {
+            var u = navigator.userAgent
+            var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Linux') > -1
+            var isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/) // ios终端
+            if (isAndroid) {
+            	that.downloadUrl = res.data.android_download_url
+            }
+            if (isIOS) {
+            	that.downloadUrl = res.data.ios_download_url
+            }
+          })
+      }else{
+        this.$router.push({name: url})
+      }
+    },
+    // 关闭下载app提示框
+    future_cancel (i) {
+      if (i == 2) {
+        window.location.href = this.downloadUrl
+      }
+      this.downAPP = false
     }
   },
   destory () {

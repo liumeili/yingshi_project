@@ -1,20 +1,22 @@
 <template>
   <div class="myDianzan index-tuijian">
     <div class="contain">
-      <div class="shoucang_title" v-if="shoucangList.length>0">电视剧</div>
-      <ul>
-        <li v-for="(item,index) in shoucangList" :key='index'>
-          <div class="tuijian-img"  @click="toDetailsFun(item.vod_id)">
-            <img :src="item.vod_pic"/>
-          </div>
-          <div class="shipingName" @click="toDetailsFun(item.vod_id)">{{item.vod_name}}</div>
-          <div class="shipingTime" @click="toDetailsFun(item.vod_id)">收藏时间<br>{{item.add_time}}</div>
-          <img src="../assets/img/mydianzan_close.png" class="close" @click="noShoucang(index, item.vod_id)"/>
-        </li>
-      </ul>
-      <div class="pingdaoNodata" v-if="shoucangList.length == 0">
-        <img src="../assets/img/nodata.png">
-        <div>暂无更多数据显示</div>
+      <div class="ALLscrollTwo">
+        <div class="shoucang_title" v-if="shoucangList.length>0">电视剧</div>
+        <ul>
+          <li v-for="(item,index) in shoucangList" :key='index'>
+            <div class="tuijian-img"  @click="toDetailsFun(item.vod_id)">
+              <img :src="item.vod_pic"/>
+            </div>
+            <div class="shipingName" @click="toDetailsFun(item.vod_id)">{{item.vod_name}}</div>
+            <div class="shipingTime" @click="toDetailsFun(item.vod_id)">收藏时间<br>{{item.add_time}}</div>
+            <img src="../assets/img/mydianzan_close.png" class="close" @click="noShoucang(index, item.vod_id)"/>
+          </li>
+        </ul>
+        <div class="pingdaoNodata" v-if="shoucangList.length == 0">
+          <img src="../assets/img/nodata.png">
+          <div>暂无更多数据显示</div>
+        </div>
       </div>
     </div>
     <!-- <div class="closeALL" @click="closeALL()">清空</div> -->

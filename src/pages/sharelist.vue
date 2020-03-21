@@ -1,5 +1,6 @@
 <template>
   <div class="sharelist">
+    <div class="ALLscrollTwo">
       <ul>
         <li>
           <div>序号</div>
@@ -18,6 +19,7 @@
         <img src="../assets/img/nodata.png">
         <div>暂无更多数据显示</div>
       </div>
+    </div>
   </div>
 </template>
 
@@ -55,7 +57,6 @@ export default {
     background: #161C2C;
   }
   .sharelist{
-    padding-top: 95px;
     ul{
       li{
         width: 100%;
