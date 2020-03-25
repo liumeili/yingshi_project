@@ -133,7 +133,13 @@
             </div>
           </template>
       </div>
-
+      <div class="Notice" v-if="noticeShow">
+        <div class="Notice_word">
+          <p>{{configInfo.system_informs}}</p>
+        </div>
+        <div class="Notice_button" @click="closeNotice()">我知道了</div>
+      </div>
+      <div class="NoticeShadow" v-if="noticeShow"></div>
       <!--底部导航  -->
       <Footer></Footer>
 
@@ -172,7 +178,22 @@ export default {
       historyShow: false, // 默认不显示搜索历史记录的关键字
       localVideoList: JSON.parse(localStorage.getItem('VideoHistory')), // 存入本地的历史搜索关键词
       historyList: [], // 页面渲染历史记录
-      nodataShow: false // 无数据显示
+      nodataShow: false, // 无数据显示
+      configInfo: {}, // 系统公告数据
+      noticeShow: false // 系统公告
+    }
+  },
+  created () {
+    let system_inform = JSON.parse(localStorage.getItem('system_inform'))
+    if (system_inform.firstOpen == 1) {
+      this.configInfo = system_inform
+      if(system_inform.system_informs_state == 1){
+        this.noticeShow = true
+      }else{
+        this.noticeShow = false
+      }
+    } else {
+      this.noticeShow = false
     }
   },
   mounted () {
@@ -364,9 +385,9 @@ export default {
 
     // 轮播点击跳转
     indexSwipFun (item) {
-      if(item.url_type=='1'){
-          this.$router.push({name: 'details', query: {vodId:item.vod_id}})
-      }else{
+      if (item.url_type == '1') {
+        this.$router.push({name: 'details', query: {vodId: item.vod_id}})
+      } else {
         window.location.href = item.h5_url
       }
     },
@@ -434,6 +455,12 @@ export default {
     // 影视详情
     toDetailsFun (id) {
       this.$router.push({name: 'details', query: {vodId: id}})
+    },
+    // 关闭系统通知
+    closeNotice () {
+      this.noticeShow = false
+      let system_inform = JSON.parse(localStorage.getItem('system_inform'))
+      localStorage.setItem('system_inform', JSON.stringify({system_informs_state: system_inform.system_informs_state, system_informs: system_inform.system_informs, firstOpen: '0'}))
     }
 
   }
@@ -447,7 +474,7 @@ export default {
     width: 100%;
     height: 100%;
     overflow: hidden;
-    -webkit-overflow-scrolling: none;
+    -webkit-overflow-scrolling: auto;
     .div_ellipsis{
         overflow:hidden;
         white-space: nowrap;
@@ -661,7 +688,44 @@ export default {
         border-radius: 10px;
       }
     }
-
+    .Notice{
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 560px;
+      height: 665px;
+      z-index: 99999;
+      background-image: url(../assets/img/noticeBG.png);
+      background-position: center;
+      background-size: 100% 100%;
+      .Notice_word{
+        width: 450px;
+        height: 248px;
+        margin: auto;
+        margin-top: 280px;
+        text-align: left;
+        line-height: 42px;
+        font-size: 28px;
+        color: #8C8E9A;
+        overflow-y: auto;
+      }
+      .Notice_button{
+        width: 320px;
+        padding: 20px 0;
+        background: linear-gradient(to right,#24D9C8,#50D06F);
+        border-radius: 60px;
+        margin:25px auto 0 auto;
+      }
+    }
+    .NoticeShadow{
+      position: fixed;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 99998;
+      background: rgba(0,0,0,0.6);
+    }
   }
 
 </style>

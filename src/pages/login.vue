@@ -23,13 +23,6 @@
         <div class="login-form-btn" @click="phoneCodeLoginFun()">登录</div>
       </div>
     </div>
-    <div class="Notice" v-if="noticeShow">
-      <div class="Notice_word">
-        <p>{{configInfo.system_informs}}</p>
-      </div>
-      <div class="Notice_button" @click="closeNotice()">我知道了</div>
-    </div>
-    <div class="NoticeShadow" v-if="noticeShow"></div>
   </div>
 </template>
 
@@ -51,24 +44,15 @@ export default {
         client_type: 2
       },
       times: 60,
-      showTime: false,
-      configInfo: {},
-      noticeShow: false
+      showTime: false
     }
   },
   created () {
   },
   mounted () {
-    let that = this
     IMService.getConfig()
       .then(function (res) {
-        that.configInfo = res.data
-        console.log(res)
-        if (that.configInfo.system_informs_state == 1) {
-          setTimeout(() => {
-            that.noticeShow = true
-          }, 1000)
-        }
+        localStorage.setItem('system_inform', JSON.stringify({system_informs_state: res.data.system_informs_state, system_informs: res.data.system_informs, firstOpen: "1"}))
       })
   },
   methods: {
@@ -160,10 +144,6 @@ export default {
             }
           })
       }
-    },
-    // 关闭系统通知
-    closeNotice () {
-      this.noticeShow = false
     }
   }
 
@@ -320,43 +300,5 @@ export default {
        }
 
     }
-  }
-  .Notice{
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 560px;
-    height: 665px;
-    z-index: 99999;
-    background-image: url(../assets/img/noticeBG.png);
-    background-position: center;
-    background-size: 100% 100%;
-    .Notice_word{
-      width: 450px;
-      height: 248px;
-      margin: auto;
-      margin-top: 280px;
-      text-align: left;
-      line-height: 42px;
-      font-size: 28px;
-      color: #8C8E9A;
-      overflow-y: auto;
-    }
-    .Notice_button{
-      width: 320px;
-      padding: 20px 0;
-      background: linear-gradient(to right,#24D9C8,#50D06F);
-      border-radius: 60px;
-      margin:25px auto 0 auto;
-    }
-  }
-  .NoticeShadow{
-    position: fixed;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 99998;
-    background: rgba(0,0,0,0.6);
   }
 </style>

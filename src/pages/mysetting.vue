@@ -37,7 +37,7 @@ export default {
     } else {
       this.nologin = true
     }
-    this.getVersionFun()
+    // this.getVersionFun()
   },
   methods: {
     loginOut () {
