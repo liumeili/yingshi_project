@@ -118,7 +118,7 @@
             <div  v-for="(item,index) in otherList" :key="index" v-if="item.list.length>0">
               <div class="index-titleLine">
                 <span>{{item.tag}}</span>
-                <span @click="topNaChoice(index+1, item.list_id)">更多内容</span>
+                <span @click="movieSelect(index)">更多内容</span>
               </div>
               <div class="index-tuijian">
                 <ul>
@@ -432,6 +432,7 @@ export default {
 
     // 顶部导航选择
     topNaChoice (index, id) {
+      console.log(index,id)
       // document.body.scrollTop = document.documentElement.scrollTop = 0
       target.scrollIntoView()
       if (index == 0) {

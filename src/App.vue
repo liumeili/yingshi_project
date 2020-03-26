@@ -1,6 +1,8 @@
 <template>
   <div id="app">
-     <div class="ys-goback" v-if="$route.meta.title!='首页'&&$route.meta.title!='热点'&&$route.meta.title!='任务'&&$route.meta.title!='我的'&&$route.meta.title!='频道列表'&&$route.meta.title!='详情'" @click="gobackFun()"><span>{{$route.meta.title}}</span></div>
+     <div class="ys-goback" v-if="$route.meta.title!='首页'&&$route.meta.title!='热点'&&$route.meta.title!='任务'&&$route.meta.title!='我的'&&$route.meta.title!='频道列表'&&$route.meta.title!='详情'" >
+       <div class="backPage" @click="gobackFun()"></div><span>{{$route.meta.title}}</span>
+     </div>
     <router-view/>
   </div>
 </template>

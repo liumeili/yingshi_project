@@ -1,6 +1,6 @@
 <template>
   <div class="pingdaoList">
-           <div class="ys-goback" @click="gobackFun()"><span>{{pingdaoName}}</span></div>
+           <div class="ys-goback"><div class="backPage" @click="gobackFun()"></div><span>{{pingdaoName}}</span></div>
           <!--筛选  -->
           <div class="pd-sx topNavMargin">
             <div class="pd-sx-line">
@@ -120,7 +120,7 @@ export default {
   mounted () {
     this.getchannelnavisortFun(this.shaixuanObj.list_id)
     //  this.getchannelsortlistFun();
-    let heightVal = document.documentElement.clientHeight - 30
+    let heightVal = document.documentElement.clientHeight - 10
     this.height.height = heightVal + 'px'
   },
   methods: {
@@ -159,10 +159,14 @@ export default {
           let list = [' ', ' ', ' ']
           that.state = that.state.concat(res.data.list_extend.state.split(','), qitaArr, list)
           that.version = that.version.concat(res.data.list_extend.version.split(','), qitaArr)
-          if (that.$route.query.movieId) {
-            that.tagTabFun(that.$route.query.movieId, that.tag[that.$route.query.movieId])
-            that.pingdaoId = that.$route.query.movieId + 1
-          }
+          that.List = []
+          setTimeout(() => {
+            if (that.$route.query.movieId >= 0) {
+              that.shaixuanObj.page = 1
+              that.tagTabFun(that.$route.query.movieId + 1, that.tag[that.$route.query.movieId + 1])
+              that.pingdaoId = that.$route.query.movieId + 1
+            }
+          }, 100)
         })
     },
 
@@ -257,7 +261,7 @@ export default {
 <style lang='less'>
   .pingdaoList{
     .ys-goback{
-      background: #161C2C;
+      background: #161C2C!important;
     }
     .van-tabs__nav{
       background: #0D1225;

@@ -1,6 +1,6 @@
 <template>
   <div class="edit">
-    <div class="ys-goback" @click="gobackFun()"><span>编辑资料</span></div>
+    <div class="ys-goback"><div class="backPage" @click="gobackFun()"></div><span>编辑资料</span></div>
     <div class="saveinfo" @click="saveinfo()">保存</div>
     <div class="edit_head">
       <img src="../assets/img/nopeopleBG.png" class="headBG"/>

@@ -1,6 +1,6 @@
 <template>
   <div class="details">
-     <div class="ys-goback" @click="gobackFun()"><span>{{details.vod_name}}</span></div>
+     <div class="ys-goback"><div class="backPage" @click="gobackFun()"></div><span>{{details.vod_name}}</span></div>
      <!-- 影片基本信息 -->
      <div class="ALLscrollTwo">
        <div class="detais-abstract" id="target">
@@ -453,8 +453,9 @@ export default {
              right: 30px;
              top: 65px;
              width: 143px;
-             height: 110px;
-             padding-top: 50px;
+             height: auto;
+             padding-top: 40px;
+             padding-bottom: 10px;
              background-image: url(../assets/img/xianlu_bg.png);
              background-size: 100% 100%;
              z-index: 9999;

@@ -1,6 +1,6 @@
 <template>
   <div class="videoplay">
-    <div class="ys-goback" @click="gobackFun()"></div>
+    <div class="ys-goback"><div class="backPage" @click="gobackFun()"></div></div>
     <div class="videoplaying" id="dplayer">
      <iframe id="show-iframe" allowfullscreen="true" webkitallowfullscreen="true"
      mozallowfullscreen="true" frameborder="0" scrolling="no" :src="videoUrl.play_url"></iframe>
